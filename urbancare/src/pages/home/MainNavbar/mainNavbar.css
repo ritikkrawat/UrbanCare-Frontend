@@ -1,0 +1,63 @@
+/* Main Navbar */
+.main-navbar {
+  height: 37px;
+  background-color: #6f0047; /* same maroon tone */
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24px;
+  font-size: 14px;
+}
+
+/* Left items */
+.main-navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-item {
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  text-decoration: underline;
+}
+
+/* Right section */
+.main-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Language selector */
+.language-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.language-box select {
+  padding: 4px 6px;
+  border-radius: 2px;
+  border: none;
+  outline: none;
+}
+
+/* Sign In button */
+.signin-btn {
+  background-color: #f5a623; /* orange */
+  border: none;
+  padding: 6px 14px;
+  border-radius: 2px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signin-btn:hover {
+  opacity: 0.9;
+}
