@@ -1,0 +1,87 @@
+.about-section {
+  background-color: #f5f5f5;
+  padding-bottom: 40px;
+}
+
+/* Top notice bar */
+.about-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6f0047;
+  color: white;
+  margin: 0px 9px;
+  font-size: 16px;
+  height: 28.5px;
+}
+
+/* Content layout */
+.about-content {
+  display: flex;
+  gap: 40px;
+  padding: 40px 60px;
+}
+
+/* Left side */
+.about-left {
+  flex: 3;
+}
+
+.about-left h2 {
+  margin-bottom: 16px;
+}
+
+.about-left p {
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.about-left ul,
+.about-left ol {
+  margin-left: 20px;
+  margin-bottom: 16px;
+}
+
+/* Right side */
+.about-right {
+  flex: 1.5;
+}
+
+.about-right h2 {
+  margin-bottom: 16px;
+}
+
+/* Update cards */
+.update-card {
+  display: flex;
+  gap: 12px;
+  background-color: white;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+}
+
+.update-date {
+  text-align: center;
+  min-width: 60px;
+}
+
+.update-date .day {
+  font-size: 20px;
+  font-weight: bold;
+  color: #7b003f;
+}
+
+.update-date .month {
+  font-size: 12px;
+}
+
+.update-date .year {
+  font-size: 12px;
+  color: #555;
+}
+
+.update-text {
+  font-size: 14px;
+  line-height: 1.4;
+}
