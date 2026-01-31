@@ -1,17 +1,12 @@
-import Topbar from "./TopBar/topBar.jsx";
-import Head from "./Head/head.jsx";
-import MainNavbar from "./MainNavbar/mainNavbar.jsx";
 import MainContent from "./MainContent/mainContent.jsx";
-import Footer from './Footer/footer.jsx';
+import MainLayout from '../../layouts/mainLayout.jsx'
 
 const Home = () => {
   return (
     <>
-      <Topbar />
-      <Head />
-      <MainNavbar />
-      <MainContent />
-      <Footer />
+      <MainLayout>
+        <MainContent type="home"/>
+      </MainLayout>
     </>
   );
 };
