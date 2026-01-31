@@ -1,21 +1,18 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
+import Login from "./pages/login";
+import Register from "./pages/register";
 
-function App() {
+const App = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        {/* Default page */}
         <Route path="/" element={<Home />} />
-
-        {/* Optional: redirect any unknown route to Home */}
-        <Route path="*" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
