@@ -1,5 +1,5 @@
 import "./mainContent.css";
-import TotalComplaint from "./totalComplaint/totalComplaint";
+// import TotalComplaint from "./totalComplaint/totalComplaint";
 import AboutSection from "./aboutSection/aboutSection";
 import BoxSection from "./boxSection/boxSection";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ const MainContent = ({ type }) => {
   if (type === "login") {
     return (
       <div className="main-content login-content">
-        <div className="login-wrapper">
+        <div>
   
           {/* USER LOGIN */}
           <div className="login-card">
@@ -313,7 +313,7 @@ const MainContent = ({ type }) => {
   // 🔹 HOME PAGE CONTENT (default)
   return (
     <div>
-      <TotalComplaint />
+      {/* <TotalComplaint /> */}
       <AboutSection />
       <BoxSection />
     </div>
