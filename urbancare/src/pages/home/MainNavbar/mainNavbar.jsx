@@ -1,15 +1,19 @@
 import "./mainNavbar.css";
+import { useNavigate } from "react-router-dom";
 
 const MainNavbar = () => {
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    navigate("/login");
+  };
+
   return (
     <div className="main-navbar">
       {/* Left navigation */}
       <div className="main-navbar-left">
         <span className="nav-item">View Status</span>
-        {/* <span className="nav-item">Officers</span> */}
         <span className="nav-item">Complaint Process</span>
-        {/* <span className="nav-item">Grievance</span> */}
-        {/* <span className="nav-item">Appeal Authority</span> */}
       </div>
 
       {/* Right actions */}
@@ -22,7 +26,7 @@ const MainNavbar = () => {
           </select>
         </div>
 
-        <button className="signin-btn">
+        <button className="signin-btn" onClick={handleSignIn}>
           Sign In
         </button>
       </div>
