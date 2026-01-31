@@ -5,10 +5,10 @@ const AboutSection = () => {
     <div className="about-section">
 
       {/* Top Notice Bar */}
-      <div className="about-notice">
+      {/* <div className="about-notice">
         Any grievance sent by email will not be entertained. Please submit your
         grievance through this portal.
-      </div>
+      </div> */}
 
       <div className="about-content">
 
