@@ -1,11 +1,20 @@
-import React, { Component } from 'react'
+import Topbar from "./home/TopBar/topBar";
+import Head from "./home/Head/head";
+import MainNavbar from "./home/MainNavbar/mainNavbar";
+import Footer from "./home/Footer/footer";
 
-export class userDashboard extends Component {
-  render() {
-    return (
-      <div>userDashboard</div>
-    )
-  }
-}
+const Dashboard = () => {
+  return (
+    <>
+      <Topbar />
+      <Head />
+      <MainNavbar type="dashboard" />
 
-export default userDashboard
+      This is user Dashboard
+
+      <Footer />
+    </>
+  );
+};
+
+export default Dashboard;
