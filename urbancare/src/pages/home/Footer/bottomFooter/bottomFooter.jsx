@@ -32,7 +32,7 @@ const BottomFooter = () => {
           <span>|</span>
           <span>Copyright © 2026</span>
           <span>|</span>
-          <span>Last Updated On: 02-01-2026</span>
+          <span>Last Updated On: 23-03-2026</span>
           <span>|</span>
           <span>Total Visitors : 6705707 (since 19-01-2024)</span>
         </div>
