@@ -2,8 +2,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import Dashboard from "./pages/userDashboard";
+import Dashboard from "./pages/userDashboard/userDashboard.jsx";
 import ProtectedRoute from "./routes/protectedRoute.jsx";
+import EditProfile from "./pages/userDashboard/editProfile.jsx";
+import ChangePassword from "./pages/userDashboard/changePassword.jsx";
 
 const App = () => {
   return (
@@ -19,6 +21,23 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/editProfile"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/changePassword"
+          element={
+            <ProtectedRoute>
+              <ChangePassword />
             </ProtectedRoute>
           }
         />
