@@ -1,0 +1,328 @@
+/* ── userDashboard.css ──────────────────────────────────────────────────────── */
+
+/* Layout */
+.ud-wrapper {
+  display: flex;
+  min-height: calc(100vh - 160px); /* adjust 160px to match Topbar+Head+Navbar+Footer height */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+.ud-sidebar {
+  width: 245px;
+  min-height: 100%;
+  background: linear-gradient(180deg, #1a3a6b 0%, #1e4080 100%);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.ud-sidebar__logo {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ud-sidebar__logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ud-sidebar__title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+.ud-sidebar__nav {
+  flex: 1;
+  padding-top: 8px;
+}
+
+.ud-sidebar__nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 400;
+  transition: all 0.15s ease;
+}
+
+.ud-sidebar__nav-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.ud-sidebar__nav-btn--active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-weight: 600;
+  border-left: 3px solid #4db8ff;
+}
+
+.ud-sidebar__signout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  cursor: pointer;
+  color: #f5a623;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.ud-sidebar__signout:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Main Content ─────────────────────────────────────────────────────────── */
+.ud-main {
+  flex: 1;
+  padding: 26px 28px;
+  background: #f0f4f9;
+  overflow-y: auto;
+}
+
+/* ── Stat Cards ───────────────────────────────────────────────────────────── */
+.ud-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+
+.ud-stat-card {
+  flex: 1;
+  min-width: 180px;
+  border-radius: 10px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ud-stat-card--orange { background: #e88a00; }
+.ud-stat-card--green  { background: #2e8b4a; }
+.ud-stat-card--red    { background: #c0392b; }
+
+.ud-stat-card__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.95);
+  flex-shrink: 0;
+}
+
+.ud-stat-card__info {
+  text-align: right;
+}
+
+.ud-stat-card__value {
+  color: #fff;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ud-stat-card__label {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* ── Table Card ───────────────────────────────────────────────────────────── */
+.ud-table-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.ud-table-card__title {
+  margin: 0 0 18px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* Controls row */
+.ud-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ud-controls__entries {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ud-controls__entries select {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 13px;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ud-controls__entries-label {
+  font-size: 13px;
+  color: #555;
+}
+
+.ud-controls__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ud-controls__search label {
+  font-size: 13px;
+  color: #555;
+}
+
+.ud-controls__search input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 13px;
+  width: 190px;
+  outline: none;
+  font-family: inherit;
+}
+
+.ud-controls__search input:focus {
+  border-color: #4db8ff;
+  box-shadow: 0 0 0 2px rgba(77, 184, 255, 0.2);
+}
+
+/* Table */
+.ud-table-wrap {
+  overflow-x: auto;
+}
+
+.ud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.ud-table thead tr {
+  background: #e8ecf0;
+}
+
+.ud-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #d0d5dc;
+  white-space: nowrap;
+}
+
+.ud-table th .th-inner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ud-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.ud-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ud-table .empty-row td {
+  text-align: center;
+  padding: 30px 0;
+  color: #888;
+  font-size: 14px;
+  border-bottom: none;
+}
+
+/* Status badge */
+.ud-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.ud-badge--pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.ud-badge--closed {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Pagination footer */
+.ud-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #555;
+}
+
+.ud-pagination__buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.ud-pagination__btn {
+  border: 1px solid #d0d5dc;
+  background: #fff;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+
+.ud-pagination__btn:hover {
+  background: #f0f4f9;
+}
