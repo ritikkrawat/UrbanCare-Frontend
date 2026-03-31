@@ -1,0 +1,343 @@
+/* ── editProfile.css ─────────────────────────────────────────────────────── */
+
+/* Layout — same wrapper as userDashboard */
+.ep-wrapper {
+  display: flex;
+  min-height: calc(100vh - 160px);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ── Sidebar (shared styles, prefixed ep- to stay self-contained) ─────────── */
+.ep-sidebar {
+  width: 245px;
+  min-height: 100%;
+  background: linear-gradient(180deg, #1a3a6b 0%, #1e4080 100%);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.ep-sidebar__logo {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ep-sidebar__logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ep-sidebar__title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+.ep-sidebar__nav {
+  flex: 1;
+  padding-top: 8px;
+}
+
+.ep-sidebar__nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 400;
+  transition: all 0.15s ease;
+}
+
+.ep-sidebar__nav-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.ep-sidebar__nav-btn--active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-weight: 600;
+  border-left: 3px solid #4db8ff;
+}
+
+.ep-sidebar__signout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  cursor: pointer;
+  color: #f5a623;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.ep-sidebar__signout:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Main Content ─────────────────────────────────────────────────────────── */
+.ep-main {
+  flex: 1;
+  padding: 28px 36px;
+  background: #f0f4f9;
+  overflow-y: auto;
+}
+
+/* ── Page Header ─────────────────────────────────────────────────────────── */
+.ep-page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #dde3ed;
+}
+
+.ep-page-header__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.ep-page-header__back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #4a5568;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ep-page-header__back-btn:hover {
+  background: #2d3748;
+}
+
+/* ── Mandatory note ──────────────────────────────────────────────────────── */
+.ep-mandatory-note {
+  color: #c0392b;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 12px 0 22px;
+}
+
+/* ── Form Card ───────────────────────────────────────────────────────────── */
+.ep-form-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px 36px 36px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  max-width: 900px;
+}
+
+/* ── Form Row ────────────────────────────────────────────────────────────── */
+.ep-form-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.ep-form-row__label {
+  width: 160px;
+  min-width: 160px;
+  text-align: right;
+  padding-top: 9px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.ep-form-row__label .required {
+  color: #c0392b;
+  margin-left: 2px;
+}
+
+.ep-form-row__field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+.ep-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ep-input:focus {
+  border-color: #4db8ff;
+  box-shadow: 0 0 0 2px rgba(77, 184, 255, 0.2);
+}
+
+.ep-input--readonly {
+  background: #f7f8fa;
+  color: #555;
+  cursor: default;
+}
+
+.ep-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.ep-select:focus {
+  border-color: #4db8ff;
+  box-shadow: 0 0 0 2px rgba(77, 184, 255, 0.2);
+}
+
+/* Address — 3 stacked inputs */
+.ep-address-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+/* ── Radio Group ─────────────────────────────────────────────────────────── */
+.ep-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding-top: 6px;
+  flex-wrap: wrap;
+}
+
+.ep-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+}
+
+.ep-radio-label input[type="radio"] {
+  accent-color: #1a3a6b;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* ── Input with Edit button ──────────────────────────────────────────────── */
+.ep-input-with-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.ep-input-with-btn .ep-input {
+  flex: 1;
+}
+
+.ep-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #e8a000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.ep-edit-btn:hover {
+  background: #c98a00;
+}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+.ep-divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 24px 0;
+}
+
+/* ── Submit Button ───────────────────────────────────────────────────────── */
+.ep-submit-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.ep-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 32px;
+  background: #1a3a6b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ep-submit-btn:hover {
+  background: #142d55;
+}
