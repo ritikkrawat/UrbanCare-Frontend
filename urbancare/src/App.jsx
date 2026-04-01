@@ -6,15 +6,39 @@ import Dashboard from "./pages/userDashboard/userDashboard.jsx";
 import ProtectedRoute from "./routes/protectedRoute.jsx";
 import EditProfile from "./pages/userDashboard/editProfile.jsx";
 import ChangePassword from "./pages/userDashboard/changePassword.jsx";
+import DeleteAccount from "./pages/userDashboard/deleteAccount.jsx"
+import PublicRoute from "./routes/publicRoutes.jsx";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Home />
+            </PublicRoute>
+          }
+        />
         
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
 
         <Route
           path="/dashboard"
@@ -24,6 +48,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        
         <Route
           path="/editProfile"
           element={
@@ -38,6 +63,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ChangePassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/deleteAccount"
+          element={
+            <ProtectedRoute>
+              <DeleteAccount/>
             </ProtectedRoute>
           }
         />
