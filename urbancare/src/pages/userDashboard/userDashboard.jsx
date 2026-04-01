@@ -73,7 +73,11 @@ const Sidebar = ({ active, setActive }) => {
               }
               
               if (item.key === "password") {
-                navigate("/changePassword"); // ✅ added
+                navigate("/changePassword"); 
+              }
+
+              if (item.key === "delete") {
+                navigate("/deleteAccount"); 
               }
             }}
             className={`ud-sidebar__nav-btn${
