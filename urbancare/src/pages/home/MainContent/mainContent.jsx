@@ -6,11 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { statesData } from "../../../utils/statesAndDistrict.js";
 import { useAuth } from "../../../context/authContext.jsx";
-import toast, { Toaster } from "react-hot-toast";
+import { useToast, ToastContainer } from "../../../components/toast.jsx"; // ✅ shared toast
 
 const MainContent = ({ type }) => {
   const navigate = useNavigate();
-  const {login} = useAuth();
+  const { login } = useAuth();
+
+  // ✅ shared toast hook
+  const { toasts, toast, removeToast } = useToast();
 
   // 🔹 REGISTER STATE
   const [formData, setFormData] = useState({
@@ -20,63 +23,56 @@ const MainContent = ({ type }) => {
     pincode: "",
     mobileNumber: "",
     email: "",
-    password: ""
+    password: "",
   });
 
   // 🔹 LOGIN STATE
   const [loginData, setLoginData] = useState({
     identifier: "",
-    password: ""
+    password: "",
   });
-  
-  const allDistricts = statesData.states.flatMap(state => state.districts);
+
+  const allDistricts = statesData.states.flatMap((state) => state.districts);
 
   // 🔹 REGISTER INPUT HANDLER
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 🔹 LOGIN INPUT HANDLER
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
-    setLoginData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    setLoginData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 🔹 REGISTER SUBMIT HANDLER
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Creating account...");
-    
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          name: formData.name,
-          email: formData.email,
-          mobile: formData.mobileNumber,
-          password: formData.password,
-          gender: formData.gender,
-          district: formData.district,
-          pincode: formData.pincode
-        }
-      );
-      
-      login(res.data); // auto login
-      toast.success(res.data.message || "Registration successful!", { id: loadingToast });
 
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        name:     formData.name,
+        email:    formData.email,
+        mobile:   formData.mobileNumber,
+        password: formData.password,
+        gender:   formData.gender,
+        district: formData.district,
+        pincode:  formData.pincode,
+      });
+
+      login(res.data);
+      toast.success(res.data.message || "Registration successful!", { id: loadingToast });
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 100);
-      
+        navigate("/dashboard", { replace: true });
+      }, 2000);
+
     } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed", { id: loadingToast });
+      toast.error(
+        error.response?.data?.message || "Registration failed",
+        { id: loadingToast }
+      );
     }
   };
 
@@ -84,25 +80,24 @@ const MainContent = ({ type }) => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Signing in...");
-    
+
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        {
-          identifier: loginData.identifier,
-          password: loginData.password
-        }
-      );
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        identifier: loginData.identifier,
+        password:   loginData.password,
+      });
 
       login(res.data);
       toast.success(res.data.message || "Login successful!", { id: loadingToast });
-      
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 100);
-      
+        navigate("/dashboard", { replace: true });
+      }, 2000);
+
     } catch (error) {
-      toast.error(error.response?.data?.message || "Invalid credentials", { id: loadingToast });
+      toast.error(
+        error.response?.data?.message || "Invalid credentials",
+        { id: loadingToast }
+      );
     }
   };
 
@@ -110,7 +105,9 @@ const MainContent = ({ type }) => {
   if (type === "login") {
     return (
       <div className="main-content login-content">
-        <Toaster position="top-center" reverseOrder={false} />
+        {/* ✅ shared ToastContainer — no more <Toaster /> */}
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
+
         <div>
           <div className="login-card">
             <h2 className="login-title">USER LOGIN</h2>
@@ -147,14 +144,14 @@ const MainContent = ({ type }) => {
             </div>
 
             <div className="login-links">
-              <span style={{cursor: "pointer"}} onClick={() => navigate("/register")}>
+              <span style={{ cursor: "pointer" }} onClick={() => navigate("/register")}>
                 Click here to sign up
               </span>
             </div>
           </div>
 
           <div className="pg-login">
-            <u> PG OFFICER LOGIN </u>
+            <u>PG OFFICER LOGIN</u>
           </div>
         </div>
       </div>
@@ -165,17 +162,19 @@ const MainContent = ({ type }) => {
   if (type === "register") {
     return (
       <div className="register-wrapper">
-        <Toaster position="top-center" reverseOrder={false} />
+        {/* ✅ shared ToastContainer */}
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
+
         <div className="register-container">
           <h1 className="form-title">Registration/ Sign up Form</h1>
-          
+
           <div className="form-header">
             <span className="section-label">Enter Details</span>
             <span className="mandatory-note">Fields marked with * are mandatory</span>
           </div>
 
           <form className="registration-form" onSubmit={handleSubmit}>
-            
+
             <div className="form-row two-column">
               <div className="form-group">
                 <label className="field-label">Name <span className="required">*</span></label>
@@ -230,11 +229,10 @@ const MainContent = ({ type }) => {
             </div>
             <div className="form-row two-column">
               <input type="text" name="premiseNumber" placeholder="Premise Number or Name" className="form-input" />
-              <input type="text" name="subLocality" placeholder="Locality" className="form-input" />
+              <input type="text" name="subLocality"   placeholder="Locality"               className="form-input" />
             </div>
 
             <div className="form-row two-column">
-              {/* <input type="text" name="locality" placeholder="Locality" className="form-input" /> */}
               <div className="form-group">
                 <label className="field-label">District <span className="required">*</span></label>
                 <select
@@ -260,7 +258,6 @@ const MainContent = ({ type }) => {
                   value={formData.pincode}
                 />
               </div>
-              
             </div>
 
             <div className="form-row two-column">
@@ -306,16 +303,17 @@ const MainContent = ({ type }) => {
                 <span className="submit-icon"></span> Submit
               </button>
             </div>
+
           </form>
         </div>
       </div>
-    ); 
+    );
   }
 
   // 🔹 HOME PAGE CONTENT (default)
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
       <div>
         <AboutSection />
         <BoxSection />
