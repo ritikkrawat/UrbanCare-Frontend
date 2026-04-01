@@ -79,6 +79,10 @@ const Sidebar = ({ active, setActive }) => {
               if (item.key === "password") {
                 navigate("/changePassword"); // ✅ change password
               }
+
+              if (item.key === "delete") {
+                navigate("/deleteAccount"); 
+              }
             }}
             className={`ep-sidebar__nav-btn${
               active === item.key ? " ep-sidebar__nav-btn--active" : ""
