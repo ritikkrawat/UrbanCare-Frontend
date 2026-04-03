@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
 import Footer from "../home/Footer/footer";
 import { useNavigate } from "react-router-dom";
+import { statesData } from "../../utils/statesAndDistrict.js";
 import "./editProfile.css";
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
@@ -97,33 +98,94 @@ const Sidebar = ({ active, setActive }) => {
   );
 };
 
-// ── Edit Profile Form ────────────────────────────────────────────────────────
+// Edit Profile Form 
 const EditProfileContent = ({ onBack }) => {
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+
+        const res = await fetch("http://localhost:5000/api/user/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (res.status === 401) {
+          return; 
+        }
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setForm((prev) => ({
+            ...prev,
+            ...data.user,
+            address1: data.user.address1 || "",
+            address2: data.user.address2 || ""
+          }));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    username:    "ritikkrawat",
-    name:        "Ritik Rawat",
-    gender:      "male",
-    country:     "India",
-    state:       "Delhi",
-    district:    "North West Delhi",
-    pincode:     "110034",
-    address1:    "M - 157 , Shakurpur",
+    // username:    "ritikkrawat",
+    name:        "",
+    gender:      "",
+    country:     "",
+    state:       "",
+    district:    "",
+    pincode:     "",
+    address1:    "",
     address2:    "",
-    address3:    "",
     phone:       "",
-    mobile:      "9582088722",
-    email:       "rithikrawat2004@gmail.com",
+    mobile:      "",
+    email:       "",
   });
 
   const handle = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Profile updated successfully!");
+
+    try {
+      const token = sessionStorage.getItem("token"); // ✅ fixed
+
+      const res = await fetch("http://localhost:5000/api/user/update-profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(form)
+      });
+
+      if (res.status === 401) {
+        sessionStorage.removeItem("token");
+        window.location.href = "/login";
+      }
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Update failed");
+      }
+
+      alert("✅ Profile updated successfully!");
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
+  const allDistricts = statesData.states.flatMap((state) => state.districts);
+  
   return (
     <main className="ep-main">
       {/* Page Header */}
@@ -147,7 +209,7 @@ const EditProfileContent = ({ onBack }) => {
       <div className="ep-form-card">
         <form onSubmit={handleSubmit}>
 
-          {/* Username */}
+          {/* Username
           <div className="ep-form-row">
             <label className="ep-form-row__label">
               Username <span className="required">*</span>
@@ -159,7 +221,7 @@ const EditProfileContent = ({ onBack }) => {
                 readOnly
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Name */}
           <div className="ep-form-row">
@@ -183,7 +245,7 @@ const EditProfileContent = ({ onBack }) => {
             </label>
             <div className="ep-form-row__field">
               <div className="ep-radio-group">
-                {["male", "female", "transgender"].map((g) => (
+                {["Male", "Female", "Transgender"].map((g) => (
                   <label key={g} className="ep-radio-label">
                     <input
                       type="radio"
@@ -210,17 +272,12 @@ const EditProfileContent = ({ onBack }) => {
                 value={form.district}
                 onChange={handle("district")}
               >
-                <option>Central Delhi</option>
-                <option>West Delhi</option>
-                <option>New Delhi</option>
-                <option>North Delhi</option>
-                <option>North East Delhi</option>
-                <option>North West Delhi</option>
-                <option>Shahdara</option>
-                <option>South Delhi</option>
-                <option>South East Delhi</option>
-                <option>South West  Delhi</option>
-                <option>West Delhi</option>
+                <option value="">--Select District--</option>
+                {allDistricts.map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -258,17 +315,11 @@ const EditProfileContent = ({ onBack }) => {
                   onChange={handle("address2")}
                   placeholder="Address line 2"
                 />
-                <input
-                  className="ep-input"
-                  value={form.address3}
-                  onChange={handle("address3")}
-                  placeholder="Address line 3"
-                />
               </div>
             </div>
           </div>
 
-          {/* Phone number */}
+          {/* Phone number
           <div className="ep-form-row">
             <label className="ep-form-row__label">Phone number</label>
             <div className="ep-form-row__field">
@@ -279,7 +330,7 @@ const EditProfileContent = ({ onBack }) => {
                 placeholder="Enter phone number"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Mobile number */}
           <div className="ep-form-row">
@@ -287,17 +338,12 @@ const EditProfileContent = ({ onBack }) => {
               Mobile number <span className="required">*</span>
             </label>
             <div className="ep-form-row__field">
-              <div className="ep-input-with-btn">
                 <input
-                  className="ep-input ep-input--readonly"
+                  className="ep-input"
                   value={form.mobile}
-                  readOnly
+                  onChange={handle("mobile")}
+                  placeholder="Enter mobile number"
                 />
-                <button type="button" className="ep-edit-btn">
-                  <Icon d={icons.editIcon} size={14} />
-                  Edit
-                </button>
-              </div>
             </div>
           </div>
 
@@ -307,17 +353,12 @@ const EditProfileContent = ({ onBack }) => {
               E-mail address <span className="required">*</span>
             </label>
             <div className="ep-form-row__field">
-              <div className="ep-input-with-btn">
                 <input
-                  className="ep-input ep-input--readonly"
+                  className="ep-input"
                   value={form.email}
-                  readOnly
+                  onChange={handle("email")}
+                  placeholder="Enter email address"
                 />
-                <button type="button" className="ep-edit-btn">
-                  <Icon d={icons.editIcon} size={14} />
-                  Edit
-                </button>
-              </div>
             </div>
           </div>
 
