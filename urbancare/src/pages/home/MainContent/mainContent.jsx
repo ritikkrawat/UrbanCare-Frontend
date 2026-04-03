@@ -24,6 +24,8 @@ const MainContent = ({ type }) => {
     mobileNumber: "",
     email: "",
     password: "",
+    premiseNumber: "",
+    subLocality: ""
   });
 
   // 🔹 LOGIN STATE
@@ -60,9 +62,12 @@ const MainContent = ({ type }) => {
         gender:   formData.gender,
         district: formData.district,
         pincode:  formData.pincode,
+        address1: formData.premiseNumber,
+        address2: formData.subLocality
       });
 
       login(res.data);
+      sessionStorage.setItem("token", res.data.token);
       toast.success(res.data.message || "Registration successful!", { id: loadingToast });
       setTimeout(() => {
         navigate("/dashboard", { replace: true });
@@ -88,6 +93,7 @@ const MainContent = ({ type }) => {
       });
 
       login(res.data);
+      sessionStorage.setItem("token", res.data.token);
       toast.success(res.data.message || "Login successful!", { id: loadingToast });
       setTimeout(() => {
         navigate("/dashboard", { replace: true });
@@ -228,8 +234,21 @@ const MainContent = ({ type }) => {
               <label className="field-label">Address <span className="required">*</span></label>
             </div>
             <div className="form-row two-column">
-              <input type="text" name="premiseNumber" placeholder="Premise Number or Name" className="form-input" />
-              <input type="text" name="subLocality"   placeholder="Locality"               className="form-input" />
+              <input 
+                type="text"
+                name="premiseNumber"
+                placeholder="Premise Number or Name"
+                className="form-input"
+                onChange={handleInputChange}
+                value={formData.premiseNumber} 
+              />
+              <input 
+                type="text"
+                name="subLocality"
+                placeholder="Locality"
+                className="form-input"
+                onChange={handleInputChange}
+                value={formData.subLocality}  />
             </div>
 
             <div className="form-row two-column">
