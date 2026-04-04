@@ -6,7 +6,7 @@ import Footer from "../home/Footer/footer";
 import { useNavigate } from "react-router-dom";
 import "./changePassword.css";
 import { useAuth } from "../../context/authContext";
-import { useToast, ToastContainer } from "../../components/toast.jsx"; // ✅ shared toast
+import { useToast, ToastContainer } from "../../components/toast.jsx"; 
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 18 }) => (
@@ -240,7 +240,7 @@ const ChangePasswordContent = ({ toast }) => {
 // ── Root ChangePassword Page ──────────────────────────────────────────────────
 const ChangePassword = () => {
   const [active, setActive] = useState("password");
-  const { toasts, toast, removeToast } = useToast(); // ✅ shared hook
+  const { toasts, toast, removeToast } = useToast(); 
 
   return (
     <>
