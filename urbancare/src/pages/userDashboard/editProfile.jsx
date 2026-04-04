@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
@@ -6,6 +6,7 @@ import Footer from "../home/Footer/footer";
 import { useNavigate } from "react-router-dom";
 import { statesData } from "../../utils/statesAndDistrict.js";
 import "./editProfile.css";
+import { useToast, ToastContainer } from "../../components/toast.jsx";
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 18 }) => (
@@ -40,21 +41,17 @@ const icons = {
 
 // ── Nav Items ────────────────────────────────────────────────────────────────
 const navItems = [
-  // { key: "dashboard", label: "Appeal Dashboard",       icon: icons.dashboard },
-  // { key: "public",    label: "Lodge Public Grievance",  icon: icons.plus      },
-  // { key: "pension",   label: "Lodge Pension Grievance", icon: icons.pension   },
-  // { key: "activity",  label: "Account Activity",        icon: icons.activity  },
-  { key: "profile",   label: "Edit Profile",            icon: icons.edit      },
-  { key: "password",  label: "Change Password",         icon: icons.lock      },
-  { key: "delete",    label: "Delete Account",          icon: icons.trash     },
+  { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
+  { key: "password", label: "Change Password", icon: icons.lock  },
+  { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
+// ── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = ({ active, setActive }) => {
   const navigate = useNavigate();
 
   return (
     <aside className="ep-sidebar">
-      {/* Logo */}
       <div className="ep-sidebar__logo">
         <div className="ep-sidebar__logo-icon">
           <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
@@ -65,25 +62,15 @@ const Sidebar = ({ active, setActive }) => {
         <span className="ep-sidebar__title">Complaint Dashboard</span>
       </div>
 
-      {/* Nav Links */}
       <nav className="ep-sidebar__nav">
         {navItems.map((item) => (
           <button
             key={item.key}
             onClick={() => {
               setActive(item.key);
-
-              if (item.key === "profile") {
-                navigate("/editProfile"); // ✅ edit profile
-              }
-
-              if (item.key === "password") {
-                navigate("/changePassword"); // ✅ change password
-              }
-
-              if (item.key === "delete") {
-                navigate("/deleteAccount"); 
-              }
+              if (item.key === "profile")  navigate("/editProfile");
+              if (item.key === "password") navigate("/changePassword");
+              if (item.key === "delete")   navigate("/deleteAccount");
             }}
             className={`ep-sidebar__nav-btn${
               active === item.key ? " ep-sidebar__nav-btn--active" : ""
@@ -98,32 +85,61 @@ const Sidebar = ({ active, setActive }) => {
   );
 };
 
-// Edit Profile Form 
-const EditProfileContent = ({ onBack }) => {
+// ── Mandatory fields config ───────────────────────────────────────────────────
+const mandatoryFields = {
+  name:     "Name",
+  gender:   "Gender",
+  district: "District",
+  pincode:  "Pincode",
+  address1: "Address line 1",
+  mobile:   "Mobile number",
+  email:    "E-mail address",
+};
+
+// ── Edit Profile Form ────────────────────────────────────────────────────────
+const EditProfileContent = ({ toast }) => {
+  const navigate = useNavigate();
+
+  const emptyForm = {
+    name:     "",
+    gender:   "",
+    country:  "",
+    state:    "",
+    district: "",
+    pincode:  "",
+    address1: "",
+    address2: "",
+    phone:    "",
+    mobile:   "",
+    email:    "",
+  };
+
+  const [form, setForm]       = useState(emptyForm);
+  const [touched, setTouched] = useState({});
+
+  // Store original fetched data to detect changes
+  const originalForm = useRef(null);
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = sessionStorage.getItem("token");
-
         const res = await fetch("http://localhost:5000/api/user/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (res.status === 401) {
-          return; 
-        }
+        if (res.status === 401) return;
 
         const data = await res.json();
-
         if (res.ok) {
-          setForm((prev) => ({
-            ...prev,
+          const fetched = {
+            ...emptyForm,
             ...data.user,
             address1: data.user.address1 || "",
-            address2: data.user.address2 || ""
-          }));
+            address2: data.user.address2 || "",
+          };
+          setForm(fetched);
+          originalForm.current = fetched; // snapshot original
         }
       } catch (err) {
         console.log(err);
@@ -133,59 +149,110 @@ const EditProfileContent = ({ onBack }) => {
     fetchProfile();
   }, []);
 
-  const navigate = useNavigate();
-  const [form, setForm] = useState({
-    // username:    "ritikkrawat",
-    name:        "",
-    gender:      "",
-    country:     "",
-    state:       "",
-    district:    "",
-    pincode:     "",
-    address1:    "",
-    address2:    "",
-    phone:       "",
-    mobile:      "",
-    email:       "",
-  });
-
-  const handle = (field) => (e) =>
+  const handle = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleBlur = (field) => () =>
+    setTouched((prev) => ({ ...prev, [field]: true }));
+
+  // ── Per-field error ────────────────────────────────────────────────────────
+  const getFieldError = (field) => {
+    if (!touched[field]) return "";
+    const val = form[field]?.trim() ?? "";
+    if (!val) return `${mandatoryFields[field]} is required`;
+    if (field === "pincode" && !/^\d{6}$/.test(val))
+      return "Pincode must be 6 digits";
+    if (field === "mobile" && !/^\d{10}$/.test(val))
+      return "Mobile number must be 10 digits";
+    if (field === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
+      return "Enter a valid email address";
+    return "";
+  };
+
+  // ── Full validation on submit ──────────────────────────────────────────────
+  const validate = () => {
+    for (const field of Object.keys(mandatoryFields)) {
+      const val = form[field]?.trim() ?? "";
+      if (!val) return `${mandatoryFields[field]} is required`;
+    }
+    if (!/^\d{6}$/.test(form.pincode.trim()))
+      return "Pincode must be exactly 6 digits";
+    if (!/^\d{10}$/.test(form.mobile.trim()))
+      return "Mobile number must be exactly 10 digits";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+      return "Enter a valid email address";
+    return null;
+  };
+
+  // ── Check if anything actually changed ────────────────────────────────────
+  const hasChanges = () => {
+    if (!originalForm.current) return true; // if no original, allow submit
+    return Object.keys(mandatoryFields).some(
+      (field) =>
+        (form[field]?.trim() ?? "") !== (originalForm.current[field]?.trim() ?? "")
+    ) || (form.address2?.trim() ?? "") !== (originalForm.current.address2?.trim() ?? "");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const token = sessionStorage.getItem("token"); // ✅ fixed
+    // Mark all mandatory fields as touched
+    const allTouched = Object.keys(mandatoryFields).reduce(
+      (acc, f) => ({ ...acc, [f]: true }),
+      {}
+    );
+    setTouched(allTouched);
 
+    // Check for validation errors first
+    const validationError = validate();
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+
+    // Check if user made any changes
+    if (!hasChanges()) {
+      toast.error("No changes detected. Please update at least one field.");
+      return;
+    }
+
+    const loadingToast = toast.loading("Updating profile...");
+
+    try {
+      const token = sessionStorage.getItem("token");
       const res = await fetch("http://localhost:5000/api/user/update-profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       if (res.status === 401) {
         sessionStorage.removeItem("token");
-        window.location.href = "/login";
+        toast.error("Session expired. Please log in again.", { id: loadingToast });
+        setTimeout(() => navigate("/login"), 1500);
+        return;
       }
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Update failed");
 
-      if (!res.ok) {
-        throw new Error(data.message || "Update failed");
-      }
+      toast.success("Profile updated successfully!", { id: loadingToast });
 
-      alert("✅ Profile updated successfully!");
+      // Update the original snapshot so subsequent submits also detect changes correctly
+      originalForm.current = { ...form };
+
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message || "Something went wrong.", { id: loadingToast });
     }
   };
 
   const allDistricts = statesData.states.flatMap((state) => state.districts);
-  
+
   return (
     <main className="ep-main">
       {/* Page Header */}
@@ -194,8 +261,8 @@ const EditProfileContent = ({ onBack }) => {
           <Icon d={icons.user} size={20} />
           Edit Profile
         </h2>
-        <button 
-          className="ep-page-header__back-btn" 
+        <button
+          className="ep-page-header__back-btn"
           onClick={() => navigate("/dashboard")}
         >
           <Icon d={icons.arrowLeft} size={14} />
@@ -207,21 +274,7 @@ const EditProfileContent = ({ onBack }) => {
 
       {/* Form Card */}
       <div className="ep-form-card">
-        <form onSubmit={handleSubmit}>
-
-          {/* Username
-          <div className="ep-form-row">
-            <label className="ep-form-row__label">
-              Username <span className="required">*</span>
-            </label>
-            <div className="ep-form-row__field">
-              <input
-                className="ep-input ep-input--readonly"
-                value={form.username}
-                readOnly
-              />
-            </div>
-          </div> */}
+        <form onSubmit={handleSubmit} noValidate>
 
           {/* Name */}
           <div className="ep-form-row">
@@ -230,11 +283,15 @@ const EditProfileContent = ({ onBack }) => {
             </label>
             <div className="ep-form-row__field">
               <input
-                className="ep-input"
+                className={`ep-input${getFieldError("name") ? " ep-input--error" : ""}`}
                 value={form.name}
                 onChange={handle("name")}
+                onBlur={handleBlur("name")}
                 placeholder="Enter full name"
               />
+              {getFieldError("name") && (
+                <span className="ep-field-error">{getFieldError("name")}</span>
+              )}
             </div>
           </div>
 
@@ -254,10 +311,13 @@ const EditProfileContent = ({ onBack }) => {
                       checked={form.gender === g}
                       onChange={handle("gender")}
                     />
-                    {g.charAt(0).toUpperCase() + g.slice(1)}
+                    {g}
                   </label>
                 ))}
               </div>
+              {getFieldError("gender") && (
+                <span className="ep-field-error">{getFieldError("gender")}</span>
+              )}
             </div>
           </div>
 
@@ -268,9 +328,10 @@ const EditProfileContent = ({ onBack }) => {
             </label>
             <div className="ep-form-row__field">
               <select
-                className="ep-select"
+                className={`ep-select${getFieldError("district") ? " ep-input--error" : ""}`}
                 value={form.district}
                 onChange={handle("district")}
+                onBlur={handleBlur("district")}
               >
                 <option value="">--Select District--</option>
                 {allDistricts.map((district) => (
@@ -279,20 +340,29 @@ const EditProfileContent = ({ onBack }) => {
                   </option>
                 ))}
               </select>
+              {getFieldError("district") && (
+                <span className="ep-field-error">{getFieldError("district")}</span>
+              )}
             </div>
           </div>
 
           {/* Pincode */}
           <div className="ep-form-row">
-            <label className="ep-form-row__label">Pincode</label>
+            <label className="ep-form-row__label">
+              Pincode <span className="required">*</span>
+            </label>
             <div className="ep-form-row__field">
               <input
-                className="ep-input"
+                className={`ep-input${getFieldError("pincode") ? " ep-input--error" : ""}`}
                 value={form.pincode}
                 onChange={handle("pincode")}
-                placeholder="Enter pincode"
+                onBlur={handleBlur("pincode")}
+                placeholder="Enter 6-digit pincode"
                 maxLength={6}
               />
+              {getFieldError("pincode") && (
+                <span className="ep-field-error">{getFieldError("pincode")}</span>
+              )}
             </div>
           </div>
 
@@ -304,33 +374,24 @@ const EditProfileContent = ({ onBack }) => {
             <div className="ep-form-row__field">
               <div className="ep-address-stack">
                 <input
-                  className="ep-input"
+                  className={`ep-input${getFieldError("address1") ? " ep-input--error" : ""}`}
                   value={form.address1}
                   onChange={handle("address1")}
+                  onBlur={handleBlur("address1")}
                   placeholder="Address line 1"
                 />
+                {getFieldError("address1") && (
+                  <span className="ep-field-error">{getFieldError("address1")}</span>
+                )}
                 <input
                   className="ep-input"
                   value={form.address2}
                   onChange={handle("address2")}
-                  placeholder="Address line 2"
+                  placeholder="Address line 2 (optional)"
                 />
               </div>
             </div>
           </div>
-
-          {/* Phone number
-          <div className="ep-form-row">
-            <label className="ep-form-row__label">Phone number</label>
-            <div className="ep-form-row__field">
-              <input
-                className="ep-input"
-                value={form.phone}
-                onChange={handle("phone")}
-                placeholder="Enter phone number"
-              />
-            </div>
-          </div> */}
 
           {/* Mobile number */}
           <div className="ep-form-row">
@@ -338,12 +399,17 @@ const EditProfileContent = ({ onBack }) => {
               Mobile number <span className="required">*</span>
             </label>
             <div className="ep-form-row__field">
-                <input
-                  className="ep-input"
-                  value={form.mobile}
-                  onChange={handle("mobile")}
-                  placeholder="Enter mobile number"
-                />
+              <input
+                className={`ep-input${getFieldError("mobile") ? " ep-input--error" : ""}`}
+                value={form.mobile}
+                onChange={handle("mobile")}
+                onBlur={handleBlur("mobile")}
+                placeholder="Enter 10-digit mobile number"
+                maxLength={10}
+              />
+              {getFieldError("mobile") && (
+                <span className="ep-field-error">{getFieldError("mobile")}</span>
+              )}
             </div>
           </div>
 
@@ -353,12 +419,16 @@ const EditProfileContent = ({ onBack }) => {
               E-mail address <span className="required">*</span>
             </label>
             <div className="ep-form-row__field">
-                <input
-                  className="ep-input"
-                  value={form.email}
-                  onChange={handle("email")}
-                  placeholder="Enter email address"
-                />
+              <input
+                className={`ep-input${getFieldError("email") ? " ep-input--error" : ""}`}
+                value={form.email}
+                onChange={handle("email")}
+                onBlur={handleBlur("email")}
+                placeholder="Enter email address"
+              />
+              {getFieldError("email") && (
+                <span className="ep-field-error">{getFieldError("email")}</span>
+              )}
             </div>
           </div>
 
@@ -381,6 +451,7 @@ const EditProfileContent = ({ onBack }) => {
 // ── Root EditProfile Page ────────────────────────────────────────────────────
 const EditProfile = () => {
   const [active, setActive] = useState("profile");
+  const { toasts, toast, removeToast } = useToast();
 
   return (
     <>
@@ -390,10 +461,12 @@ const EditProfile = () => {
 
       <div className="ep-wrapper">
         <Sidebar active={active} setActive={setActive} />
-        <EditProfileContent onBack={() => window.history.back()} />
+        <EditProfileContent toast={toast} />
       </div>
 
       <Footer />
+
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );
 };
