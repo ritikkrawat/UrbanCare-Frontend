@@ -341,3 +341,17 @@
 .ep-submit-btn:hover {
   background: #142d55;
 }
+
+/* ── Field Validation ────────────────────────────────────────────────────── */
+.ep-input--error {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.15);
+}
+
+.ep-field-error {
+  display: block;
+  color: #c0392b;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
