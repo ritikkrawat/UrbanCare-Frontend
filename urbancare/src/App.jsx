@@ -6,7 +6,9 @@ import Dashboard from "./pages/userDashboard/userDashboard.jsx";
 import ProtectedRoute from "./routes/protectedRoute.jsx";
 import EditProfile from "./pages/userDashboard/editProfile.jsx";
 import ChangePassword from "./pages/userDashboard/changePassword.jsx";
-import DeleteAccount from "./pages/userDashboard/deleteAccount.jsx"
+import DeleteAccount from "./pages/userDashboard/deleteAccount.jsx";
+import ComplaintForm from "./pages/userDashboard/complaintForm.jsx";
+import ForgotPassword from "./pages/forgotPassword.jsx";
 import PublicRoute from "./routes/publicRoutes.jsx";
 
 const App = () => {
@@ -73,6 +75,24 @@ const App = () => {
             <ProtectedRoute>
               <DeleteAccount/>
             </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/complaintForm"
+          element={
+            <ProtectedRoute>
+              <ComplaintForm/>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/forgotPassword"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
           }
         />
       </Routes>
