@@ -26,10 +26,11 @@ const Icon = ({ d, size = 18 }) => (
 );
 
 const icons = {
-  edit:  "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
-  lock:  "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
-  trash: "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
-  alert: "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01",
+  edit:      "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
+  lock:      "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
+  trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
+  alert:     "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01",
+  arrowLeft: "M19 12H5 M12 19l-7-7 7-7",
 };
 
 // ── Nav Items ─────────────────────────────────────────────────────────────────
@@ -167,10 +168,17 @@ const DeleteAccountContent = ({ toast }) => {
     <main className="da-main">
       {/* Page Header */}
       <div className="da-page-header">
-        <span className="da-page-header__icon">
-          <Icon d={icons.trash} size={26} />
-        </span>
-        <h2 className="da-page-header__title">Delete Account</h2>
+        <h2 className="da-page-header__title">
+          <Icon d={icons.trash} size={20} />
+          Delete Account
+        </h2>
+        <button
+          className="da-page-header__back-btn"
+          onClick={() => navigate("/dashboard")}
+        >
+          <Icon d={icons.arrowLeft} size={14} />
+          Back To Home Page
+        </button>
       </div>
 
       {/* Content Card */}
@@ -232,7 +240,7 @@ const DeleteAccountContent = ({ toast }) => {
 // ── Root DeleteAccount Page ───────────────────────────────────────────────────
 const DeleteAccount = () => {
   const [active, setActive] = useState("delete");
-  const { toasts, toast, removeToast } = useToast(); // ✅ shared hook
+  const { toasts, toast, removeToast } = useToast();
 
   return (
     <>
@@ -247,7 +255,6 @@ const DeleteAccount = () => {
 
       <Footer />
 
-      {/* ✅ shared ToastContainer — same component as mainContent */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );
