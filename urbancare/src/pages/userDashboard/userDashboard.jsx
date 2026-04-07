@@ -79,6 +79,10 @@ const Sidebar = ({ active, setActive }) => {
               if (item.key === "delete") {
                 navigate("/deleteAccount"); 
               }
+
+              if (item.key === "plus") {
+                navigate("/complaintForm"); 
+              }
             }}
             className={`ud-sidebar__nav-btn${
               active === item.key ? " ud-sidebar__nav-btn--active" : ""
