@@ -89,23 +89,40 @@
 .da-page-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 0;
-  padding-bottom: 16px;
+  padding-bottom: 14px;
   border-bottom: 1px solid #dde3ed;
 }
 
-.da-page-header__icon {
-  color: #c0392b;
+.da-page-header__title {
   display: flex;
   align-items: center;
-}
-
-.da-page-header__title {
-  font-size: 22px;
+  gap: 8px;
+  font-size: 18px;
   font-weight: 700;
   color: #1a1a1a;
   margin: 0;
+}
+
+.da-page-header__back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #4a5568;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.da-page-header__back-btn:hover {
+  background: #2d3748;
 }
 
 /* ── Content Card ────────────────────────────────────────────────────────── */
