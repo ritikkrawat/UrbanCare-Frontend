@@ -253,7 +253,7 @@ const ChangePassword = () => {
         <ChangePasswordContent toast={toast} />
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
 
       {/* ✅ shared ToastContainer */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
