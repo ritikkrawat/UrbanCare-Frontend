@@ -22,11 +22,11 @@ const BottomFooter = () => {
         </div>
 
         <div className="footer-links">
-          <a href="#">Disclaimer</a>
+          {/* <a href="#">Disclaimer</a>
           <span>|</span>
           <a href="#">Website Policies</a>
           <span>|</span>
-          <a href="#">Web Information Manager</a>
+          <a href="#">Web Information Manager</a> */}
           <span>|</span>
           <span>Version 7.0.01092019.0.0</span>
           <span>|</span>
