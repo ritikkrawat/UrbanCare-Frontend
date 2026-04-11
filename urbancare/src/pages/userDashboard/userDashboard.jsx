@@ -256,7 +256,7 @@ const Dashboard = () => {
         <ComplaintContent />
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
