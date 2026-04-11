@@ -464,7 +464,7 @@ const EditProfile = () => {
         <EditProfileContent toast={toast} />
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
