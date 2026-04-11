@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
-import Footer from "../home/Footer/footer";
+// import Footer from "../home/Footer/footer";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./complaintForm.css";
 import { useToast, ToastContainer } from "../../components/toast.jsx";
