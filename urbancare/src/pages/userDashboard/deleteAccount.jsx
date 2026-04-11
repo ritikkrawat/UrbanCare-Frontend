@@ -253,7 +253,7 @@ const DeleteAccount = () => {
         <DeleteAccountContent toast={toast} />
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
