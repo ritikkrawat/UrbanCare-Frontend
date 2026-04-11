@@ -13,11 +13,11 @@ const Topbar = () => {
 
       {/* Right side */}
       <div className="topbar-right">
-        <a href="/">Home</a>
+        {/* <a href="/">Home</a>
         <a href="#">Contact Us</a>
         <a href="#">About Us</a>
         <a href="#">FAQs/Help</a>
-        {/* <a href="#">Site Map</a> */}
+        <a href="#">Site Map</a> */}
       </div>
     </div>
   );
