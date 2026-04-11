@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { statesData } from "../../../utils/statesAndDistrict.js";
 import { useAuth } from "../../../context/authContext.jsx";
-import { useToast, ToastContainer } from "../../../components/toast.jsx"; // ✅ shared toast
+import { useToast, ToastContainer } from "../../../components/toast.jsx"; 
 
 const MainContent = ({ type }) => {
   const navigate = useNavigate();
@@ -145,7 +145,9 @@ const MainContent = ({ type }) => {
             </form>
 
             <div className="login-links">
-              <span>Forgot Password</span>
+              <span style={{ cursor: "pointer" }} onClick={() => navigate("/forgotPassword")}>
+                Forgot Password
+              </span>
               <span>Login with OTP</span>
             </div>
 
