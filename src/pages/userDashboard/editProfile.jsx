@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
-import Footer from "../home/Footer/footer";
+// import Footer from "../home/Footer/footer";
 import { useNavigate } from "react-router-dom";
 import { statesData } from "../../utils/statesAndDistrict.js";
 import "./editProfile.css";
@@ -96,23 +96,24 @@ const mandatoryFields = {
   email:    "E-mail address",
 };
 
+const emptyForm = {
+  name:     "",
+  gender:   "",
+  country:  "",
+  state:    "",
+  district: "",
+  pincode:  "",
+  address1: "",
+  address2: "",
+  phone:    "",
+  mobile:   "",
+  email:    "",
+};
+
 // ── Edit Profile Form ────────────────────────────────────────────────────────
 const EditProfileContent = ({ toast }) => {
   const navigate = useNavigate();
 
-  const emptyForm = {
-    name:     "",
-    gender:   "",
-    country:  "",
-    state:    "",
-    district: "",
-    pincode:  "",
-    address1: "",
-    address2: "",
-    phone:    "",
-    mobile:   "",
-    email:    "",
-  };
 
   const [form, setForm]       = useState(emptyForm);
   const [touched, setTouched] = useState({});
