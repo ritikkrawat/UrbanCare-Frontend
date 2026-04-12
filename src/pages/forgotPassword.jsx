@@ -109,7 +109,7 @@ const ForgotPasswordContent = ({ toast }) => {
     const loadingToast = toast.loading("Sending OTP...");
     try {
       const res = await axios.post(
-        `${BASE_URL}api/auth/forgot-password`,
+        `${BASE_URL}/api/auth/forgot-password`,
         buildPayload()
       );
       toast.success(res.data.message || "OTP sent successfully!", { id: loadingToast });
@@ -129,7 +129,7 @@ const ForgotPasswordContent = ({ toast }) => {
     const loadingToast = toast.loading("Resending OTP...");
     try {
       const res = await axios.post(
-        `${BASE_URL}api/auth/forgot-password`,
+        `${BASE_URL}/api/auth/forgot-password`,
         buildPayload()
       );
       toast.success(res.data.message || "OTP resent successfully!", { id: loadingToast });
@@ -158,9 +158,9 @@ const ForgotPasswordContent = ({ toast }) => {
     try {
       const payload = buildPayload();
 
-      await axios.post(`${BASE_URL}api/auth/verify-otp`, { ...payload, otp: otp.trim() });
+      await axios.post(`${BASE_URL}/api/auth/verify-otp`, { ...payload, otp: otp.trim() });
 
-      await axios.post(`${BASE_URL}api/auth/reset-password`, {
+      await axios.post(`${BASE_URL}/api/auth/reset-password`, {
         ...payload,
         otp:      otp.trim(),
         password: newPassword,
