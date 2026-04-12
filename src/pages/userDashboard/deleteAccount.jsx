@@ -6,7 +6,7 @@ import "./deleteAccount.css";
 import { useNavigate } from "react-router-dom";
 import { useToast, ToastContainer } from "../../components/toast.jsx";
 import { useAuth } from "../../context/authContext";
-import { api } from "../../api";
+import { api } from "../../utils/api.js";
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 18 }) => (
