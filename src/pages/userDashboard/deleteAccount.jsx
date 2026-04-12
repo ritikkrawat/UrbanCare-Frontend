@@ -117,10 +117,10 @@ const DeleteAccountContent = ({ toast }) => {
   const handleConfirm = async () => {
     try {
       if (modal === "instant") {
-        await api("api/user/delete-instant", { method: "DELETE" });
+        await api("/api/user/delete-instant", { method: "DELETE" });
         toast.success("Your account has been permanently deleted.");
       } else {
-        const data = await api("api/user/delete-request", { method: "POST" });
+        const data = await api("/api/user/delete-request", { method: "POST" });
         toast.success(data.message || "Deletion scheduled successfully.");
       }
 
