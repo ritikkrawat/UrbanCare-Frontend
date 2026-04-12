@@ -118,7 +118,7 @@ const ChangePasswordContent = ({ toast }) => {
     const loadingToast = toast.loading("Changing password...");
 
     try {
-      await api("api/user/change-password", {
+      await api("/api/user/change-password", {
         method: "PUT",
         body: JSON.stringify({
           oldPassword: form.oldPassword,
