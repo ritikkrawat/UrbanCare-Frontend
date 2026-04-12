@@ -2,12 +2,11 @@ import { useState } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
-// import Footer from "../home/Footer/footer";
 import "./deleteAccount.css";
 import { useNavigate } from "react-router-dom";
-import { useToast, ToastContainer } from "../../components/toast.jsx"; 
-import axios from "axios";
-import { useAuth } from "../../context/authContext"; // adjust path
+import { useToast, ToastContainer } from "../../components/toast.jsx";
+import { useAuth } from "../../context/authContext";
+import { api } from "../../api";
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 18 }) => (
@@ -111,56 +110,26 @@ const ConfirmModal = ({ type, onConfirm, onCancel }) => {
 
 // ── Delete Account Content ────────────────────────────────────────────────────
 const DeleteAccountContent = ({ toast }) => {
-  const [modal, setModal] = useState(null); 
+  const [modal, setModal] = useState(null);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleConfirm = async () => {
     try {
-      const token = sessionStorage.getItem("token");
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
-
       if (modal === "instant") {
-        await axios.delete(
-          "http://localhost:5000/api/user/delete-instant",
-          config
-        );
-
+        await api("api/user/delete-instant", { method: "DELETE" });
         toast.success("Your account has been permanently deleted.");
-
       } else {
-        const res = await axios.post(
-          "http://localhost:5000/api/user/delete-request",
-          {},
-          config
-        );
-
-        toast.success(res.data.message);
+        const data = await api("api/user/delete-request", { method: "POST" });
+        toast.success(data.message || "Deletion scheduled successfully.");
       }
-
-      // ✅ CENTRALIZED LOGOUT
-      logout();
-
-      // ✅ REDIRECT TO LOGIN
-      setTimeout(() => {
-        navigate("/login", { replace: true });
-      }, 1200);
 
       setModal(null);
+      logout();
+      setTimeout(() => navigate("/login", { replace: true }), 1200);
 
     } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
-
-      // 🔐 If token invalid → force logout
-      if (error.response?.status === 401) {
-        logout();
-        navigate("/login", { replace: true });
-      }
+      toast.error(error.message || "Something went wrong");
     }
   };
 
@@ -252,8 +221,6 @@ const DeleteAccount = () => {
         <Sidebar active={active} setActive={setActive} />
         <DeleteAccountContent toast={toast} />
       </div>
-
-      {/* <Footer /> */}
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
