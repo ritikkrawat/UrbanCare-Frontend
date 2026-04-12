@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Topbar from "./home/TopBar/topBar.jsx";
 import Head from "./home/Head/head";
 import MainNavbar from "./home/MainNavbar/mainNavbar";
+// import Footer from "./home/Footer/footer";
 import "./forgotPassword.css";
 import { useNavigate } from "react-router-dom";
 import { useToast, ToastContainer } from "../components/toast.jsx";
@@ -30,22 +31,22 @@ const icons = {
   lock:   "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
 };
 
-const BASE_URL = process.env.REACT_APP_API_URL;
-
 // ── Forgot Password Content ───────────────────────────────────────────────────
 const ForgotPasswordContent = ({ toast }) => {
   const navigate = useNavigate();
 
+  // ── Step: "idle" | "otp-sent" | "verified"
   const [step, setStep] = useState("idle");
 
   const [form, setForm] = useState({ email: "", mobile: "" });
   const [otp, setOtp]   = useState("");
-  const [newPassword, setNewPassword]         = useState("");
+  const [newPassword, setNewPassword]     = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [touched, setTouched]       = useState({});
+  const [touched, setTouched]   = useState({});
   const [otpTouched, setOtpTouched] = useState(false);
 
+  // Resend countdown
   const [countdown, setCountdown] = useState(0);
   const timerRef = useRef(null);
 
@@ -62,6 +63,7 @@ const ForgotPasswordContent = ({ toast }) => {
 
   useEffect(() => () => clearInterval(timerRef.current), []);
 
+  // ── Handlers ───────────────────────────────────────────────────────────────
   const handle = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -70,6 +72,7 @@ const ForgotPasswordContent = ({ toast }) => {
   const handleBlur = (field) => () =>
     setTouched((prev) => ({ ...prev, [field]: true }));
 
+  // ── Per-field errors ───────────────────────────────────────────────────────
   const getFieldError = (field) => {
     if (!touched[field]) return "";
     const val = form[field].trim();
@@ -80,6 +83,7 @@ const ForgotPasswordContent = ({ toast }) => {
     return "";
   };
 
+  // ── Validate contact fields ────────────────────────────────────────────────
   const validateContact = () => {
     const email  = form.email.trim();
     const mobile = form.mobile.trim();
@@ -92,14 +96,6 @@ const ForgotPasswordContent = ({ toast }) => {
     return null;
   };
 
-  // ── Build reusable payload ─────────────────────────────────────────────────
-  const buildPayload = () => {
-    const payload = {};
-    if (form.email.trim())  payload.email  = form.email.trim();
-    if (form.mobile.trim()) payload.mobile = form.mobile.trim();
-    return payload;
-  };
-
   // ── Step 1: Send OTP ───────────────────────────────────────────────────────
   const handleSendOtp = async () => {
     setTouched({ email: true, mobile: true });
@@ -108,13 +104,19 @@ const ForgotPasswordContent = ({ toast }) => {
 
     const loadingToast = toast.loading("Sending OTP...");
     try {
+      const payload = {};
+      if (form.email.trim())  payload.email  = form.email.trim();
+      if (form.mobile.trim()) payload.mobile = form.mobile.trim();
+
       const res = await axios.post(
-        `${BASE_URL}/api/auth/forgot-password`,
-        buildPayload()
+        "http://localhost:5000/api/auth/forgot-password",
+        payload
       );
+
       toast.success(res.data.message || "OTP sent successfully!", { id: loadingToast });
       setStep("otp-sent");
       startCountdown();
+
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to send OTP. Please try again.",
@@ -128,13 +130,19 @@ const ForgotPasswordContent = ({ toast }) => {
     if (countdown > 0) return;
     const loadingToast = toast.loading("Resending OTP...");
     try {
+      const payload = {};
+      if (form.email.trim())  payload.email  = form.email.trim();
+      if (form.mobile.trim()) payload.mobile = form.mobile.trim();
+
       const res = await axios.post(
-        `${BASE_URL}/api/auth/forgot-password`,
-        buildPayload()
+        "http://localhost:5000/api/auth/forgot-password",
+        payload
       );
+
       toast.success(res.data.message || "OTP resent successfully!", { id: loadingToast });
       setOtp("");
       startCountdown();
+
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to resend OTP.",
@@ -147,28 +155,56 @@ const ForgotPasswordContent = ({ toast }) => {
   const handleVerifyAndReset = async () => {
     setOtpTouched(true);
 
-    if (!otp.trim())           { toast.error("Please enter the OTP"); return; }
-    if (otp.trim().length < 4) { toast.error("Enter a valid OTP"); return; }
-    if (!newPassword)          { toast.error("Please enter a new password"); return; }
-    if (newPassword.length < 6){ toast.error("Password must be at least 6 characters"); return; }
-    if (newPassword !== confirmPassword) { toast.error("Passwords do not match"); return; }
+    if (!otp.trim()) {
+      toast.error("Please enter the OTP");
+      return;
+    }
+    if (otp.trim().length < 4) {
+      toast.error("Enter a valid OTP");
+      return;
+    }
+    if (!newPassword) {
+      toast.error("Please enter a new password");
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
 
     const loadingToast = toast.loading("Verifying OTP...");
 
     try {
-      const payload = buildPayload();
-
-      await axios.post(`${BASE_URL}/api/auth/verify-otp`, { ...payload, otp: otp.trim() });
-
-      await axios.post(`${BASE_URL}/api/auth/reset-password`, {
-        ...payload,
-        otp:      otp.trim(),
-        password: newPassword,
-      });
-
+      const payload = {
+        otp: otp.trim(),
+      };
+    
+      if (form.email.trim()) payload.email = form.email.trim();
+      if (form.mobile.trim()) payload.mobile = form.mobile.trim();
+    
+      // ✅ Step 1: Verify OTP
+      await axios.post(
+        "http://localhost:5000/api/auth/verify-otp",
+        payload
+      );
+    
+      // ✅ Step 2: Reset Password (THIS WAS MISSING 🚨)
+      await axios.post(
+        "http://localhost:5000/api/auth/reset-password",
+        {
+          ...payload,
+          password: newPassword, // ⚠️ IMPORTANT: use 'password' not 'newPassword'
+        }
+      );
+    
       toast.success("Password reset successfully!", { id: loadingToast });
+    
       setTimeout(() => navigate("/login", { replace: true }), 1500);
-
+    
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Something went wrong",
@@ -180,14 +216,16 @@ const ForgotPasswordContent = ({ toast }) => {
   return (
     <div className="fp-wrapper">
       <div className="fp-card">
-
+        {/* Card Header */}
         <div className="fp-card__header">Forgot Password</div>
 
+        {/* Card Body */}
         <div className="fp-card__body">
           <p className="fp-mandatory-note">
             Enter Details &nbsp;— Fields marked with <strong>#</strong> require at least one
           </p>
 
+          {/* Info note */}
           <div className="fp-info-note">
             <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#1a56a0" strokeWidth={2}>
               <circle cx="12" cy="12" r="10" />
@@ -196,6 +234,7 @@ const ForgotPasswordContent = ({ toast }) => {
             At least one required from the fields marked with <strong>&nbsp;#</strong>
           </div>
 
+          {/* ── STEP 1: Contact fields ── */}
           {/* Registered Email Address */}
           <div className="fp-form-row">
             <label className="fp-form-row__label">
@@ -239,7 +278,7 @@ const ForgotPasswordContent = ({ toast }) => {
             </div>
           </div>
 
-          {/* Send OTP button */}
+          {/* Send OTP button — only shown in idle step */}
           {step === "idle" && (
             <>
               <hr className="fp-divider" />
@@ -252,9 +291,10 @@ const ForgotPasswordContent = ({ toast }) => {
             </>
           )}
 
-          {/* ── STEP 2: OTP + new password fields ── */}
+          {/* ── STEP 2: OTP sent — show OTP + new password fields ── */}
           {step === "otp-sent" && (
             <>
+              {/* OTP sent banner */}
               <div className="fp-otp-banner">
                 <Icon d={icons.check} size={15} />
                 OTP sent successfully to your registered {form.email.trim() ? "email" : "mobile number"}
@@ -276,6 +316,7 @@ const ForgotPasswordContent = ({ toast }) => {
                       maxLength={6}
                     />
                   </div>
+                  {/* Resend row */}
                   <div className="fp-resend-row">
                     <button
                       type="button"
@@ -358,6 +399,8 @@ const ForgotPassword = () => {
       <MainNavbar type="login" />
 
       <ForgotPasswordContent toast={toast} />
+
+      {/* <Footer /> */}
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>

@@ -2,11 +2,11 @@ import { useState } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
+// import Footer from "../home/Footer/footer";
 import { useNavigate } from "react-router-dom";
 import "./changePassword.css";
 import { useAuth } from "../../context/authContext";
-import { useToast, ToastContainer } from "../../components/toast.jsx";
-import { api } from "../../utils/api.js";
+import { useToast, ToastContainer } from "../../components/toast.jsx"; 
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 18 }) => (
@@ -81,7 +81,7 @@ const Sidebar = ({ active, setActive }) => {
 // ── Change Password Form Content ──────────────────────────────────────────────
 const ChangePasswordContent = ({ toast }) => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { token, logout } = useAuth();
 
   const [form, setForm] = useState({
     oldPassword:     "",
@@ -95,6 +95,7 @@ const ChangePasswordContent = ({ toast }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ── Client-side validation via toast.error ────────────────────────────
     if (!form.oldPassword || !form.newPassword || !form.confirmPassword) {
       toast.error("All fields are mandatory.");
       return;
@@ -115,27 +116,40 @@ const ChangePasswordContent = ({ toast }) => {
       return;
     }
 
+    // ── API call ──────────────────────────────────────────────────────────
     const loadingToast = toast.loading("Changing password...");
 
     try {
-      await api("/api/user/change-password", {
+      const res = await fetch("http://localhost:5000/api/user/change-password", {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           oldPassword: form.oldPassword,
           newPassword: form.newPassword,
         }),
       });
 
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
       toast.success("Password changed! Please login again.", { id: loadingToast });
+
       setForm({ oldPassword: "", newPassword: "", confirmPassword: "" });
 
+      // delay logout + navigate so toast is visible
       setTimeout(() => {
         logout();
         navigate("/login");
-      }, 1500);
+      }, 200);
 
     } catch (err) {
-      toast.error(err.message || "Something went wrong.", { id: loadingToast });
+      toast.error(err.message, { id: loadingToast });
     }
   };
 
@@ -226,7 +240,7 @@ const ChangePasswordContent = ({ toast }) => {
 // ── Root ChangePassword Page ──────────────────────────────────────────────────
 const ChangePassword = () => {
   const [active, setActive] = useState("password");
-  const { toasts, toast, removeToast } = useToast();
+  const { toasts, toast, removeToast } = useToast(); 
 
   return (
     <>
@@ -239,6 +253,9 @@ const ChangePassword = () => {
         <ChangePasswordContent toast={toast} />
       </div>
 
+      {/* <Footer /> */}
+
+      {/* ✅ shared ToastContainer */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );

@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
+// import Footer from "../home/Footer/footer";
 import { useNavigate } from "react-router-dom";
 import { statesData } from "../../utils/statesAndDistrict.js";
 import "./editProfile.css";
 import { useToast, ToastContainer } from "../../components/toast.jsx";
-import { api } from "../../utils/api.js";
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 18 }) => (
@@ -114,16 +114,25 @@ const emptyForm = {
 const EditProfileContent = ({ toast }) => {
   const navigate = useNavigate();
 
+
   const [form, setForm]       = useState(emptyForm);
   const [touched, setTouched] = useState({});
 
+  // Store original fetched data to detect changes
   const originalForm = useRef(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await api("/api/user/profile");
-        if (data) {
+        const token = sessionStorage.getItem("token");
+        const res = await fetch("http://localhost:5000/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.status === 401) return;
+
+        const data = await res.json();
+        if (res.ok) {
           const fetched = {
             ...emptyForm,
             ...data.user,
@@ -131,7 +140,7 @@ const EditProfileContent = ({ toast }) => {
             address2: data.user.address2 || "",
           };
           setForm(fetched);
-          originalForm.current = fetched;
+          originalForm.current = fetched; // snapshot original
         }
       } catch (err) {
         console.log(err);
@@ -180,31 +189,31 @@ const EditProfileContent = ({ toast }) => {
 
   // ── Check if anything actually changed ────────────────────────────────────
   const hasChanges = () => {
-    if (!originalForm.current) return true;
-    return (
-      Object.keys(mandatoryFields).some(
-        (field) =>
-          (form[field]?.trim() ?? "") !== (originalForm.current[field]?.trim() ?? "")
-      ) ||
-      (form.address2?.trim() ?? "") !== (originalForm.current.address2?.trim() ?? "")
-    );
+    if (!originalForm.current) return true; // if no original, allow submit
+    return Object.keys(mandatoryFields).some(
+      (field) =>
+        (form[field]?.trim() ?? "") !== (originalForm.current[field]?.trim() ?? "")
+    ) || (form.address2?.trim() ?? "") !== (originalForm.current.address2?.trim() ?? "");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Mark all mandatory fields as touched
     const allTouched = Object.keys(mandatoryFields).reduce(
       (acc, f) => ({ ...acc, [f]: true }),
       {}
     );
     setTouched(allTouched);
 
+    // Check for validation errors first
     const validationError = validate();
     if (validationError) {
       toast.error(validationError);
       return;
     }
 
+    // Check if user made any changes
     if (!hasChanges()) {
       toast.error("No changes detected. Please update at least one field.");
       return;
@@ -213,12 +222,29 @@ const EditProfileContent = ({ toast }) => {
     const loadingToast = toast.loading("Updating profile...");
 
     try {
-      await api("/api/user/update-profile", {
+      const token = sessionStorage.getItem("token");
+      const res = await fetch("http://localhost:5000/api/user/update-profile", {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(form),
       });
 
+      if (res.status === 401) {
+        sessionStorage.removeItem("token");
+        toast.error("Session expired. Please log in again.", { id: loadingToast });
+        setTimeout(() => navigate("/login"), 1500);
+        return;
+      }
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Update failed");
+
       toast.success("Profile updated successfully!", { id: loadingToast });
+
+      // Update the original snapshot so subsequent submits also detect changes correctly
       originalForm.current = { ...form };
 
     } catch (error) {
@@ -439,10 +465,11 @@ const EditProfile = () => {
         <EditProfileContent toast={toast} />
       </div>
 
+      {/* <Footer /> */}
+
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );
 };
 
 export default EditProfile;
-

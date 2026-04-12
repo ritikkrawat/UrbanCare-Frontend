@@ -6,54 +6,55 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { statesData } from "../../../utils/statesAndDistrict.js";
 import { useAuth } from "../../../context/authContext.jsx";
-import { useToast, ToastContainer } from "../../../components/toast.jsx";
-
-const BASE_URL = process.env.REACT_APP_API_URL;
+import { useToast, ToastContainer } from "../../../components/toast.jsx"; 
 
 const MainContent = ({ type }) => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  // ✅ shared toast hook
   const { toasts, toast, removeToast } = useToast();
 
   // 🔹 REGISTER STATE
   const [formData, setFormData] = useState({
-    name:          "",
-    gender:        "",
-    district:      "",
-    pincode:       "",
-    mobileNumber:  "",
-    email:         "",
-    password:      "",
+    name: "",
+    gender: "",
+    district: "",
+    pincode: "",
+    mobileNumber: "",
+    email: "",
+    password: "",
     premiseNumber: "",
-    subLocality:   "",
+    subLocality: ""
   });
 
   // 🔹 LOGIN STATE
   const [loginData, setLoginData] = useState({
     identifier: "",
-    password:   "",
+    password: "",
   });
 
   const allDistricts = statesData.states.flatMap((state) => state.districts);
 
+  // 🔹 REGISTER INPUT HANDLER
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // 🔹 LOGIN INPUT HANDLER
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
     setLoginData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 🔹 REGISTER SUBMIT
+  // 🔹 REGISTER SUBMIT HANDLER
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Creating account...");
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/register`, {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
         name:     formData.name,
         email:    formData.email,
         mobile:   formData.mobileNumber,
@@ -62,13 +63,15 @@ const MainContent = ({ type }) => {
         district: formData.district,
         pincode:  formData.pincode,
         address1: formData.premiseNumber,
-        address2: formData.subLocality,
+        address2: formData.subLocality
       });
 
       login(res.data);
       sessionStorage.setItem("token", res.data.token);
       toast.success(res.data.message || "Registration successful!", { id: loadingToast });
-      setTimeout(() => navigate("/dashboard", { replace: true }), 2000);
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 2000);
 
     } catch (error) {
       toast.error(
@@ -78,13 +81,13 @@ const MainContent = ({ type }) => {
     }
   };
 
-  // 🔹 LOGIN SUBMIT
+  // 🔹 LOGIN SUBMIT HANDLER
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Signing in...");
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/login`, {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
         identifier: loginData.identifier,
         password:   loginData.password,
       });
@@ -92,7 +95,9 @@ const MainContent = ({ type }) => {
       login(res.data);
       sessionStorage.setItem("token", res.data.token);
       toast.success(res.data.message || "Login successful!", { id: loadingToast });
-      setTimeout(() => navigate("/dashboard", { replace: true }), 2000);
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 2000);
 
     } catch (error) {
       toast.error(
@@ -102,10 +107,11 @@ const MainContent = ({ type }) => {
     }
   };
 
-  // 🔹 LOGIN PAGE
+  // 🔹 LOGIN PAGE CONTENT
   if (type === "login") {
     return (
       <div className="main-content login-content">
+        {/* ✅ shared ToastContainer — no more <Toaster /> */}
         <ToastContainer toasts={toasts} removeToast={removeToast} />
 
         <div>
@@ -160,10 +166,11 @@ const MainContent = ({ type }) => {
     );
   }
 
-  // 🔹 REGISTER PAGE
+  // 🔹 REGISTER PAGE CONTENT
   if (type === "register") {
     return (
       <div className="register-wrapper">
+        {/* ✅ shared ToastContainer */}
         <ToastContainer toasts={toasts} removeToast={removeToast} />
 
         <div className="register-container">
@@ -191,18 +198,36 @@ const MainContent = ({ type }) => {
               <div className="form-group">
                 <label className="field-label">Gender <span className="required">*</span></label>
                 <div className="radio-group">
-                  {["Male", "Female", "Transgender"].map((g) => (
-                    <label key={g} className="radio-label">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value={g}
-                        onChange={handleInputChange}
-                        checked={formData.gender === g}
-                      />
-                      <span>{g}</span>
-                    </label>
-                  ))}
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Male"
+                      onChange={handleInputChange}
+                      checked={formData.gender === "Male"}
+                    />
+                    <span>Male</span>
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Female"
+                      onChange={handleInputChange}
+                      checked={formData.gender === "Female"}
+                    />
+                    <span>Female</span>
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Transgender"
+                      onChange={handleInputChange}
+                      checked={formData.gender === "Transgender"}
+                    />
+                    <span>Transgender</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -211,22 +236,21 @@ const MainContent = ({ type }) => {
               <label className="field-label">Address <span className="required">*</span></label>
             </div>
             <div className="form-row two-column">
-              <input
+              <input 
                 type="text"
                 name="premiseNumber"
                 placeholder="Premise Number or Name"
                 className="form-input"
                 onChange={handleInputChange}
-                value={formData.premiseNumber}
+                value={formData.premiseNumber} 
               />
-              <input
+              <input 
                 type="text"
                 name="subLocality"
                 placeholder="Locality"
                 className="form-input"
                 onChange={handleInputChange}
-                value={formData.subLocality}
-              />
+                value={formData.subLocality}  />
             </div>
 
             <div className="form-row two-column">
@@ -307,7 +331,7 @@ const MainContent = ({ type }) => {
     );
   }
 
-  // 🔹 HOME PAGE (default)
+  // 🔹 HOME PAGE CONTENT (default)
   return (
     <>
       <ToastContainer toasts={toasts} removeToast={removeToast} />

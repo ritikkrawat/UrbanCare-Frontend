@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
+// import Footer from "../home/Footer/footer";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./complaintForm.css";
 import { useToast, ToastContainer } from "../../components/toast.jsx";
-import { complaint } from "../../utils/complaintCategory.js";
+import { complaint } from "../../utils/complaintCategory.js"
 import axios from "axios";
-import { api } from "../../utils/api.js";
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 18 }) => (
@@ -26,15 +26,15 @@ const Icon = ({ d, size = 18 }) => (
 );
 
 const icons = {
-  edit:      "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
-  lock:      "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
-  trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
-  form:      "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8",
-  upload:    "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12",
-  save:      "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z M17 21v-8H7v8 M7 3v5h8",
-  close:     "M18 6L6 18M6 6l12 12",
-  image:     "M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M21 15l-5-5L5 21",
-  video:     "M23 7l-7 5 7 5V7z M1 5h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H1a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z",
+  edit:     "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
+  lock:     "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
+  trash:    "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
+  form:     "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8",
+  upload:   "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12",
+  save:     "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z M17 21v-8H7v8 M7 3v5h8",
+  close:    "M18 6L6 18M6 6l12 12",
+  image:    "M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M21 15l-5-5L5 21",
+  video:    "M23 7l-7 5 7 5V7z M1 5h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H1a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z",
   arrowLeft: "M19 12H5 M12 19l-7-7 7-7",
 };
 
@@ -100,7 +100,16 @@ const FileChip = ({ file, onRemove }) => (
 );
 
 // ── Upload Box ────────────────────────────────────────────────────────────────
-const UploadBox = ({ label, textLabel, accept, files, onChange, onRemove, iconD, hint }) => {
+const UploadBox = ({
+  label,
+  textLabel,   // ✅ NEW
+  accept,
+  files,
+  onChange,
+  onRemove,
+  iconD,
+  hint
+}) => {
   const inputRef = useRef();
 
   return (
@@ -115,10 +124,13 @@ const UploadBox = ({ label, textLabel, accept, files, onChange, onRemove, iconD,
           multiple
           onChange={onChange}
         />
+
         <Icon d={iconD} size={28} />
+
         <span className="cf-upload-area__text">
           Click to upload {textLabel.toLowerCase()}
         </span>
+
         <span className="cf-upload-area__hint">{hint}</span>
       </div>
 
@@ -137,13 +149,18 @@ const UploadBox = ({ label, textLabel, accept, files, onChange, onRemove, iconD,
 const ComplaintFormContent = ({ toast }) => {
   const navigate = useNavigate();
 
+  // ── User info (prefilled from profile API) ─────────────────────────────────
   const [userInfo, setUserInfo] = useState({ name: "", email: "", mobile: "" });
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await api("/api/user/profile");
-        if (data) {
+        const token = sessionStorage.getItem("token");
+        const res = await fetch("http://localhost:5000/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
           setUserInfo({
             name:   data.user.name   || "",
             email:  data.user.email  || "",
@@ -157,21 +174,22 @@ const ComplaintFormContent = ({ toast }) => {
     fetchProfile();
   }, []);
 
+  // ── Form state ─────────────────────────────────────────────────────────────
   const [form, setForm] = useState({
-    category:      "",
-    subCategory:   "",
-    description:   "",
-    addressLine1:  "",
-    addressLine2:  "",
-    city:          "",
-    state:         "",
-    pincode:       "",
-    exactLocation: "",
-    priority:      "Medium",
+    category:       "",
+    subCategory:    "",
+    description:    "",
+    addressLine1:   "",
+    addressLine2:   "",
+    city:           "",
+    state:          "",
+    pincode:        "",
+    exactLocation:  "",
+    priority:       "Medium",
   });
 
-  const [images, setImages]   = useState([]);
-  const [videos, setVideos]   = useState([]);
+  const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [touched, setTouched] = useState({});
 
   const subCategories = form.category ? complaint[form.category] || [] : [];
@@ -181,6 +199,7 @@ const ComplaintFormContent = ({ toast }) => {
     setForm((prev) => ({
       ...prev,
       [field]: val,
+      // reset sub category when category changes
       ...(field === "category" ? { subCategory: "" } : {}),
     }));
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -189,30 +208,32 @@ const ComplaintFormContent = ({ toast }) => {
   const handleBlur = (field) => () =>
     setTouched((prev) => ({ ...prev, [field]: true }));
 
+  // ── File handlers ──────────────────────────────────────────────────────────
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setImages((prev) => [...prev, ...files].slice(0, 5));
+    setImages((prev) => [...prev, ...files].slice(0, 5)); // max 5
     e.target.value = "";
   };
 
   const handleVideoChange = (e) => {
     const files = Array.from(e.target.files);
-    setVideos((prev) => [...prev, ...files].slice(0, 2));
+    setVideos((prev) => [...prev, ...files].slice(0, 2)); // max 2
     e.target.value = "";
   };
 
   const removeImage = (i) => setImages((prev) => prev.filter((_, idx) => idx !== i));
   const removeVideo = (i) => setVideos((prev) => prev.filter((_, idx) => idx !== i));
 
+  // ── Mandatory fields ───────────────────────────────────────────────────────
   const mandatoryFields = {
-    category:      "Complaint Category",
-    subCategory:   "Sub Category",
-    description:   "Description",
-    addressLine1:  "Address Line 1",
-    city:          "City",
-    state:         "State",
-    pincode:       "Pincode",
-    exactLocation: "Exact Location",
+    category: "Complaint Category",
+    subCategory: "Sub Category",
+    description: "Description",
+    addressLine1: "Address Line 1",
+    city: "City",
+    state: "State",
+    pincode: "Pincode",
+    exactLocation:"Exact Location"
   };
 
   const getFieldError = (field) => {
@@ -228,16 +249,23 @@ const ComplaintFormContent = ({ toast }) => {
     for (const field of Object.keys(mandatoryFields)) {
       if (!form[field]?.trim()) return `${mandatoryFields[field]} is required`;
     }
-    if (!/^\d{6}$/.test(form.pincode.trim()))
+
+    if (!/^\d{6}$/.test(form.pincode.trim())) {
       return "Pincode must be exactly 6 digits";
-    if (images.length === 0 && videos.length === 0)
+    }
+  
+    if (images.length === 0 && videos.length === 0) {
       return "Upload at least one image or video";
+    }
+  
     return null;
   };
 
+  // ── Submit ─────────────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Touch all mandatory fields
     const allTouched = Object.keys(mandatoryFields).reduce(
       (acc, f) => ({ ...acc, [f]: true }), {}
     );
@@ -269,7 +297,7 @@ const ComplaintFormContent = ({ toast }) => {
       videos.forEach((vid) => formData.append("videos", vid));
 
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/complaint/submit`,
+        "http://localhost:5000/api/complaint/submit",
         formData,
         {
           headers: {
@@ -281,6 +309,7 @@ const ComplaintFormContent = ({ toast }) => {
 
       toast.success(res.data.message || "Complaint submitted successfully!", { id: loadingToast });
 
+      // Reset form
       setForm({
         category: "", subCategory: "", description: "",
         addressLine1: "", addressLine2: "", city: "",
@@ -347,6 +376,7 @@ const ComplaintFormContent = ({ toast }) => {
           {/* ── Section: Complaint Details ── */}
           <p className="cf-section-title">Complaint Details</p>
 
+          {/* Category + Sub Category */}
           <div className="cf-two-col">
             <div className="cf-col-group">
               <label>Complaint Category <span className="required">*</span></label>
@@ -414,7 +444,10 @@ const ComplaintFormContent = ({ toast }) => {
             <div className="cf-form-row__field">
               <div className="cf-radio-group">
                 {["Low", "Medium", "High"].map((p) => (
-                  <label key={p} className={`cf-radio-label cf-radio-label--${p.toLowerCase()}`}>
+                  <label
+                    key={p}
+                    className={`cf-radio-label cf-radio-label--${p.toLowerCase()}`}
+                  >
                     <input
                       type="radio"
                       name="priority"
@@ -434,6 +467,7 @@ const ComplaintFormContent = ({ toast }) => {
           {/* ── Section: Location ── */}
           <p className="cf-section-title">Location Details</p>
 
+          {/* Address — 2 columns */}
           <div className="cf-two-col">
             <div className="cf-col-group">
               <label>Address Line 1 <span className="required">*</span></label>
@@ -509,9 +543,9 @@ const ComplaintFormContent = ({ toast }) => {
                 className={`cf-input${getFieldError("exactLocation") ? " cf-input--error" : ""}`}
                 value={form.exactLocation}
                 onChange={handle("exactLocation")}
-                onBlur={handleBlur("exactLocation")}
                 placeholder="e.g. Near railway station gate 2"
               />
+
               {getFieldError("exactLocation") && (
                 <span className="cf-field-error">{getFieldError("exactLocation")}</span>
               )}
@@ -525,7 +559,11 @@ const ComplaintFormContent = ({ toast }) => {
 
           <div className="cf-two-col">
             <UploadBox
-              label={<>Upload Images <span className="required">*</span></>}
+              label={
+                <>
+                  Upload Images <span className="required">*</span>
+                </>
+              }
               textLabel="Images"
               accept="image/*"
               files={images}
@@ -535,7 +573,11 @@ const ComplaintFormContent = ({ toast }) => {
               hint="JPG, PNG, WEBP — max 5 files"
             />
             <UploadBox
-              label={<>Upload Videos</>}
+              label={
+                <>
+                  Upload Videos
+                </>
+              }
               textLabel="Videos"
               accept="video/*"
               files={videos}
@@ -574,6 +616,8 @@ const ComplaintForm = () => {
         <Sidebar />
         <ComplaintFormContent toast={toast} />
       </div>
+
+      {/* <Footer /> */}
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
