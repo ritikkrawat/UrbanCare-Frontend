@@ -53,7 +53,7 @@ const MainContent = ({ type }) => {
     const loadingToast = toast.loading("Creating account...");
 
     try {
-      const res = await axios.post(`${BASE_URL}api/auth/register`, {
+      const res = await axios.post(`${BASE_URL}/api/auth/register`, {
         name:     formData.name,
         email:    formData.email,
         mobile:   formData.mobileNumber,
@@ -84,7 +84,7 @@ const MainContent = ({ type }) => {
     const loadingToast = toast.loading("Signing in...");
 
     try {
-      const res = await axios.post(`${BASE_URL}api/auth/login`, {
+      const res = await axios.post(`${BASE_URL}/api/auth/login`, {
         identifier: loginData.identifier,
         password:   loginData.password,
       });
