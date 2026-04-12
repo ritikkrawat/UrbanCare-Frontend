@@ -142,7 +142,7 @@ const ComplaintFormContent = ({ toast }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await api("api/user/profile");
+        const data = await api("/api/user/profile");
         if (data) {
           setUserInfo({
             name:   data.user.name   || "",
@@ -269,7 +269,7 @@ const ComplaintFormContent = ({ toast }) => {
       videos.forEach((vid) => formData.append("videos", vid));
 
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}api/complaint/submit`,
+        `${process.env.REACT_APP_API_URL}/api/complaint/submit`,
         formData,
         {
           headers: {
