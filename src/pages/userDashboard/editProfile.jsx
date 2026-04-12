@@ -122,7 +122,7 @@ const EditProfileContent = ({ toast }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await api("api/user/profile");
+        const data = await api("/api/user/profile");
         if (data) {
           const fetched = {
             ...emptyForm,
@@ -213,7 +213,7 @@ const EditProfileContent = ({ toast }) => {
     const loadingToast = toast.loading("Updating profile...");
 
     try {
-      await api("api/user/update-profile", {
+      await api("/api/user/update-profile", {
         method: "PUT",
         body: JSON.stringify(form),
       });
