@@ -29,17 +29,17 @@ const MainContent = ({ type }) => {
   });
 
   const isLoginValid =
-  login.identifier.trim() !== "" &&
-  login.password.trim() !== "";
+  login.identifier?.trim() !== "" &&
+  login.password?.trim() !== "";
 
   const isRegisterValid =
-  formData.name.trim() !== "" &&
+  formData.name?.trim() !== "" &&
   formData.gender !== "" &&
   formData.district !== "" &&
-  formData.mobileNumber.trim() !== "" &&
-  formData.email.trim() !== "" &&
-  formData.password.trim() !== "" &&
-  formData.premiseNumber.trim() !== "";
+  formData.mobileNumber?.trim() !== "" &&
+  formData.email?.trim() !== "" &&
+  formData.password?.trim() !== "" &&
+  formData.premiseNumber?.trim() !== "";
 
   // 🔹 LOGIN STATE
   const [loginData, setLoginData] = useState({
