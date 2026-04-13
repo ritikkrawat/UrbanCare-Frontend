@@ -35,8 +35,8 @@ const MainContent = ({ type }) => {
   formData.mobileNumber.trim() &&
   formData.email.trim() &&
   formData.password.trim() &&
-  formData.premiseNumber.trim() &&
-  formData.subLocality.trim();
+  formData.premiseNumber.trim();
+  // formData.subLocality.trim();
 
   // 🔹 LOGIN STATE
   const [loginData, setLoginData] = useState({
