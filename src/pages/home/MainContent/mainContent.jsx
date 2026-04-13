@@ -28,24 +28,11 @@ const MainContent = ({ type }) => {
     subLocality: ""
   });
 
-  const isRegisterValid =
-  formData.name?.trim() !== "" &&
-  formData.gender !== "" &&
-  formData.district !== "" &&
-  formData.mobileNumber?.trim() !== "" &&
-  formData.email?.trim() !== "" &&
-  formData.password?.trim() !== "" &&
-  formData.premiseNumber?.trim() !== "";
-
   // 🔹 LOGIN STATE
   const [loginData, setLoginData] = useState({
     identifier: "",
     password: "",
   });
-
-  const isLoginValid =
-  loginData.identifier?.trim() !== "" &&
-  loginData.password?.trim() !== "";
 
   const allDistricts = statesData.states.flatMap((state) => state.districts);
 
@@ -99,7 +86,7 @@ const MainContent = ({ type }) => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Signing in...");
-    
+
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/login`, 
@@ -155,11 +142,7 @@ const MainContent = ({ type }) => {
                 value={loginData.password}
               />
 
-              <button 
-                type="submit" 
-                className={`login-btn${!isLoginValid ? " btn-disabled" : ""}`}
-                disabled={!isLoginValid}
-              >
+              <button type="submit" className="login-btn">
                 Login →
               </button>
             </form>
@@ -340,11 +323,7 @@ const MainContent = ({ type }) => {
             </div>
 
             <div className="submit-container">
-              <button
-                type="submit"
-                className={`submit-button${!isRegisterValid ? " btn-disabled" : ""}`}
-                disabled={!isRegisterValid}
-              >
+              <button type="submit" className="submit-button">
                 <span className="submit-icon"></span> Submit
               </button>
             </div>
