@@ -28,10 +28,6 @@ const MainContent = ({ type }) => {
     subLocality: ""
   });
 
-  const isLoginValid =
-  login.identifier?.trim() !== "" &&
-  login.password?.trim() !== "";
-
   const isRegisterValid =
   formData.name?.trim() !== "" &&
   formData.gender !== "" &&
@@ -46,6 +42,10 @@ const MainContent = ({ type }) => {
     identifier: "",
     password: "",
   });
+
+  const isLoginValid =
+  loginData.identifier?.trim() !== "" &&
+  loginData.password?.trim() !== "";
 
   const allDistricts = statesData.states.flatMap((state) => state.districts);
 
