@@ -10,6 +10,7 @@ import DeleteAccount from "./pages/userDashboard/deleteAccount.jsx";
 import ComplaintForm from "./pages/userDashboard/complaintForm.jsx";
 import ForgotPassword from "./pages/forgotPassword.jsx";
 import PublicRoute from "./routes/publicRoutes.jsx";
+import AdminLogin  from "./pages/adminDashboard/adminLogin.jsx";
 
 const App = () => {
   return (
@@ -92,6 +93,15 @@ const App = () => {
           element={
             <PublicRoute>
               <ForgotPassword />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/officerLogin"
+          element={
+            <PublicRoute>
+              <AdminLogin />
             </PublicRoute>
           }
         />
