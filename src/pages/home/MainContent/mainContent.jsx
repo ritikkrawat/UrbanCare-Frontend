@@ -72,7 +72,7 @@ const MainContent = ({ type }) => {
       toast.success(res.data.message || "Registration successful!", { id: loadingToast });
       setTimeout(() => {
         navigate("/dashboard", { replace: true });
-      }, 2000);
+      }, 200);
 
     } catch (error) {
       toast.error(

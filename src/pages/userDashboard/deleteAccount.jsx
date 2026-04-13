@@ -151,7 +151,7 @@ const DeleteAccountContent = ({ toast }) => {
       // ✅ REDIRECT TO LOGIN
       setTimeout(() => {
         navigate("/login", { replace: true });
-      }, 1200);
+      }, 200);
 
       setModal(null);
 

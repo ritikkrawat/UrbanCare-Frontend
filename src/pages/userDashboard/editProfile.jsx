@@ -241,7 +241,7 @@ const EditProfileContent = ({ toast }) => {
       if (res.status === 401) {
         sessionStorage.removeItem("token");
         toast.error("Session expired. Please log in again.", { id: loadingToast });
-        setTimeout(() => navigate("/login"), 1500);
+        setTimeout(() => navigate("/login"), 200);
         return;
       }
 

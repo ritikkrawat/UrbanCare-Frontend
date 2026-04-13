@@ -153,7 +153,7 @@ const ComplaintContent = () => {
 
         const data = await res.json();
 
-        await new Promise((resolve) => setTimeout(resolve, 200)); // 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 200)); 
 
         if (res.ok) {
           setComplaints(data.complaints || []);

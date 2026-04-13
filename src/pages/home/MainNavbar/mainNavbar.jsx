@@ -17,7 +17,7 @@ const MainNavbar = ({ type }) => {
     setTimeout(() => {
       logout();
       navigate("/login", { replace: true });
-    }, 800);
+    }, 200);
   };
 
   return (

@@ -325,7 +325,7 @@ const ComplaintFormContent = ({ toast }) => {
 
       setTimeout(() => {
         navigate("/dashboard");
-      }, 600);
+      }, 200);
 
     } catch (error) {
       toast.error(

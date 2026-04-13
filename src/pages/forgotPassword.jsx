@@ -207,7 +207,7 @@ const ForgotPasswordContent = ({ toast }) => {
     
       toast.success("Password reset successfully!", { id: loadingToast });
     
-      setTimeout(() => navigate("/login", { replace: true }), 1500);
+      setTimeout(() => navigate("/login", { replace: true }), 200);
     
     } catch (error) {
       toast.error(
