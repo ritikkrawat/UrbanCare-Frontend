@@ -28,11 +28,25 @@ const MainContent = ({ type }) => {
     subLocality: ""
   });
 
+  const isRegisterValid = 
+  formData.name.trim() &&
+  formData.gender &&
+  formData.district &&
+  formData.mobileNumber.trim() &&
+  formData.email.trim() &&
+  formData.password.trim() &&
+  formData.premiseNumber.trim() &&
+  formData.subLocality.trim();
+
   // 🔹 LOGIN STATE
   const [loginData, setLoginData] = useState({
     identifier: "",
     password: "",
   });
+
+  const isLoginValid = 
+  loginData.identifier.trim() && 
+  loginData.password.trim();
 
   const allDistricts = statesData.states.flatMap((state) => state.districts);
 
@@ -142,7 +156,11 @@ const MainContent = ({ type }) => {
                 value={loginData.password}
               />
 
-              <button type="submit" className="login-btn">
+              <button 
+                type="submit" 
+                className="login-btn"
+                disabled={!isLoginValid}
+              >
                 Login →
               </button>
             </form>
@@ -323,7 +341,11 @@ const MainContent = ({ type }) => {
             </div>
 
             <div className="submit-container">
-              <button type="submit" className="submit-button">
+              <button 
+                type="submit" 
+                className="submit-button"
+                disabled={!isRegisterValid}
+              >
                 <span className="submit-icon"></span> Submit
               </button>
             </div>
