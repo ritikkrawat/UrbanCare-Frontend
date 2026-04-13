@@ -3,7 +3,7 @@
 /* Layout */
 .ud-wrapper {
   display: flex;
-  min-height: calc(100vh - 160px); /* adjust 160px to match Topbar+Head+Navbar+Footer height */
+  min-height: calc(100vh - 160px);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -277,15 +277,54 @@
   border-bottom: none;
 }
 
-/* Status badge */
+/* Description cell — truncate long text */
+.ud-desc {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Registration number */
+.ud-reg-no {
+  font-family: monospace;
+  font-size: 12.5px;
+  color: #1a3a6b;
+  font-weight: 600;
+}
+
+/* Action cell */
+.ud-action-cell {
+  text-align: center;
+}
+
+/* ── Loading spinner row ──────────────────────────────────────────────────── */
+.ud-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #888;
+  font-size: 14px;
+  /* animation: ud-spin 1s linear infinite; */
+}
+
+@keyframes ud-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Status / Priority badge ──────────────────────────────────────────────── */
 .ud-badge {
   padding: 3px 10px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
   display: inline-block;
+  white-space: nowrap;
 }
 
+/* Status badges */
 .ud-badge--pending {
   background: #fff3cd;
   color: #856404;
@@ -294,6 +333,147 @@
 .ud-badge--closed {
   background: #d4edda;
   color: #155724;
+}
+
+.ud-badge--progress {
+  background: #cce5ff;
+  color: #004085;
+}
+
+/* Priority badges */
+.ud-badge--low {
+  background: #d4edda;
+  color: #155724;
+}
+
+.ud-badge--medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.ud-badge--high {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ── Delete button in table ───────────────────────────────────────────────── */
+.ud-del-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #c0392b;
+  padding: 5px 7px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.13s, color 0.13s;
+}
+
+.ud-del-btn:hover {
+  background: #fde8e8;
+  color: #a93226;
+}
+
+/* ── Confirmation Modal ───────────────────────────────────────────────────── */
+.ud-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.ud-modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 30px 24px;
+  width: 340px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: ud-modal-in 0.18s ease;
+}
+
+@keyframes ud-modal-in {
+  from { transform: scale(0.93); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.ud-modal__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fde8e8;
+  color: #c0392b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.ud-modal__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.ud-modal__sub {
+  font-size: 13.5px;
+  color: #555;
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+.ud-modal__reg {
+  font-family: monospace;
+  font-weight: 700;
+  color: #1a3a6b;
+  background: #f0f4f9;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.ud-modal__btns {
+  display: flex;
+  gap: 10px;
+}
+
+.ud-modal__btn {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: background 0.13s;
+}
+
+.ud-modal__btn--cancel {
+  background: #f0f4f9;
+  color: #444;
+}
+
+.ud-modal__btn--cancel:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.ud-modal__btn--delete {
+  background: #c0392b;
+  color: #fff;
+}
+
+.ud-modal__btn--delete:hover:not(:disabled) {
+  background: #a93226;
+}
+
+.ud-modal__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 /* Pagination footer */
@@ -323,6 +503,11 @@
   transition: background 0.12s;
 }
 
-.ud-pagination__btn:hover {
+.ud-pagination__btn:hover:not(:disabled) {
   background: #f0f4f9;
+}
+
+.ud-pagination__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

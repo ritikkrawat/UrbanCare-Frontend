@@ -109,7 +109,8 @@ const ForgotPasswordContent = ({ toast }) => {
       if (form.mobile.trim()) payload.mobile = form.mobile.trim();
 
       const res = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
+        // "http://localhost:5000/api/auth/forgot-password",
+        `${process.env.REACT_APP_API_URL}/api/auth/forgot-password`,
         payload
       );
 
@@ -135,7 +136,8 @@ const ForgotPasswordContent = ({ toast }) => {
       if (form.mobile.trim()) payload.mobile = form.mobile.trim();
 
       const res = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
+        // "http://localhost:5000/api/auth/forgot-password",
+        `${process.env.REACT_APP_API_URL}/api/auth/forgot-password`,
         payload
       );
 
@@ -188,13 +190,15 @@ const ForgotPasswordContent = ({ toast }) => {
     
       // ✅ Step 1: Verify OTP
       await axios.post(
-        "http://localhost:5000/api/auth/verify-otp",
+        // "http://localhost:5000/api/auth/verify-otp",
+        `${process.env.REACT_APP_API_URL}/api/auth/verify-otp`,
         payload
       );
     
       // ✅ Step 2: Reset Password (THIS WAS MISSING 🚨)
       await axios.post(
-        "http://localhost:5000/api/auth/reset-password",
+        // "http://localhost:5000/api/auth/reset-password",
+        `${process.env.REACT_APP_API_URL}/api/auth/reset-password`,
         {
           ...payload,
           password: newPassword, // ⚠️ IMPORTANT: use 'password' not 'newPassword'

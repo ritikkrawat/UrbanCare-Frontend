@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
-// import Footer from "../home/Footer/footer";
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import "./userDashboard.css";
 
+// ── Inline SVG Icon Helper ───────────────────────────────────────────────────
 const Icon = ({ d, size = 20 }) => (
   <svg
     width={size}
@@ -24,24 +24,22 @@ const Icon = ({ d, size = 20 }) => (
 const icons = {
   dashboard: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10",
   plus:      "M12 5v14M5 12h14",
-  pension:   "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75",
-  activity:  "M22 12h-4l-3 9L9 3l-3 9H2",
   edit:      "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
   lock:      "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
   trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
-  power:     "M18.36 6.64a9 9 0 1 1-12.73 0 M12 2v10",
   complaint: "M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
   pending:   "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8",
   closed:    "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3",
   sort:      "M8 6h13M8 12h9M8 18h5",
+  loader:    "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83",
 };
 
-// ── Nav Items Config ─────────────────────────────────────────────────────────
+// ── Nav Items ─────────────────────────────────────────────────────────────────
 const navItems = [
-  { key: "plus",   label: "Lodge Complaint",            icon: icons.plus      },
-  { key: "profile",   label: "Edit Profile",            icon: icons.edit      },
-  { key: "password",  label: "Change Password",         icon: icons.lock      },
-  { key: "delete",    label: "Delete Account",          icon: icons.trash     },
+  { key: "plus",     label: "Lodge Complaint", icon: icons.plus  },
+  { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
+  { key: "password", label: "Change Password", icon: icons.lock  },
+  { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
 // ── Sidebar ──────────────────────────────────────────────────────────────────
@@ -50,7 +48,6 @@ const Sidebar = ({ active, setActive }) => {
 
   return (
     <aside className="ud-sidebar">
-      {/* Logo */}
       <div className="ud-sidebar__logo">
         <div className="ud-sidebar__logo-icon">
           <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
@@ -61,28 +58,16 @@ const Sidebar = ({ active, setActive }) => {
         <span className="ud-sidebar__title">Complaint Dashboard</span>
       </div>
 
-      {/* Nav Links */}
       <nav className="ud-sidebar__nav">
         {navItems.map((item) => (
           <button
             key={item.key}
             onClick={() => {
               setActive(item.key);
-              if (item.key === "profile") {
-                navigate("/editProfile");
-              }
-              
-              if (item.key === "password") {
-                navigate("/changePassword"); 
-              }
-
-              if (item.key === "delete") {
-                navigate("/deleteAccount"); 
-              }
-
-              if (item.key === "plus") {
-                navigate("/complaintForm"); 
-              }
+              if (item.key === "profile")  navigate("/editProfile");
+              if (item.key === "password") navigate("/changePassword");
+              if (item.key === "delete")   navigate("/deleteAccount");
+              if (item.key === "plus")     navigate("/complaintForm");
             }}
             className={`ud-sidebar__nav-btn${
               active === item.key ? " ud-sidebar__nav-btn--active" : ""
@@ -110,46 +95,152 @@ const StatCard = ({ label, value, colorClass, iconD }) => (
   </div>
 );
 
-// ── Table Columns Config ─────────────────────────────────────────────────────
+// ── Table Columns ─────────────────────────────────────────────────────────────
 const columns = [
-  { label: "Sn."                   },
-  { label: "Registration Number"   },
-  { label: "Received Date"         },
-  { label: "Complaint description" },
-  { label: "Status"                },
+  { label: "Sn."                 },
+  { label: "Registration Number" },
+  { label: "Category"            },
+  { label: "Sub Category"        },
+  { label: "Description"         },
+  { label: "Priority"            },
+  { label: "Date"                },
+  { label: "Status"              },
+  { label: "Action"              },
 ];
 
-// ── Complaint Content ────────────────────────────────────────────────────────
+// ── Priority badge map ────────────────────────────────────────────────────────
+const priorityClass = {
+  Low:    "ud-badge--low",
+  Medium: "ud-badge--medium",
+  High:   "ud-badge--high",
+};
+
+// ── Format date ───────────────────────────────────────────────────────────────
+const formatDate = (iso) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+};
+
+// ── Complaint Content ─────────────────────────────────────────────────────────
 const ComplaintContent = () => {
-  const [search, setSearch]   = useState("");
-  const [entries, setEntries] = useState("10");
+  const navigate = useNavigate();
+  const [complaints, setComplaints] = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [search, setSearch]         = useState("");
+  const [entries, setEntries]       = useState("10");
+  const [page, setPage]             = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState(null); // { id, regNo }
+  const [deleting, setDeleting]         = useState(false);
 
-  // Replace with real data from your API / state management
-  const complaints = [];
+  // ── Fetch complaints ───────────────────────────────────────────────────────
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        const res = await fetch(
+          // "http://localhost:5000/api/complaint/my-complaints", 
+          `${process.env.REACT_APP_API_URL}/api/complaint/my-complaints`,
+          {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  const filtered = complaints.filter((g) =>
-    !search || g.description?.toLowerCase().includes(search.toLowerCase())
-  );
+        if (res.status === 401) {
+          sessionStorage.removeItem("token");
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        const data = await res.json();
+
+        await new Promise((resolve) => setTimeout(resolve, 200)); // 2 seconds
+
+        if (res.ok) {
+          setComplaints(data.complaints || []);
+        }
+      } catch (err) {
+        console.error("❌ Failed to fetch complaints:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComplaints();
+  }, []);
+
+  // ── Delete handler ─────────────────────────────────────────────────────────
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const token = sessionStorage.getItem("token");
+      const res = await fetch(
+        // `http://localhost:5000/api/complaint/${deleteTarget.id}`,
+        `${process.env.REACT_APP_API_URL}/api/complaint/${deleteTarget.id}`,
+        { method: "DELETE", headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.ok) {
+        setComplaints((prev) => prev.filter((c) => c._id !== deleteTarget.id));
+      } else {
+        console.error("❌ Delete failed with status:", res.status);
+      }
+    } catch (err) {
+      console.error("❌ Delete error:", err);
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
+    }
+  };
+
+  // ── Derived stats ──────────────────────────────────────────────────────────
+  const total   = complaints.length;
+  const pending = complaints.filter((c) => c.status === "Pending").length;
+  const closed  = complaints.filter((c) => c.status === "Closed" || c.status === "Resolved").length;
+
+  // ── Filter ─────────────────────────────────────────────────────────────────
+  const filtered = complaints.filter((c) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      (c.registrationNumber || "").toLowerCase().includes(q) ||
+      (c.category           || "").toLowerCase().includes(q) ||
+      (c.subCategory        || "").toLowerCase().includes(q) ||
+      (c.description        || "").toLowerCase().includes(q) ||
+      (c.status             || "").toLowerCase().includes(q)
+    );
+  });
+
+  // ── Pagination ─────────────────────────────────────────────────────────────
+  const perPage    = parseInt(entries);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const paginated  = filtered.slice((page - 1) * perPage, page * perPage);
+
+  const goFirst = () => setPage(1);
+  const goPrev  = () => setPage((p) => Math.max(1, p - 1));
+  const goNext  = () => setPage((p) => Math.min(totalPages, p + 1));
+  const goLast  = () => setPage(totalPages);
+
+  useEffect(() => setPage(1), [search, entries]);
 
   return (
     <main className="ud-main">
       {/* Stat Cards */}
       <div className="ud-stats">
         <StatCard
-          label="Total Complaint Registered"
-          value={0}
+          label="Total Complaints Registered"
+          value={loading ? "—" : total}
           colorClass="ud-stat-card--orange"
           iconD={icons.complaint}
         />
         <StatCard
-          label="Number of Complaint Pending"
-          value={0}
+          label="Number of Complaints Pending"
+          value={loading ? "—" : pending}
           colorClass="ud-stat-card--green"
           iconD={icons.pending}
         />
         <StatCard
-          label="Number of Complaint Closed"
-          value={0}
+          label="Number of Complaints Closed"
+          value={loading ? "—" : closed}
           colorClass="ud-stat-card--red"
           iconD={icons.closed}
         />
@@ -157,7 +248,7 @@ const ComplaintContent = () => {
 
       {/* Table Card */}
       <div className="ud-table-card">
-        <h2 className="ud-table-card__title">List of Complaint</h2>
+        <h2 className="ud-table-card__title">List of Complaints</h2>
 
         {/* Controls */}
         <div className="ud-controls">
@@ -175,7 +266,7 @@ const ComplaintContent = () => {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder=""
+              placeholder="Search complaints..."
             />
           </div>
         </div>
@@ -189,34 +280,68 @@ const ComplaintContent = () => {
                   <th key={col.label}>
                     <div className="th-inner">
                       {col.label}
-                      <Icon d={icons.sort} size={12} />
+                      {col.label !== "Action" && <Icon d={icons.sort} size={12} />}
                     </div>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 ? (
+              {loading ? (
                 <tr className="empty-row">
-                  <td colSpan={5}>No data available in table</td>
+                  <td colSpan={columns.length}>
+                    <div className="ud-loading">
+                      <Icon d={icons.loader} size={20} />
+                      &nbsp;Loading complaints...
+                    </div>
+                  </td>
+                </tr>
+              ) : paginated.length === 0 ? (
+                <tr className="empty-row">
+                  <td colSpan={columns.length}>
+                    {search ? "No complaints match your search" : "No complaints found"}
+                  </td>
                 </tr>
               ) : (
-                filtered.map((g, i) => (
-                  <tr key={i}>
-                    <td>{i + 1}</td>
-                    <td>{g.regNo}</td>
-                    <td>{g.date}</td>
-                    <td>{g.description}</td>
+                paginated.map((c, i) => (
+                  <tr key={c._id || i}>
+                    <td>{(page - 1) * perPage + i + 1}</td>
+                    <td className="ud-reg-no">{c.registrationNumber || "—"}</td>
+                    <td>{c.category}</td>
+                    <td>{c.subCategory}</td>
+                    <td className="ud-desc" title={c.description}>{c.description}</td>
+                    <td>
+                      <span className={`ud-badge ${priorityClass[c.priority] || ""}`}>
+                        {c.priority}
+                      </span>
+                    </td>
+                    <td>{formatDate(c.createdAt)}</td>
                     <td>
                       <span
                         className={`ud-badge ${
-                          g.status === "Pending"
-                            ? "ud-badge--pending"
-                            : "ud-badge--closed"
+                          c.status === "Closed"      ? "ud-badge--closed"   :
+                          c.status === "Resolved"    ? "ud-badge--closed"   :
+                          c.status === "Pending"     ? "ud-badge--pending"  :
+                          c.status === "In Progress" ? "ud-badge--progress" :
+                                                       "ud-badge--pending"
                         }`}
                       >
-                        {g.status}
+                        {c.status}
                       </span>
+                    </td>
+                    <td className="ud-action-cell">
+                      <button
+                        className="ud-del-btn"
+                        title="Delete complaint"
+                        onClick={() =>
+                          setDeleteTarget({
+                            id:    c._id,
+                            regNo: c.registrationNumber || "—",
+                          })
+                        }
+                      >
+                        <Icon d={icons.trash} size={15} />
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -225,18 +350,59 @@ const ComplaintContent = () => {
           </table>
         </div>
 
-        {/* Pagination */}
+        {/* Pagination Footer */}
         <div className="ud-pagination">
-          <span>No entries found</span>
+          <span>
+            {loading
+              ? "Loading..."
+              : filtered.length === 0
+              ? "No entries found"
+              : `Showing ${(page - 1) * perPage + 1}–${Math.min(
+                  page * perPage,
+                  filtered.length
+                )} of ${filtered.length} entries`}
+          </span>
           <div className="ud-pagination__buttons">
-            {["First", "Prev", "Next", "Last"].map((btn) => (
-              <button key={btn} className="ud-pagination__btn">
-                {btn}
-              </button>
-            ))}
+            <button className="ud-pagination__btn" onClick={goFirst} disabled={page === 1}>First</button>
+            <button className="ud-pagination__btn" onClick={goPrev}  disabled={page === 1}>Prev</button>
+            <button className="ud-pagination__btn" onClick={goNext}  disabled={page === totalPages}>Next</button>
+            <button className="ud-pagination__btn" onClick={goLast}  disabled={page === totalPages}>Last</button>
           </div>
         </div>
       </div>
+
+      {/* ── Delete Confirmation Modal ─────────────────────────────────────── */}
+      {deleteTarget && (
+        <div className="ud-modal-overlay" onClick={() => !deleting && setDeleteTarget(null)}>
+          <div className="ud-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ud-modal__icon">
+              <Icon d={icons.trash} size={22} />
+            </div>
+            <h3 className="ud-modal__title">Delete Complaint?</h3>
+            <p className="ud-modal__sub">
+              Are you sure you want to delete complaint{" "}
+              <span className="ud-modal__reg">{deleteTarget.regNo}</span>?
+              This action cannot be undone.
+            </p>
+            <div className="ud-modal__btns">
+              <button
+                className="ud-modal__btn ud-modal__btn--cancel"
+                onClick={() => setDeleteTarget(null)}
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button
+                className="ud-modal__btn ud-modal__btn--delete"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
@@ -255,8 +421,6 @@ const Dashboard = () => {
         <Sidebar active={active} setActive={setActive} />
         <ComplaintContent />
       </div>
-
-      {/* <Footer /> */}
     </>
   );
 };

@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null); // ✅ IMPORTANT
   };
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!token || !!sessionStorage.getItem("token");
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>

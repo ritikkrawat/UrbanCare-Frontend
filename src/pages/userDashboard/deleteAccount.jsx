@@ -127,7 +127,8 @@ const DeleteAccountContent = ({ toast }) => {
 
       if (modal === "instant") {
         await axios.delete(
-          "http://localhost:5000/api/user/delete-instant",
+          // "http://localhost:5000/api/user/delete-instant",
+          `${process.env.REACT_APP_API_URL}/api/user/delete-instant`, 
           config
         );
 
@@ -135,7 +136,8 @@ const DeleteAccountContent = ({ toast }) => {
 
       } else {
         const res = await axios.post(
-          "http://localhost:5000/api/user/delete-request",
+          // "http://localhost:5000/api/user/delete-request",
+          `${process.env.REACT_APP_API_URL}/api/user/delete-request`,
           {},
           config
         );

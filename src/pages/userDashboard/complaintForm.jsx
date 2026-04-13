@@ -156,7 +156,10 @@ const ComplaintFormContent = ({ toast }) => {
     const fetchProfile = async () => {
       try {
         const token = sessionStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/user/profile", {
+        const res = await fetch(
+          // "http://localhost:5000/api/user/profile", 
+          `${process.env.REACT_APP_API_URL}/api/user/profile`,
+          {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
@@ -297,7 +300,8 @@ const ComplaintFormContent = ({ toast }) => {
       videos.forEach((vid) => formData.append("videos", vid));
 
       const res = await axios.post(
-        "http://localhost:5000/api/complaint/submit",
+        // "http://localhost:5000/api/complaint/submit",
+        `${process.env.REACT_APP_API_URL}/api/complaint/submit`,
         formData,
         {
           headers: {
@@ -318,6 +322,10 @@ const ComplaintFormContent = ({ toast }) => {
       setImages([]);
       setVideos([]);
       setTouched({});
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 600);
 
     } catch (error) {
       toast.error(

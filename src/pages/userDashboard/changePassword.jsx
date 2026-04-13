@@ -120,7 +120,10 @@ const ChangePasswordContent = ({ toast }) => {
     const loadingToast = toast.loading("Changing password...");
 
     try {
-      const res = await fetch("http://localhost:5000/api/user/change-password", {
+      const res = await fetch(
+        // "http://localhost:5000/api/user/change-password", 
+        `${process.env.REACT_APP_API_URL}/api/user/change-password`,
+        {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

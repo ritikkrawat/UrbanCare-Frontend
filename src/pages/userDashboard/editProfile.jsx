@@ -125,7 +125,10 @@ const EditProfileContent = ({ toast }) => {
     const fetchProfile = async () => {
       try {
         const token = sessionStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/user/profile", {
+        const res = await fetch(
+          // "http://localhost:5000/api/user/profile", 
+          `${process.env.REACT_APP_API_URL}/api/user/profile`,
+          {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -223,7 +226,10 @@ const EditProfileContent = ({ toast }) => {
 
     try {
       const token = sessionStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/user/update-profile", {
+      const res = await fetch(
+        // "http://localhost:5000/api/user/update-profile", 
+        `${process.env.REACT_APP_API_URL}/api/user/update-profile`,
+        {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
