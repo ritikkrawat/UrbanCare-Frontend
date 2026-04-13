@@ -28,6 +28,19 @@ const MainContent = ({ type }) => {
     subLocality: ""
   });
 
+  const isLoginValid =
+  login.identifier.trim() !== "" &&
+  login.password.trim() !== "";
+
+  const isRegisterValid =
+  formData.name.trim() !== "" &&
+  formData.gender !== "" &&
+  formData.district !== "" &&
+  formData.mobileNumber.trim() !== "" &&
+  formData.email.trim() !== "" &&
+  formData.password.trim() !== "" &&
+  formData.premiseNumber.trim() !== "";
+
   // 🔹 LOGIN STATE
   const [loginData, setLoginData] = useState({
     identifier: "",
@@ -86,7 +99,7 @@ const MainContent = ({ type }) => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Signing in...");
-
+    
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/login`, 
@@ -142,7 +155,11 @@ const MainContent = ({ type }) => {
                 value={loginData.password}
               />
 
-              <button type="submit" className="login-btn">
+              <button 
+                type="submit" 
+                className={`login-btn${!isLoginValid ? " btn-disabled" : ""}`}
+                disabled={!isLoginValid}
+              >
                 Login →
               </button>
             </form>
@@ -323,7 +340,11 @@ const MainContent = ({ type }) => {
             </div>
 
             <div className="submit-container">
-              <button type="submit" className="submit-button">
+              <button
+                type="submit"
+                className={`submit-button${!isRegisterValid ? " btn-disabled" : ""}`}
+                disabled={!isRegisterValid}
+              >
                 <span className="submit-icon"></span> Submit
               </button>
             </div>
