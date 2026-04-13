@@ -166,7 +166,7 @@ const ComplaintContent = () => {
     };
 
     fetchComplaints();
-  }, []);
+  }, [navigate]);
 
   // ── Delete handler ─────────────────────────────────────────────────────────
   const handleDelete = async () => {
