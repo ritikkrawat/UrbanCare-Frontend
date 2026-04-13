@@ -180,7 +180,9 @@ const MainContent = ({ type }) => {
           </div>
 
           <div className="pg-login">
-            <u>PG OFFICER LOGIN</u>
+            <u style={{ cursor: "pointer" }} onClick={() => navigate("/officerLogin")}>
+              OFFICER LOGIN
+            </u>
           </div>
         </div>
       </div>
