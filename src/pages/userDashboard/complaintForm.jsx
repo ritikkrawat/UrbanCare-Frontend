@@ -283,11 +283,42 @@ const ComplaintFormContent = ({ toast }) => {
     return null;
   };
 
+  const uploadToCloudinary = async (file, type = "image") => {
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/cloudinary/signature`
+    );
+    const { timestamp, signature, cloudName, apiKey } = await res.json();
+  
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("api_key", apiKey);
+    formData.append("timestamp", timestamp);
+    formData.append("signature", signature);
+  
+    const resourceType = type === "video" ? "video" : "image";
+  
+    const uploadRes = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+  
+    const data = await uploadRes.json();
+  
+    if (!data.secure_url) {
+      console.error("Cloudinary error:", data);
+      throw new Error("Cloudinary upload failed");
+    }
+  
+    return data.secure_url;
+  };
+
   // ── Submit ─────────────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Touch all mandatory fields
     const allTouched = Object.keys(mandatoryFields).reduce(
       (acc, f) => ({ ...acc, [f]: true }), {}
     );
@@ -299,56 +330,67 @@ const ComplaintFormContent = ({ toast }) => {
       return;
     }
 
-    const loadingToast = toast.loading("Submitting complaint...");
-
     try {
       const token = sessionStorage.getItem("token");
 
-      const formData = new FormData();
-      formData.append("category",      form.category);
-      formData.append("subCategory",   form.subCategory);
-      formData.append("description",   form.description);
-      formData.append("addressLine1",  form.addressLine1);
-      formData.append("addressLine2",  form.addressLine2);
-      formData.append("city",          form.city);
-      formData.append("state",         form.state);
-      formData.append("pincode",       form.pincode);
-      formData.append("exactLocation", form.exactLocation);
-      formData.append("priority",      form.priority);
-      images.forEach((img) => formData.append("images", img));
-      videos.forEach((vid) => formData.append("videos", vid));
+      // ✅ STEP 1: Upload files
+      const uploadToast = toast.loading("Uploading files...");
+
+      const imageUrls = await Promise.all(
+        images.map((img) => uploadToCloudinary(img, "image"))
+      );
+
+      const videoUrls = await Promise.all(
+        videos.map((vid) => uploadToCloudinary(vid, "video"))
+      );
+
+      toast.success("Files uploaded successfully!", { id: uploadToast });
+
+      // ✅ STEP 2: Submit complaint
+      const submitToast = toast.loading("Submitting complaint...");
 
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/complaint/submit`,
-        formData,
+        {
+          ...form,
+          images: imageUrls,
+          videos: videoUrls,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      toast.success(res.data.message || "Complaint submitted successfully!", { id: loadingToast });
+      toast.success(
+        res.data.message || "Complaint submitted successfully!",
+        { id: submitToast }
+      );
 
-      // Reset form
+      // Reset
       setForm({
-        category: "", subCategory: "", description: "",
-        addressLine1: "", addressLine2: "", city: "",
-        state: "", pincode: "", exactLocation: "", priority: "Medium",
+        category: "",
+        subCategory: "",
+        description: "",
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        state: "",
+        pincode: "",
+        exactLocation: "",
+        priority: "Medium",
       });
+
       setImages([]);
       setVideos([]);
       setTouched({});
 
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 100);
+      setTimeout(() => navigate("/dashboard"), 500);
 
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to submit complaint.",
-        { id: loadingToast }
+        error.response?.data?.message || "Something went wrong"
       );
     }
   };
