@@ -1,0 +1,328 @@
+/* ── adminLogin.css ──────────────────────────────────────────────────────── */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.al-root {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f4f9;
+}
+
+/* ── Left Panel — wide, like CPGRAMS ────────────────────────────────────── */
+.al-left {
+  flex: 1; /* takes all remaining space */
+  background: linear-gradient(180deg, #1a3a6b 0%, #1e4080 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 72px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative circles */
+.al-left::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.al-left::after {
+  content: "";
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+
+/* Logo */
+.al-left__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 56px;
+  position: relative;
+  z-index: 1;
+}
+
+.al-left__logo-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.al-left__logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+/* Heading */
+.al-left__title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  max-width: 560px;
+  position: relative;
+  z-index: 1;
+}
+
+.al-left__title span {
+  color: #4db8ff;
+}
+
+.al-left__subtitle {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 56px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Divider */
+.al-left__divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 36px;
+  max-width: 560px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Feature list */
+.al-features {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.al-feature {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+}
+
+.al-feature__icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #4db8ff;
+}
+
+/* ── Right Panel — narrow, like CPGRAMS ──────────────────────────────────── */
+.al-right {
+  width: 400px;        /* fixed narrow width like CPGRAMS right panel */
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: #f5f7fa;
+  border-left: 1px solid #e0e4eb;
+}
+
+.al-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 36px 36px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+}
+
+/* Card header */
+.al-card__header {
+  margin-bottom: 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eee;
+}
+
+.al-card__eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #1a3a6b;
+  margin-bottom: 6px;
+}
+
+.al-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.al-card__sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #888;
+}
+
+/* Fields */
+.al-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.al-field__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.al-field__label .required {
+  color: #c0392b;
+  margin-left: 2px;
+}
+
+.al-field__wrap {
+  position: relative;
+}
+
+.al-field__icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.al-field__input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.al-field__input:focus {
+  border-color: #1a3a6b;
+  box-shadow: 0 0 0 2px rgba(26, 58, 107, 0.12);
+}
+
+.al-field__input--error {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.12) !important;
+}
+
+.al-field__toggle {
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+  padding: 0;
+}
+
+.al-field__toggle:hover {
+  color: #555;
+}
+
+.al-field__error {
+  font-size: 12px;
+  color: #c0392b;
+  font-weight: 500;
+}
+
+/* Error banner */
+.al-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fdf0ef;
+  border: 1px solid #f5c6c6;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #c0392b;
+  margin-bottom: 16px;
+}
+
+/* Submit */
+.al-submit-btn {
+  width: 100%;
+  padding: 11px;
+  background: #1a3a6b;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 6px;
+}
+
+.al-submit-btn:hover {
+  background: #142d55;
+}
+
+.al-submit-btn:disabled {
+  background: #7a9cc8;
+  cursor: not-allowed;
+}
+
+/* Footer note */
+.al-footer-note {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 11.5px;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .al-left  { display: none; }
+  .al-right { width: 100%; border-left: none; background: #f0f4f9; }
+  .al-card  { padding: 28px 20px; }
+}
