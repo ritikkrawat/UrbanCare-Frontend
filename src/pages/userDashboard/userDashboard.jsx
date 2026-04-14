@@ -408,7 +408,7 @@ const ComplaintContent = () => {
 };
 
 // ── Root Dashboard ────────────────────────────────────────────────────────────
-const Dashboard = () => {
+const UserDashboard = () => {
   const [active, setActive] = useState("dashboard");
 
   return (
@@ -425,4 +425,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default UserDashboard;

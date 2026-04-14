@@ -114,7 +114,6 @@ const emptyForm = {
 const EditProfileContent = ({ toast }) => {
   const navigate = useNavigate();
 
-
   const [form, setForm]       = useState(emptyForm);
   const [touched, setTouched] = useState({});
 
@@ -259,6 +258,25 @@ const EditProfileContent = ({ toast }) => {
   };
 
   const allDistricts = statesData.states.flatMap((state) => state.districts);
+
+  // ── Check if form is valid for submission ───────────────────────────────────
+  const isFormValid = () => {
+    // Check all mandatory fields are filled
+    const allFilled = Object.keys(mandatoryFields).every((field) => {
+      const val = form[field]?.trim();
+      return val && val.length > 0;
+    });
+
+    // Check format validations
+    const pincodeValid = /^\d{6}$/.test(form.pincode?.trim() || "");
+    const mobileValid = /^\d{10}$/.test(form.mobile?.trim() || "");
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email?.trim() || "");
+
+    // Check if user actually made changes
+    const changed = hasChanges();
+
+    return allFilled && pincodeValid && mobileValid && emailValid && changed;
+  };
 
   return (
     <main className="ep-main">
@@ -443,11 +461,22 @@ const EditProfileContent = ({ toast }) => {
 
           {/* Submit */}
           <div className="ep-submit-row">
-            <button type="submit" className="ep-submit-btn">
+            <button 
+              type="submit" 
+              className="ep-submit-btn"
+              disabled={!isFormValid()}
+              title={!isFormValid() ? "Fill all required fields to enable submit" : ""}
+            >
               <Icon d={icons.save} size={16} />
               Submit
             </button>
           </div>
+                    
+          {!isFormValid() && (
+            <p className="ep-submit-hint">
+              Fill all required fields with valid data to enable submission
+            </p>
+          )}
 
         </form>
       </div>

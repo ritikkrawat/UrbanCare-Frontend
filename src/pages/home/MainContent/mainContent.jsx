@@ -182,7 +182,7 @@ const MainContent = ({ type }) => {
           <div className="pg-login">
             <u  
               style={{ cursor: "pointer" }} 
-              onClick={() => window.open("/officerLogin", "_blank",)}
+              onClick={() => window.open("/admin/login", "_blank",)}
             >
               OFFICER LOGIN
             </u>

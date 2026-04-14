@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export class adminDashboard extends Component {
-  render() {
-    return (
-      <div>adminDashboard</div>
-    )
-  }
+const AdminDashboard = props => {
+  return (
+    <div>This is Admin Dashboard</div>
+  )
 }
 
-export default adminDashboard
+export default AdminDashboard

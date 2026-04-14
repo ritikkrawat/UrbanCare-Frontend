@@ -355,3 +355,25 @@
   margin-top: 4px;
   font-weight: 500;
 }
+
+/* 🔹 Disabled submit button styles */
+.ep-submit-btn:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transition: none;
+}
+
+.ep-submit-btn:disabled:hover {
+  background-color: #cccccc;
+}
+
+/* Optional: Helper text styling */
+.ep-submit-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin-top: 10px;
+  font-weight: 500;
+}

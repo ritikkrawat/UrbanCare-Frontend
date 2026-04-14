@@ -191,6 +191,25 @@ const ComplaintFormContent = ({ toast }) => {
     priority:       "Medium",
   });
 
+  const isFormValid = () => {
+    const requiredFields = [
+      form.category,
+      form.subCategory,
+      form.description,
+      form.addressLine1,
+      form.city,
+      form.state,
+      form.pincode,
+      form.exactLocation
+    ];
+
+    const allFieldsFilled = requiredFields.every(field => field?.trim());
+    const pincodeValid = /^\d{6}$/.test(form.pincode?.trim());
+    const hasAttachment = images.length > 0 || videos.length > 0;
+
+    return allFieldsFilled && pincodeValid && hasAttachment;
+  }
+
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [touched, setTouched] = useState({});
@@ -300,7 +319,6 @@ const ComplaintFormContent = ({ toast }) => {
       videos.forEach((vid) => formData.append("videos", vid));
 
       const res = await axios.post(
-        // "http://localhost:5000/api/complaint/submit",
         `${process.env.REACT_APP_API_URL}/api/complaint/submit`,
         formData,
         {
@@ -325,7 +343,7 @@ const ComplaintFormContent = ({ toast }) => {
 
       setTimeout(() => {
         navigate("/dashboard");
-      }, 200);
+      }, 100);
 
     } catch (error) {
       toast.error(
@@ -598,11 +616,21 @@ const ComplaintFormContent = ({ toast }) => {
 
           {/* Submit */}
           <div className="cf-submit-row">
-            <button type="submit" className="cf-submit-btn">
+            <button 
+              type="submit" 
+              className="cf-submit-btn"
+              disabled={!isFormValid()}
+            >
               <Icon d={icons.save} size={16} />
               Submit Complaint
             </button>
           </div>
+
+          {!isFormValid() && (
+            <p className="cf-submit-hint">
+              Fill all required fields and add at least one image or video to submit
+            </p>
+          )}
 
         </form>
       </div>
