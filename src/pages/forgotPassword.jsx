@@ -217,6 +217,30 @@ const ForgotPasswordContent = ({ toast }) => {
     }
   };
 
+  // ── Validation: Step 1 (Generate OTP) ───────────────────────────────────────
+  const isContactValid = () => {
+    const email = form.email.trim();
+    const mobile = form.mobile.trim();
+
+    // At least one must be provided
+    if (!email && !mobile) return false;
+
+    // If provided, must be valid format
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
+    if (mobile && !/^\d{10}$/.test(mobile)) return false;
+
+    return true;
+  };
+
+  // ── Validation: Step 2 (Verify & Reset) ─────────────────────────────────────
+  const isResetValid = () => {
+    const otpValid = otp.trim().length >= 4;
+    const passwordValid = newPassword.length >= 6;
+    const confirmValid = confirmPassword && newPassword === confirmPassword;
+
+    return otpValid && passwordValid && confirmValid;
+  };
+
   return (
     <div className="fp-wrapper">
       <div className="fp-card">
@@ -287,7 +311,12 @@ const ForgotPasswordContent = ({ toast }) => {
             <>
               <hr className="fp-divider" />
               <div className="fp-submit-row">
-                <button className="fp-btn fp-btn--primary" onClick={handleSendOtp}>
+                <button 
+                  className="fp-btn fp-btn--primary" 
+                  onClick={handleSendOtp}
+                  disabled={!isContactValid()}
+                  title={!isContactValid() ? "Enter valid email or mobile number" : ""}
+                >
                   <Icon d={icons.send} size={15} />
                   Generate OTP
                 </button>
@@ -378,7 +407,12 @@ const ForgotPasswordContent = ({ toast }) => {
               <hr className="fp-divider" />
 
               <div className="fp-submit-row">
-                <button className="fp-btn fp-btn--success" onClick={handleVerifyAndReset}>
+                <button 
+                  className="fp-btn fp-btn--success" 
+                  onClick={handleVerifyAndReset}
+                  disabled={!isResetValid()}
+                  title={!isResetValid() ? "Complete all fields to enable reset" : ""}
+                >
                   <Icon d={icons.shield} size={15} />
                   Verify OTP &amp; Reset Password
                 </button>

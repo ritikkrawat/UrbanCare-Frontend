@@ -156,6 +156,38 @@ const ChangePasswordContent = ({ toast }) => {
     }
   };
 
+  // ── Get human-readable reason why button is disabled ────────────────────────
+  const getDisabledReason = () => {
+    const { oldPassword, newPassword, confirmPassword } = form;
+    
+    if (!oldPassword.trim()) return "Enter your old password";
+    if (!newPassword.trim()) return "Enter a new password";
+    if (!confirmPassword.trim()) return "Confirm your new password";
+    if (newPassword.length < 6) return "New password must be at least 6 characters";
+    if (newPassword !== confirmPassword) return "Passwords do not match";
+    if (oldPassword === newPassword) return "New password cannot be same as old";
+    
+    return "Fill all fields correctly to enable submit";
+  };
+
+  const isFormValid = () => {
+    const { oldPassword, newPassword, confirmPassword } = form;
+    
+    // All fields must be filled
+    const allFilled = oldPassword.trim() && newPassword.trim() && confirmPassword.trim();
+    
+    // New password must be at least 6 characters
+    const passwordLengthValid = newPassword.length >= 6;
+    
+    // Passwords must match
+    const passwordsMatch = newPassword === confirmPassword;
+    
+    // New password cannot be same as old
+    const notSameAsOld = oldPassword !== newPassword;
+    
+    return allFilled && passwordLengthValid && passwordsMatch && notSameAsOld;
+  };
+
   return (
     <main className="cp-main">
       {/* Page Header */}
@@ -229,10 +261,22 @@ const ChangePasswordContent = ({ toast }) => {
 
           {/* Submit */}
           <div className="cp-submit-row">
-            <button type="submit" className="cp-submit-btn">
+            <button 
+              type="submit" 
+              className="cp-submit-btn"
+              disabled={!isFormValid()}
+              title={!isFormValid() ? getDisabledReason() : ""}
+            >
               Submit
             </button>
           </div>
+          
+          {/* Optional: Helper text when disabled */}
+          {!isFormValid() && (
+            <p className="cp-submit-hint">
+              {getDisabledReason()}
+            </p>
+          )}
 
         </form>
       </div>
