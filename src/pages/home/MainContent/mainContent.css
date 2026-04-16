@@ -297,3 +297,214 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Email + Send OTP row */
+.email-otp-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.email-otp-input {
+  flex: 1;
+  border-right: none !important;
+}
+
+.send-otp-btn {
+  white-space: nowrap;
+  padding: 0 16px;
+  background-color: #003d7a;
+  color: #fff;
+  border: 1px solid #003d7a;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.send-otp-btn:hover:not(:disabled) {
+  background-color: #002b5c;
+}
+
+.send-otp-btn:disabled {
+  background-color: #a0b4cc;
+  border-color: #a0b4cc;
+  cursor: not-allowed;
+}
+
+.email-verified-badge {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  background-color: #e6f4ea;
+  border: 1px solid #4caf50;
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── OTP overlay & modal ── */
+.otp-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: otp-fade-in 0.2s ease;
+}
+
+@keyframes otp-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.otp-modal {
+  position: relative;
+  background: #fff;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  padding: 36px 32px 32px;
+  border-top: 4px solid #003d7a;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+  animation: otp-slide-up 0.25s ease;
+  text-align: center;
+}
+
+@keyframes otp-slide-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.otp-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+}
+
+.otp-modal-close:hover { color: #333; }
+
+.otp-modal-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #003d7a;
+}
+
+.otp-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #003d7a;
+  margin: 0 0 8px;
+}
+
+.otp-modal-sub {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 4px;
+}
+
+.otp-modal-email {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 20px;
+  word-break: break-all;
+}
+
+/* 6-digit boxes */
+.otp-digits {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.otp-digit {
+  width: 44px;
+  height: 52px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  border: 2px solid #ccc;
+  outline: none;
+  color: #003d7a;
+  transition: border-color 0.15s;
+  background: #f9f9f9;
+}
+
+.otp-digit:focus {
+  border-color: #003d7a;
+  background: #fff;
+}
+
+.otp-digit--filled {
+  border-color: #003d7a;
+  background: #fff;
+}
+
+.otp-digit:disabled {
+  background: #f0f0f0;
+  color: #aaa;
+  border-color: #ddd;
+}
+
+/* Timer */
+.otp-timer {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 18px;
+}
+
+.otp-expired {
+  color: #c62828;
+  font-weight: 600;
+}
+
+/* Verify button */
+.otp-verify-btn {
+  width: 100%;
+  padding: 13px;
+  background-color: #003d7a;
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 10px;
+}
+
+.otp-verify-btn:hover:not(:disabled) {
+  background-color: #002b5c;
+}
+
+.otp-verify-btn:disabled {
+  background-color: #a0b4cc;
+  cursor: not-allowed;
+}
+
+/* Resend link */
+.otp-resend-btn {
+  background: none;
+  border: none;
+  color: #003d7a;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px;
+}
+
+.otp-resend-btn:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+  text-decoration: none;
+}
