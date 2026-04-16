@@ -278,36 +278,6 @@ const ComplaintTile = ({ complaint: c, onImageClick }) => (
   </div>
 );
 
-// ── VIEW: Block (dense single-row list) ───────────────────────────────────────
-// const ComplaintBlock = ({ complaint: c }) => (
-//   <div className="mc-block">
-//     <div className={`mc-block__strip ${priorityStripClass(c.priority)}`} />
-//     <div className="mc-block__main">
-//       <div className="mc-block__reg">{c.registrationNumber || c.complaintId || "—"}</div>
-//       <div className="mc-block__title">
-//         {c.category}
-//         <span className="mc-block__sep">·</span>
-//         {c.subCategory}
-//       </div>
-//       <div className="mc-block__desc">{c.description}</div>
-//     </div>
-//     <div className="mc-block__meta">
-//       {c.city && (
-//         <span className="mc-block__city">
-//           <Icon d={icons.mapPin} size={10} /> {c.city}
-//         </span>
-//       )}
-//       <span className="mc-block__date">
-//         <Icon d={icons.calendar} size={10} /> {formatDate(c.createdAt)}
-//       </span>
-//     </div>
-//     <div className="mc-block__badges">
-//       <span className={`mc-badge ${priorityBadgeClass(c.priority)}`}>{c.priority}</span>
-//       <span className={`mc-badge ${statusBadgeClass(c.status)}`}>{c.status}</span>
-//     </div>
-//   </div>
-// );
-
 // ── View Toggle Button ────────────────────────────────────────────────────────
 const ViewToggle = ({ view, setView }) => (
   <div className="mc-view-toggle">
@@ -393,13 +363,13 @@ const MyComplaints = () => {
       {/* ── Top Bar ── */}
       <div className="mc-topbar">
         <div className="mc-topbar__brand">
-          <div className="mc-topbar__logo">
+          {/* <div className="mc-topbar__logo">
             <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
               <circle cx="12" cy="12" r="10" />
               <path d="M12 8v4l3 3" />
             </svg>
-          </div>
-          <span className="mc-topbar__name">UrbanCare — My Complaints</span>
+          </div> */}
+          <span className="mc-topbar__name">My Complaints</span>
         </div>
         <div className="mc-topbar__right">
           <button className="mc-topbar__back-btn" onClick={() => navigate("/dashboard")}>
