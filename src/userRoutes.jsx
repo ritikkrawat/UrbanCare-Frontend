@@ -8,6 +8,7 @@ import ChangePassword from "./pages/userDashboard/changePassword.jsx";
 import DeleteAccount from "./pages/userDashboard/deleteAccount.jsx";
 import ComplaintForm from "./pages/userDashboard/complaintForm.jsx";
 import ForgotPassword from "./pages/forgotPassword.jsx";
+import MyComplaints from "./pages/userDashboard/myComplaints.jsx";
 
 import UserProtectedRoute from "./routes/userProtectedRoute.jsx";
 import PublicRoute from "./routes/publicRoutes.jsx";
@@ -26,6 +27,7 @@ const UserRoutes = () => {
         <Route path="/changePassword" element={<ChangePassword />} />
         <Route path="/deleteAccount" element={<DeleteAccount />} />
         <Route path="/complaintForm" element={<ComplaintForm />} />
+        <Route path="/myComplaints" element={<MyComplaints />} />
       </Route>
     </Routes>
   );

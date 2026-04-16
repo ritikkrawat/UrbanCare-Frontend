@@ -29,7 +29,9 @@ const MainNavbar = ({ type }) => {
         <div className="main-navbar-left">
           {type === "dashboard" ? (
             <>
-              <span className="nav-item">My Complaints</span>
+              <span className="nav-item" onClick={() => navigate("/myComplaints")}>
+                My Complaints
+              </span>
               <span className="nav-item">Track Status</span>
             </>
           ) : (
