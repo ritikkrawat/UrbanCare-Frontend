@@ -89,11 +89,10 @@ const Sidebar = ({ active, setActive }) => {
 const mandatoryFields = {
   name:     "Name",
   gender:   "Gender",
+  state:    "State",
   district: "District",
-  pincode:  "Pincode",
-  address1: "Address line 1",
-  mobile:   "Mobile number",
-  email:    "E-mail address",
+  mobile:   "Mobile Number",
+  email:    "Email Address",
 };
 
 const emptyForm = {
@@ -120,16 +119,20 @@ const EditProfileContent = ({ toast }) => {
   // Store original fetched data to detect changes
   const originalForm = useRef(null);
 
+  // Derive state/district lists directly from local statesData
+  const allStates    = statesData.states.map((s) => s.state);
+  const allDistricts = form.state
+    ? statesData.states.find((s) => s.state === form.state)?.districts || []
+    : [];
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = sessionStorage.getItem("token");
         const res = await fetch(
-          // "http://localhost:5000/api/user/profile", 
           `${process.env.REACT_APP_API_URL}/api/user/profile`,
-          {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
         if (res.status === 401) return;
 
@@ -142,7 +145,7 @@ const EditProfileContent = ({ toast }) => {
             address2: data.user.address2 || "",
           };
           setForm(fetched);
-          originalForm.current = fetched; // snapshot original
+          originalForm.current = fetched;
         }
       } catch (err) {
         console.log(err);
@@ -160,16 +163,22 @@ const EditProfileContent = ({ toast }) => {
   const handleBlur = (field) => () =>
     setTouched((prev) => ({ ...prev, [field]: true }));
 
+  // State change resets district
+  const handleStateChange = (e) => {
+    setForm((prev) => ({ ...prev, state: e.target.value, district: "" }));
+    setTouched((prev) => ({ ...prev, state: true, district: false }));
+  };
+
   // ── Per-field error ────────────────────────────────────────────────────────
   const getFieldError = (field) => {
     if (!touched[field]) return "";
     const val = form[field]?.trim() ?? "";
-    if (!val) return `${mandatoryFields[field]} is required`;
-    if (field === "pincode" && !/^\d{6}$/.test(val))
+    if (!val && mandatoryFields[field]) return `${mandatoryFields[field]} is required`;
+    if (field === "pincode" && val && !/^\d{6}$/.test(val))
       return "Pincode must be 6 digits";
-    if (field === "mobile" && !/^\d{10}$/.test(val))
+    if (field === "mobile" && val && !/^\d{10}$/.test(val))
       return "Mobile number must be 10 digits";
-    if (field === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
+    if (field === "email" && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
       return "Enter a valid email address";
     return "";
   };
@@ -180,7 +189,7 @@ const EditProfileContent = ({ toast }) => {
       const val = form[field]?.trim() ?? "";
       if (!val) return `${mandatoryFields[field]} is required`;
     }
-    if (!/^\d{6}$/.test(form.pincode.trim()))
+    if (form.pincode && !/^\d{6}$/.test(form.pincode.trim()))
       return "Pincode must be exactly 6 digits";
     if (!/^\d{10}$/.test(form.mobile.trim()))
       return "Mobile number must be exactly 10 digits";
@@ -191,31 +200,32 @@ const EditProfileContent = ({ toast }) => {
 
   // ── Check if anything actually changed ────────────────────────────────────
   const hasChanges = () => {
-    if (!originalForm.current) return true; // if no original, allow submit
-    return Object.keys(mandatoryFields).some(
-      (field) =>
-        (form[field]?.trim() ?? "") !== (originalForm.current[field]?.trim() ?? "")
-    ) || (form.address2?.trim() ?? "") !== (originalForm.current.address2?.trim() ?? "");
+    if (!originalForm.current) return true;
+    return (
+      Object.keys(mandatoryFields).some(
+        (field) =>
+          (form[field]?.trim() ?? "") !== (originalForm.current[field]?.trim() ?? "")
+      ) ||
+      (form.address1?.trim() ?? "") !== (originalForm.current.address1?.trim() ?? "") ||
+      (form.address2?.trim() ?? "") !== (originalForm.current.address2?.trim() ?? "") ||
+      (form.pincode?.trim()  ?? "") !== (originalForm.current.pincode?.trim()  ?? "")
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Mark all mandatory fields as touched
     const allTouched = Object.keys(mandatoryFields).reduce(
-      (acc, f) => ({ ...acc, [f]: true }),
-      {}
+      (acc, f) => ({ ...acc, [f]: true }), {}
     );
     setTouched(allTouched);
 
-    // Check for validation errors first
     const validationError = validate();
     if (validationError) {
       toast.error(validationError);
       return;
     }
 
-    // Check if user made any changes
     if (!hasChanges()) {
       toast.error("No changes detected. Please update at least one field.");
       return;
@@ -226,16 +236,16 @@ const EditProfileContent = ({ toast }) => {
     try {
       const token = sessionStorage.getItem("token");
       const res = await fetch(
-        // "http://localhost:5000/api/user/update-profile", 
         `${process.env.REACT_APP_API_URL}/api/user/update-profile`,
         {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(form),
-      });
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(form),
+        }
+      );
 
       if (res.status === 401) {
         sessionStorage.removeItem("token");
@@ -248,8 +258,6 @@ const EditProfileContent = ({ toast }) => {
       if (!res.ok) throw new Error(data.message || "Update failed");
 
       toast.success("Profile updated successfully!", { id: loadingToast });
-
-      // Update the original snapshot so subsequent submits also detect changes correctly
       originalForm.current = { ...form };
 
     } catch (error) {
@@ -257,25 +265,16 @@ const EditProfileContent = ({ toast }) => {
     }
   };
 
-  const allDistricts = statesData.states.flatMap((state) => state.districts);
-
-  // ── Check if form is valid for submission ───────────────────────────────────
+  // ── Check if form is valid for submission ──────────────────────────────────
   const isFormValid = () => {
-    // Check all mandatory fields are filled
     const allFilled = Object.keys(mandatoryFields).every((field) => {
       const val = form[field]?.trim();
       return val && val.length > 0;
     });
-
-    // Check format validations
-    const pincodeValid = /^\d{6}$/.test(form.pincode?.trim() || "");
-    const mobileValid = /^\d{10}$/.test(form.mobile?.trim() || "");
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email?.trim() || "");
-
-    // Check if user actually made changes
-    const changed = hasChanges();
-
-    return allFilled && pincodeValid && mobileValid && emailValid && changed;
+    const pincodeValid = !form.pincode || /^\d{6}$/.test(form.pincode?.trim() || "");
+    const mobileValid  = /^\d{10}$/.test(form.mobile?.trim() || "");
+    const emailValid   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email?.trim() || "");
+    return allFilled && pincodeValid && mobileValid && emailValid && hasChanges();
   };
 
   return (
@@ -346,6 +345,29 @@ const EditProfileContent = ({ toast }) => {
             </div>
           </div>
 
+          {/* State */}
+          <div className="ep-form-row">
+            <label className="ep-form-row__label">
+              State <span className="required">*</span>
+            </label>
+            <div className="ep-form-row__field">
+              <select
+                className={`ep-select${getFieldError("state") ? " ep-input--error" : ""}`}
+                value={form.state}
+                onChange={handleStateChange}
+                onBlur={handleBlur("state")}
+              >
+                <option value="">--Select State--</option>
+                {allStates.map((s, i) => (
+                  <option key={i} value={s}>{s}</option>
+                ))}
+              </select>
+              {getFieldError("state") && (
+                <span className="ep-field-error">{getFieldError("state")}</span>
+              )}
+            </div>
+          </div>
+
           {/* District */}
           <div className="ep-form-row">
             <label className="ep-form-row__label">
@@ -357,12 +379,11 @@ const EditProfileContent = ({ toast }) => {
                 value={form.district}
                 onChange={handle("district")}
                 onBlur={handleBlur("district")}
+                disabled={!form.state}
               >
                 <option value="">--Select District--</option>
-                {allDistricts.map((district) => (
-                  <option key={district} value={district}>
-                    {district}
-                  </option>
+                {allDistricts.map((d, i) => (
+                  <option key={i} value={d}>{d}</option>
                 ))}
               </select>
               {getFieldError("district") && (
@@ -374,7 +395,7 @@ const EditProfileContent = ({ toast }) => {
           {/* Pincode */}
           <div className="ep-form-row">
             <label className="ep-form-row__label">
-              Pincode <span className="required">*</span>
+              Pincode
             </label>
             <div className="ep-form-row__field">
               <input
@@ -394,7 +415,7 @@ const EditProfileContent = ({ toast }) => {
           {/* Address */}
           <div className="ep-form-row">
             <label className="ep-form-row__label">
-              Address <span className="required">*</span>
+              Address
             </label>
             <div className="ep-form-row__field">
               <div className="ep-address-stack">
@@ -461,8 +482,8 @@ const EditProfileContent = ({ toast }) => {
 
           {/* Submit */}
           <div className="ep-submit-row">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="ep-submit-btn"
               disabled={!isFormValid()}
               title={!isFormValid() ? "Fill all required fields to enable submit" : ""}
@@ -471,7 +492,7 @@ const EditProfileContent = ({ toast }) => {
               Submit
             </button>
           </div>
-                    
+
           {!isFormValid() && (
             <p className="ep-submit-hint">
               Fill all required fields with valid data to enable submission
