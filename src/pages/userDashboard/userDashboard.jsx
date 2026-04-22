@@ -5,17 +5,12 @@ import MainNavbar from "../home/MainNavbar/mainNavbar";
 import { useNavigate } from "react-router-dom";
 import "./userDashboard.css";
 
-// ── Inline SVG Icon Helper ───────────────────────────────────────────────────
+// ── Icon Helper ───────────────────────────────────────────────────────────────
 const Icon = ({ d, size = 20 }) => (
   <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    width={size} height={size} viewBox="0 0 24 24"
+    fill="none" stroke="currentColor"
+    strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
   >
     <path d={d} />
   </svg>
@@ -32,6 +27,7 @@ const icons = {
   closed:    "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3",
   sort:      "M8 6h13M8 12h9M8 18h5",
   loader:    "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83",
+  search:    "M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z",
 };
 
 // ── Nav Items ─────────────────────────────────────────────────────────────────
@@ -42,21 +38,25 @@ const navItems = [
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
-// ── Sidebar ──────────────────────────────────────────────────────────────────
+// ── Sidebar ───────────────────────────────────────────────────────────────────
 const Sidebar = ({ active, setActive }) => {
   const navigate = useNavigate();
-
   return (
     <aside className="ud-sidebar">
       <div className="ud-sidebar__logo">
         <div className="ud-sidebar__logo-icon">
-          <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4l3 3" />
+          <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <path d="M9 22V12h6v10" />
           </svg>
         </div>
-        <span className="ud-sidebar__title">Complaint Dashboard</span>
+        <div>
+          <div className="ud-sidebar__title">UrbanCare</div>
+          <div className="ud-sidebar__subtitle">Citizen Dashboard</div>
+        </div>
       </div>
+
+      <div className="ud-sidebar__section-label">Navigation</div>
 
       <nav className="ud-sidebar__nav">
         {navItems.map((item) => (
@@ -69,29 +69,34 @@ const Sidebar = ({ active, setActive }) => {
               if (item.key === "delete")   navigate("/deleteAccount");
               if (item.key === "plus")     navigate("/complaintForm");
             }}
-            className={`ud-sidebar__nav-btn${
-              active === item.key ? " ud-sidebar__nav-btn--active" : ""
-            }`}
+            className={`ud-sidebar__nav-btn${active === item.key ? " ud-sidebar__nav-btn--active" : ""}`}
           >
-            <Icon d={item.icon} size={17} />
+            <span className="ud-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
             {item.label}
           </button>
         ))}
       </nav>
+
+      <div className="ud-sidebar__footer">
+        <div className="ud-sidebar__footer-note">
+          Need help? Contact your ward officer through the complaint portal.
+        </div>
+      </div>
     </aside>
   );
 };
 
-// ── Stat Card ────────────────────────────────────────────────────────────────
-const StatCard = ({ label, value, colorClass, iconD }) => (
+// ── Stat Card ─────────────────────────────────────────────────────────────────
+const StatCard = ({ label, value, colorClass, iconD, accent }) => (
   <div className={`ud-stat-card ${colorClass}`}>
-    <div className="ud-stat-card__icon">
-      <Icon d={iconD} size={30} />
+    <div className="ud-stat-card__top">
+      <div className="ud-stat-card__icon-wrap" style={{ background: accent }}>
+        <Icon d={iconD} size={18} />
+      </div>
     </div>
-    <div className="ud-stat-card__info">
-      <div className="ud-stat-card__value">{value}</div>
-      <div className="ud-stat-card__label">{label}</div>
-    </div>
+    <div className="ud-stat-card__value">{value}</div>
+    <div className="ud-stat-card__label">{label}</div>
+    <div className="ud-stat-card__bar" style={{ background: accent }} />
   </div>
 );
 
@@ -108,96 +113,77 @@ const columns = [
   { label: "Action"              },
 ];
 
-// ── Priority badge map ────────────────────────────────────────────────────────
 const priorityClass = {
   Low:    "ud-badge--low",
   Medium: "ud-badge--medium",
   High:   "ud-badge--high",
 };
 
-// ── Format date ───────────────────────────────────────────────────────────────
 const formatDate = (iso) => {
   if (!iso) return "—";
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("en-IN", {
+    day: "2-digit", month: "short", year: "numeric",
+  });
 };
 
 // ── Complaint Content ─────────────────────────────────────────────────────────
 const ComplaintContent = () => {
   const navigate = useNavigate();
-  const [complaints, setComplaints] = useState([]);
-  const [loading, setLoading]       = useState(true);
-  const [search, setSearch]         = useState("");
-  const [entries, setEntries]       = useState("10");
-  const [page, setPage]             = useState(1);
-  const [deleteTarget, setDeleteTarget] = useState(null); // { id, regNo }
+  const [complaints, setComplaints]     = useState([]);
+  const [loading, setLoading]           = useState(true);
+  const [search, setSearch]             = useState("");
+  const [entries, setEntries]           = useState("10");
+  const [page, setPage]                 = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting]         = useState(false);
 
-  // ── Fetch complaints ───────────────────────────────────────────────────────
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
         const token = sessionStorage.getItem("token");
         const res = await fetch(
-          // "http://localhost:5000/api/complaint/my-complaints", 
           `${process.env.REACT_APP_API_URL}/api/complaint/my-complaints`,
-          {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         if (res.status === 401) {
           sessionStorage.removeItem("token");
           navigate("/login", { replace: true });
           return;
         }
-
         const data = await res.json();
-
-        await new Promise((resolve) => setTimeout(resolve, 200)); 
-
-        if (res.ok) {
-          setComplaints(data.complaints || []);
-        }
+        await new Promise((r) => setTimeout(r, 200));
+        if (res.ok) setComplaints(data.complaints || []);
       } catch (err) {
-        console.error("❌ Failed to fetch complaints:", err);
+        console.error("Failed to fetch complaints:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchComplaints();
   }, [navigate]);
 
-  // ── Delete handler ─────────────────────────────────────────────────────────
   const handleDelete = async () => {
     if (!deleteTarget) return;
     setDeleting(true);
     try {
       const token = sessionStorage.getItem("token");
       const res = await fetch(
-        // `http://localhost:5000/api/complaint/${deleteTarget.id}`,
         `${process.env.REACT_APP_API_URL}/api/complaint/${deleteTarget.id}`,
         { method: "DELETE", headers: { Authorization: `Bearer ${token}` } }
       );
-      if (res.ok) {
-        setComplaints((prev) => prev.filter((c) => c._id !== deleteTarget.id));
-      } else {
-        console.error("❌ Delete failed with status:", res.status);
-      }
+      if (res.ok) setComplaints((prev) => prev.filter((c) => c._id !== deleteTarget.id));
     } catch (err) {
-      console.error("❌ Delete error:", err);
+      console.error("Delete error:", err);
     } finally {
       setDeleting(false);
       setDeleteTarget(null);
     }
   };
 
-  // ── Derived stats ──────────────────────────────────────────────────────────
   const total   = complaints.length;
   const pending = complaints.filter((c) => c.status === "Pending").length;
   const closed  = complaints.filter((c) => c.status === "Closed" || c.status === "Resolved").length;
 
-  // ── Filter ─────────────────────────────────────────────────────────────────
   const filtered = complaints.filter((c) => {
     if (!search) return true;
     const q = search.toLowerCase();
@@ -210,63 +196,68 @@ const ComplaintContent = () => {
     );
   });
 
-  // ── Pagination ─────────────────────────────────────────────────────────────
   const perPage    = parseInt(entries);
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated  = filtered.slice((page - 1) * perPage, page * perPage);
-
-  const goFirst = () => setPage(1);
-  const goPrev  = () => setPage((p) => Math.max(1, p - 1));
-  const goNext  = () => setPage((p) => Math.min(totalPages, p + 1));
-  const goLast  = () => setPage(totalPages);
 
   useEffect(() => setPage(1), [search, entries]);
 
   return (
     <main className="ud-main">
-      {/* Stat Cards */}
+
+      {/* ── Stat Cards ── */}
       <div className="ud-stats">
         <StatCard
-          label="Total Complaints Registered"
+          label="Total Complaints"
           value={loading ? "—" : total}
-          colorClass="ud-stat-card--orange"
+          colorClass="ud-stat-card--total"
           iconD={icons.complaint}
+          accent="rgba(111,0,71,0.12)"
         />
         <StatCard
-          label="Number of Complaints Pending"
+          label="Complaints Pending"
           value={loading ? "—" : pending}
-          colorClass="ud-stat-card--green"
+          colorClass="ud-stat-card--pending"
           iconD={icons.pending}
+          accent="rgba(214,125,0,0.14)"
         />
         <StatCard
-          label="Number of Complaints Closed"
+          label="Complaints Resolved"
           value={loading ? "—" : closed}
-          colorClass="ud-stat-card--red"
+          colorClass="ud-stat-card--closed"
           iconD={icons.closed}
+          accent="rgba(30,120,60,0.13)"
         />
       </div>
 
-      {/* Table Card */}
+      {/* ── Table Card ── */}
       <div className="ud-table-card">
-        <h2 className="ud-table-card__title">List of Complaints</h2>
+        <div className="ud-table-card__header">
+          <div>
+            <h2 className="ud-table-card__title">My Complaints</h2>
+            <p className="ud-table-card__sub">Full history of all submitted grievances</p>
+          </div>
+          <button className="ud-lodge-btn" onClick={() => navigate("/complaintForm")}>
+            <Icon d={icons.plus} size={14} />
+            Lodge New
+          </button>
+        </div>
 
         {/* Controls */}
         <div className="ud-controls">
           <div className="ud-controls__entries">
+            <span className="ud-controls__entries-label">Show</span>
             <select value={entries} onChange={(e) => setEntries(e.target.value)}>
-              {["10", "25", "50", "100"].map((n) => (
-                <option key={n}>{n}</option>
-              ))}
+              {["10", "25", "50", "100"].map((n) => <option key={n}>{n}</option>)}
             </select>
             <span className="ud-controls__entries-label">entries</span>
           </div>
-
           <div className="ud-controls__search">
-            <label>Search:</label>
+            <span className="ud-controls__search-icon"><Icon d={icons.search} size={13} /></span>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search complaints..."
+              placeholder="Search complaints…"
             />
           </div>
         </div>
@@ -280,7 +271,7 @@ const ComplaintContent = () => {
                   <th key={col.label}>
                     <div className="th-inner">
                       {col.label}
-                      {col.label !== "Action" && <Icon d={icons.sort} size={12} />}
+                      {col.label !== "Action" && <Icon d={icons.sort} size={11} />}
                     </div>
                   </th>
                 ))}
@@ -291,21 +282,24 @@ const ComplaintContent = () => {
                 <tr className="empty-row">
                   <td colSpan={columns.length}>
                     <div className="ud-loading">
-                      <Icon d={icons.loader} size={20} />
-                      &nbsp;Loading complaints...
+                      <span className="ud-loading__spinner" />
+                      Loading complaints…
                     </div>
                   </td>
                 </tr>
               ) : paginated.length === 0 ? (
                 <tr className="empty-row">
                   <td colSpan={columns.length}>
-                    {search ? "No complaints match your search" : "No complaints found"}
+                    <div className="ud-empty">
+                      <Icon d={icons.complaint} size={28} />
+                      <span>{search ? "No complaints match your search" : "No complaints found"}</span>
+                    </div>
                   </td>
                 </tr>
               ) : (
                 paginated.map((c, i) => (
                   <tr key={c._id || i}>
-                    <td>{(page - 1) * perPage + i + 1}</td>
+                    <td className="ud-sn">{(page - 1) * perPage + i + 1}</td>
                     <td className="ud-reg-no">{c.registrationNumber || "—"}</td>
                     <td>{c.category}</td>
                     <td>{c.subCategory}</td>
@@ -315,17 +309,15 @@ const ComplaintContent = () => {
                         {c.priority}
                       </span>
                     </td>
-                    <td>{formatDate(c.createdAt)}</td>
+                    <td className="ud-date">{formatDate(c.createdAt)}</td>
                     <td>
-                      <span
-                        className={`ud-badge ${
-                          c.status === "Closed"      ? "ud-badge--closed"   :
-                          c.status === "Resolved"    ? "ud-badge--closed"   :
-                          c.status === "Pending"     ? "ud-badge--pending"  :
-                          c.status === "In Progress" ? "ud-badge--progress" :
-                                                       "ud-badge--pending"
-                        }`}
-                      >
+                      <span className={`ud-badge ${
+                        c.status === "Closed"      ? "ud-badge--closed"   :
+                        c.status === "Resolved"    ? "ud-badge--closed"   :
+                        c.status === "Pending"     ? "ud-badge--pending"  :
+                        c.status === "In Progress" ? "ud-badge--progress" :
+                                                     "ud-badge--pending"
+                      }`}>
                         {c.status}
                       </span>
                     </td>
@@ -333,14 +325,9 @@ const ComplaintContent = () => {
                       <button
                         className="ud-del-btn"
                         title="Delete complaint"
-                        onClick={() =>
-                          setDeleteTarget({
-                            id:    c._id,
-                            regNo: c.registrationNumber || "—",
-                          })
-                        }
+                        onClick={() => setDeleteTarget({ id: c._id, regNo: c.registrationNumber || "—" })}
                       >
-                        <Icon d={icons.trash} size={15} />
+                        <Icon d={icons.trash} size={14} />
                       </button>
                     </td>
                   </tr>
@@ -350,33 +337,34 @@ const ComplaintContent = () => {
           </table>
         </div>
 
-        {/* Pagination Footer */}
+        {/* Pagination */}
         <div className="ud-pagination">
-          <span>
-            {loading
-              ? "Loading..."
-              : filtered.length === 0
-              ? "No entries found"
-              : `Showing ${(page - 1) * perPage + 1}–${Math.min(
-                  page * perPage,
-                  filtered.length
-                )} of ${filtered.length} entries`}
+          <span className="ud-pagination__info">
+            {loading ? "Loading…" : filtered.length === 0
+              ? "No entries"
+              : `Showing ${(page - 1) * perPage + 1}–${Math.min(page * perPage, filtered.length)} of ${filtered.length} entries`}
           </span>
           <div className="ud-pagination__buttons">
-            <button className="ud-pagination__btn" onClick={goFirst} disabled={page === 1}>First</button>
-            <button className="ud-pagination__btn" onClick={goPrev}  disabled={page === 1}>Prev</button>
-            <button className="ud-pagination__btn" onClick={goNext}  disabled={page === totalPages}>Next</button>
-            <button className="ud-pagination__btn" onClick={goLast}  disabled={page === totalPages}>Last</button>
+            {[
+              { label: "«", action: () => setPage(1),                        disabled: page === 1 },
+              { label: "‹", action: () => setPage((p) => Math.max(1, p-1)), disabled: page === 1 },
+              { label: "›", action: () => setPage((p) => Math.min(totalPages, p+1)), disabled: page === totalPages },
+              { label: "»", action: () => setPage(totalPages),               disabled: page === totalPages },
+            ].map(({ label, action, disabled }) => (
+              <button key={label} className="ud-pagination__btn" onClick={action} disabled={disabled}>
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* ── Delete Confirmation Modal ─────────────────────────────────────── */}
+      {/* ── Delete Modal ── */}
       {deleteTarget && (
         <div className="ud-modal-overlay" onClick={() => !deleting && setDeleteTarget(null)}>
           <div className="ud-modal" onClick={(e) => e.stopPropagation()}>
             <div className="ud-modal__icon">
-              <Icon d={icons.trash} size={22} />
+              <Icon d={icons.trash} size={20} />
             </div>
             <h3 className="ud-modal__title">Delete Complaint?</h3>
             <p className="ud-modal__sub">
@@ -397,7 +385,7 @@ const ComplaintContent = () => {
                 onClick={handleDelete}
                 disabled={deleting}
               >
-                {deleting ? "Deleting..." : "Yes, Delete"}
+                {deleting ? "Deleting…" : "Yes, Delete"}
               </button>
             </div>
           </div>
@@ -407,16 +395,14 @@ const ComplaintContent = () => {
   );
 };
 
-// ── Root Dashboard ────────────────────────────────────────────────────────────
+// ── Root ──────────────────────────────────────────────────────────────────────
 const UserDashboard = () => {
   const [active, setActive] = useState("dashboard");
-
   return (
     <>
       <Topbar />
       <Head />
       <MainNavbar type="dashboard" />
-
       <div className="ud-wrapper">
         <Sidebar active={active} setActive={setActive} />
         <ComplaintContent />
