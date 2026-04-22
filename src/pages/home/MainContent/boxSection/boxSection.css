@@ -1,73 +1,113 @@
-/* Wrapper */
 .box-section {
   display: flex;
-  gap: 24px;
-  padding: 15px 185px;
+  gap: 0;
+  background: #f4f1f0;
 }
 
-/* Each box */
 .box-card {
   flex: 1;
-  width: 100%;
-  min-height: 260px;
-
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  /* border-radius: 4px; */
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
 
-/* Icon placeholder */
-.box-icon-placeholder {
-  width: 120px;
-  height: 120px;
-  background-color: white;
+.box-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.box-card:hover .box-overlay {
+  opacity: 1;
+}
+
+.box-card:hover .box-btn {
+  background: #4a0030;
+  transform: translateY(-2px);
+}
+
+.box-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 32px 24px;
+  z-index: 1;
+  width: 100%;
+}
+
+.box-icon-wrap {
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Button */
+.box-icon-wrap svg {
+  width: 40px;
+  height: 40px;
+}
+
+.box-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #3a001e;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.65;
+}
+
 .box-btn {
-  background-color: #001f54;
+  background: #6f0047;
   color: #ffffff;
   border: none;
-  padding: 10px 22px;
-  font-size: 14px;
+  padding: 11px 28px;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  transition: background 0.2s, transform 0.15s;
 }
 
 .box-btn:hover {
-  background-color: #6f0047;
+  background: #4a0030;
 }
 
-/* Colors */
-.blue {
-  background-color: #86cdee;
+.box-sep {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  align-self: stretch;
+  flex-shrink: 0;
 }
 
-.pink {
-  background-color: #e89ab3;
-}
+.blue   { background-color: #86cdee; }
+.pink   { background-color: #e89ab3; }
+.yellow { background-color: #f6d59f; }
 
-.yellow {
-  background-color: #f6d59f;
-}
-
-/* 🔥 RESPONSIVE BEHAVIOR 🔥 */
 @media (max-width: 900px) {
   .box-section {
     flex-direction: column;
   }
-}
 
-@media (max-width: 1200px) {
-  .box-section {
-    padding: 10px 24px; /* reduce side white space */
-    gap: 0px;
+  .box-sep {
+    width: auto;
+    height: 1px;
+    align-self: auto;
   }
 }
-
-

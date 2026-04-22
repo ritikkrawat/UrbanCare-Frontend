@@ -1,23 +1,22 @@
-import React from 'react'
+import React from 'react';
 import './topBar.css';
 
 const Topbar = () => {
   return (
     <div className="topbar">
-      {/* Left side */}
       <div className="topbar-left">
-        <span>Government of India</span>
-        <span className="divider">|</span>
-        <span>Public Grievance & Civic Services</span>
+        <span className="topbar-text">UrbanCare</span>
+        <div className="topbar-divider"></div>
+        <span className="topbar-text">Public Grievance &amp; Civic Services</span>
       </div>
-
-      {/* Right side */}
       <div className="topbar-right">
-        {/* <a href="/">Home</a>
-        <a href="#">Contact Us</a>
-        <a href="#">About Us</a>
-        <a href="#">FAQs/Help</a>
-        <a href="#">Site Map</a> */}
+        <span className="topbar-link">Home</span>
+        <span className="topbar-sep">|</span>
+        <span className="topbar-link">Contact Us</span>
+        <span className="topbar-sep">|</span>
+        <span className="topbar-link">Sitemap</span>
+        <span className="topbar-sep">|</span>
+        <span className="topbar-link">Help / FAQs</span>
       </div>
     </div>
   );

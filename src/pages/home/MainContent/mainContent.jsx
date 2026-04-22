@@ -356,50 +356,108 @@ const MainContent = ({ type }) => {
 
   /* ═══════════════════════════ LOGIN PAGE ══════════════════════════ */
   if (type === "login") {
-    return (
-      <div className="main-content login-content">
-        <ToastContainer toasts={toasts} removeToast={removeToast} />
-        <div>
-          <div className="login-card">
-            <h2 className="login-title">USER LOGIN</h2>
-            <form onSubmit={handleLoginSubmit}>
-              <label>Mobile No/ Email Id</label>
-              <input
-                type="text" name="identifier" className="login-input"
-                placeholder="Mobile No/ Email Id"
-                onChange={handleLoginChange} value={loginData.identifier}
-              />
-              <label>Password</label>
-              <input
-                type="password" name="password" className="login-input"
-                placeholder="Password"
-                onChange={handleLoginChange} value={loginData.password}
-              />
-              <button type="submit" className="login-btn" disabled={!isLoginValid}>
-                Login →
-              </button>
-            </form>
-            <div className="login-links">
-              <span style={{ cursor: "pointer" }} onClick={() => navigate("/forgotPassword")}>
-                Forgot Password
-              </span>
-              <span>Login with OTP</span>
-            </div>
-            <div className="login-links">
-              <span style={{ cursor: "pointer" }} onClick={() => navigate("/register")}>
-                Click here to sign up
-              </span>
-            </div>
+  return (
+    <div className="login-page">
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+
+      <div className="login-wrap">
+
+        <div className="login-card">
+          <div className="login-card-header">
+            <h2 className="login-card-title">Welcome back</h2>
+            <p className="login-card-sub">Sign in to your UrbanCare account</p>
           </div>
-          <div className="pg-login">
-            <u style={{ cursor: "pointer" }} onClick={() => window.open("/admin/login", "_blank")}>
-              OFFICER LOGIN
-            </u>
+          <div className="login-card-divider"></div>
+          <div className="login-card-body">
+
+            <form onSubmit={handleLoginSubmit}>
+
+              <div className="login-input-group">
+                <label>Mobile No / Email ID</label>
+                <div className="login-input-row">
+                  <div className="login-input-icon">
+                    <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="7.5" cy="5" r="3" stroke="#aaa" strokeWidth="1.3" />
+                      <path d="M2 14c0-3.04 2.46-5.5 5.5-5.5S13 10.96 13 14" stroke="#aaa" strokeWidth="1.3" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <input
+                    className="login-input-field"
+                    type="text"
+                    name="identifier"
+                    placeholder="Enter mobile or email"
+                    onChange={handleLoginChange}
+                    value={loginData.identifier}
+                  />
+                </div>
+              </div>
+
+              <div className="login-input-group">
+                <label>Password</label>
+                <div className="login-input-row">
+                  <div className="login-input-icon">
+                    <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="2.5" y="6.5" width="10" height="7" rx="1.5" stroke="#aaa" strokeWidth="1.3" />
+                      <path d="M5 6.5V4.5a2.5 2.5 0 015 0v2" stroke="#aaa" strokeWidth="1.3" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <input
+                    className="login-input-field"
+                    type="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    onChange={handleLoginChange}
+                    value={loginData.password}
+                  />
+                </div>
+              </div>
+
+              <div className="login-forgot">
+                <span onClick={() => navigate("/forgotPassword")}>Forgot password?</span>
+              </div>
+
+              <button type="submit" className="login-submit-btn" disabled={!isLoginValid}>
+                Sign In →
+              </button>
+
+            </form>
+
+            <div className="login-or-row">
+              <div className="login-or-line"></div>
+              <span className="login-or-text">or</span>
+              <div className="login-or-line"></div>
+            </div>
+
+            <button className="login-otp-btn">Login with OTP</button>
+
+            <div className="login-signup-row">
+              New user?{" "}
+              <span onClick={() => navigate("/register")}>Create an account</span>
+            </div>
+
           </div>
         </div>
+
+        <div className="officer-card" onClick={() => window.open("/admin/login", "_blank")}>
+          <div className="officer-left">
+            <div className="officer-icon">
+              <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
+                <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div>
+              <div className="officer-label">Officer / Admin Login</div>
+              <div className="officer-sub">Restricted access</div>
+            </div>
+          </div>
+          <span className="officer-arrow">→</span>
+        </div>
+
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   /* ═══════════════════════════ REGISTER PAGE ═══════════════════════ */
   if (type === "register") {

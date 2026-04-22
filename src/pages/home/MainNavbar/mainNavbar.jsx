@@ -1,16 +1,15 @@
 import "./mainNavbar.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
-import { useToast, ToastContainer } from "../../../components/toast.jsx"; 
+import { useToast, ToastContainer } from "../../../components/toast.jsx";
 
 const MainNavbar = ({ type }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useAuth();
-  const { toasts, toast, removeToast } = useToast(); 
+  const { toasts, toast, removeToast } = useToast();
 
-  const handleSignIn = () => {
-    navigate("/login");
-  };
+  const handleSignIn = () => navigate("/login");
 
   const handleLogout = () => {
     toast.success("Logged out successfully!");
@@ -20,16 +19,20 @@ const MainNavbar = ({ type }) => {
     }, 200);
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <>
-      {/* ✅ shared ToastContainer */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
 
       <div className="main-navbar">
         <div className="main-navbar-left">
           {type === "dashboard" ? (
             <>
-              <span className="nav-item" onClick={() => navigate("/myComplaints")}>
+              <span
+                className={`nav-item ${isActive("/myComplaints") ? "nav-item--active" : ""}`}
+                onClick={() => navigate("/myComplaints")}
+              >
                 My Complaints
               </span>
               <span className="nav-item">Track Status</span>
@@ -44,19 +47,22 @@ const MainNavbar = ({ type }) => {
 
         <div className="main-navbar-right">
           {type === "dashboard" ? (
-            <button className="signin-btn" onClick={handleLogout}>
+            <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
           ) : (
             <>
               <div className="language-box">
-                <span>Language :</span>
+                <svg className="lang-globe" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="7" cy="7" r="6" stroke="rgba(255,255,255,0.65)" strokeWidth="1.2" />
+                  <path d="M7 1c-2 2-2 8 0 12M7 1c2 2 2 8 0 12M1 7h12" stroke="rgba(255,255,255,0.65)" strokeWidth="1.2" />
+                </svg>
                 <select>
                   <option>English</option>
                   <option>Hindi</option>
                 </select>
               </div>
-
+              <div className="nav-divider"></div>
               <button className="signin-btn" onClick={handleSignIn}>
                 Sign In
               </button>

@@ -1,63 +1,119 @@
-/* Main Navbar */
 .main-navbar {
-  height: 37px;
-  background-color: #6f0047; /* same maroon tone */
+  height: 44px;
+  background-color: #6f0047;
   color: #ffffff;
-
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
-
-  padding: 0 24px;
-  font-size: 14px;
+  padding: 0 28px;
+  font-size: 13px;
 }
 
-/* Left items */
+/* Left nav items */
 .main-navbar-left {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  align-items: stretch;
+  gap: 0;
 }
 
 .nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
   cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
 }
 
 .nav-item:hover {
-  text-decoration: underline;
+  color: #ffffff;
+  border-bottom-color: rgba(245, 166, 35, 0.6);
+}
+
+.nav-item--active {
+  color: #ffffff;
+  border-bottom-color: #f5a623;
 }
 
 /* Right section */
 .main-navbar-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
-/* Language selector */
+/* Language box */
 .language-box {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
+.lang-globe {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 .language-box select {
-  padding: 4px 6px;
-  border-radius: 2px;
-  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 3px;
   outline: none;
+  cursor: pointer;
+}
+
+.language-box select option {
+  background: #6f0047;
+  color: #ffffff;
+}
+
+/* Thin separator */
+.nav-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Sign In button */
 .signin-btn {
-  background-color: #f5a623; /* orange */
+  background: #f5a623;
   border: none;
-  padding: 6px 14px;
-  border-radius: 2px;
-  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #ffffff;
   cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.15s;
 }
 
 .signin-btn:hover {
-  opacity: 0.9;
+  background: #d4891a;
+}
+
+/* Logout button */
+.logout-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 5px 16px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
 }
