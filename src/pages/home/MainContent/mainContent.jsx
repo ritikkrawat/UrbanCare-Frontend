@@ -356,110 +356,152 @@ const MainContent = ({ type }) => {
 
   /* ═══════════════════════════ LOGIN PAGE ══════════════════════════ */
   if (type === "login") {
-  return (
-    <div className="login-page">
-      <ToastContainer toasts={toasts} removeToast={removeToast} />
+    return (
+      <div className="login-page">
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
 
-      <div className="login-wrap">
+        <div className="login-wrap">
 
-        <div className="login-card">
-          <div className="login-card-header">
-            <h2 className="login-card-title">Welcome back</h2>
-            <p className="login-card-sub">Sign in to your UrbanCare account</p>
-          </div>
-          <div className="login-card-divider"></div>
-          <div className="login-card-body">
+          {/* ── LFFT: Login Card ── */}
+          <div>
+            <div className="login-card">
+              <div className="login-card-header">
+                <h2 className="login-card-title">Welcome back</h2>
+                <p className="login-card-sub">Sign in to your UrbanCare account</p>
+              </div>
 
-            <form onSubmit={handleLoginSubmit}>
+              <div className="login-card-body">
+                <form onSubmit={handleLoginSubmit}>
 
-              <div className="login-input-group">
-                <label>Mobile No / Email ID</label>
-                <div className="login-input-row">
-                  <div className="login-input-icon">
-                    <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="7.5" cy="5" r="3" stroke="#aaa" strokeWidth="1.3" />
-                      <path d="M2 14c0-3.04 2.46-5.5 5.5-5.5S13 10.96 13 14" stroke="#aaa" strokeWidth="1.3" strokeLinecap="round" />
-                    </svg>
+                  <div className="login-input-group">
+                    <label>Mobile No / Email ID</label>
+                    <div className="login-input-row">
+                      <div className="login-input-icon">
+                        <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="7.5" cy="5" r="3" stroke="#c4adb8" strokeWidth="1.3" />
+                          <path d="M2 14c0-3.04 2.46-5.5 5.5-5.5S13 10.96 13 14" stroke="#c4adb8" strokeWidth="1.3" strokeLinecap="round" />
+                        </svg>
+                      </div>
+                      <input
+                        className="login-input-field"
+                        type="text"
+                        name="identifier"
+                        placeholder="Enter mobile or email"
+                        onChange={handleLoginChange}
+                        value={loginData.identifier}
+                      />
+                    </div>
                   </div>
-                  <input
-                    className="login-input-field"
-                    type="text"
-                    name="identifier"
-                    placeholder="Enter mobile or email"
-                    onChange={handleLoginChange}
-                    value={loginData.identifier}
-                  />
-                </div>
-              </div>
 
-              <div className="login-input-group">
-                <label>Password</label>
-                <div className="login-input-row">
-                  <div className="login-input-icon">
-                    <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="2.5" y="6.5" width="10" height="7" rx="1.5" stroke="#aaa" strokeWidth="1.3" />
-                      <path d="M5 6.5V4.5a2.5 2.5 0 015 0v2" stroke="#aaa" strokeWidth="1.3" strokeLinecap="round" />
-                    </svg>
+                  <div className="login-input-group">
+                    <label>Password</label>
+                    <div className="login-input-row">
+                      <div className="login-input-icon">
+                        <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2.5" y="6.5" width="10" height="7" rx="1.5" stroke="#c4adb8" strokeWidth="1.3" />
+                          <path d="M5 6.5V4.5a2.5 2.5 0 015 0v2" stroke="#c4adb8" strokeWidth="1.3" strokeLinecap="round" />
+                        </svg>
+                      </div>
+                      <input
+                        className="login-input-field"
+                        type="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        onChange={handleLoginChange}
+                        value={loginData.password}
+                      />
+                    </div>
                   </div>
-                  <input
-                    className="login-input-field"
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    onChange={handleLoginChange}
-                    value={loginData.password}
-                  />
+
+                  <div className="login-forgot">
+                    <span onClick={() => navigate("/forgotPassword")}>Forgot password?</span>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="login-submit-btn"
+                    disabled={!isLoginValid}
+                  >
+                    Sign In →
+                  </button>
+
+                </form>
+
+                <div className="login-or-row">
+                  <div className="login-or-line" />
+                  <span className="login-or-text">or</span>
+                  <div className="login-or-line" />
                 </div>
+
+                <button className="login-otp-btn">Login with OTP</button>
+
+                <div className="login-signup-row">
+                  New user?{" "}
+                  <span onClick={() => navigate("/register")}>Create an account</span>
+                </div>
+
+                <div
+                  className="officer-card"
+                  onClick={() => window.open("/admin/login", "_blank")}
+                >
+                  <div className="officer-left">
+                    <div className="officer-icon">
+                      <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
+                        <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="officer-label">Officer / Admin Login</div>
+                      <div className="officer-sub">Restricted access</div>
+                    </div>
+                  </div>
+                  <span className="officer-arrow">→</span>
+                </div>
+
               </div>
-
-              <div className="login-forgot">
-                <span onClick={() => navigate("/forgotPassword")}>Forgot password?</span>
-              </div>
-
-              <button type="submit" className="login-submit-btn" disabled={!isLoginValid}>
-                Sign In →
-              </button>
-
-            </form>
-
-            <div className="login-or-row">
-              <div className="login-or-line"></div>
-              <span className="login-or-text">or</span>
-              <div className="login-or-line"></div>
-            </div>
-
-            <button className="login-otp-btn">Login with OTP</button>
-
-            <div className="login-signup-row">
-              New user?{" "}
-              <span onClick={() => navigate("/register")}>Create an account</span>
-            </div>
-
-          </div>
-        </div>
-
-        <div className="officer-card" onClick={() => window.open("/admin/login", "_blank")}>
-          <div className="officer-left">
-            <div className="officer-icon">
-              <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
-                <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div>
-              <div className="officer-label">Officer / Admin Login</div>
-              <div className="officer-sub">Restricted access</div>
             </div>
           </div>
-          <span className="officer-arrow">→</span>
-        </div>
 
+          {/* ── RIGHT: Info Panel ── */}
+          <aside className="login-info-panel">
+    
+            <div className="login-brand">
+              <h1 className="login-brand-name">UrbanCare</h1>
+              <p className="login-brand-tagline">
+                Your civic companion — file complaints, track resolutions,
+                and engage with your local administration, all in one place.
+              </p>
+            </div>
+    
+            <div className="login-features">
+              <h3>What you can do</h3>
+              <div className="login-feature-item">
+                <div className="login-feature-dot" />
+                <span className="login-feature-text">File and track civic complaints in real time</span>
+              </div>
+              <div className="login-feature-item">
+                <div className="login-feature-dot" />
+                <span className="login-feature-text">Get status updates directly to your dashboard</span>
+              </div>
+              <div className="login-feature-item">
+                <div className="login-feature-dot" />
+                <span className="login-feature-text">Connect with your ward officer and local teams</span>
+              </div>
+              <div className="login-feature-item">
+                <div className="login-feature-dot" />
+                <span className="login-feature-text">View resolved issues and civic activity near you</span>
+              </div>
+            </div>
+    
+          </aside>
+
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-  /* ═══════════════════════════ REGISTER PAGE ═══════════════════════ */
+    /* ═════════════════════════ REGISTER PAGE ══════════════════════════ */
   if (type === "register") {
     return (
       <div className="register-wrapper">
@@ -474,169 +516,249 @@ const MainContent = ({ type }) => {
           />
         )}
 
-        <div className="register-container">
-          <h1 className="form-title">Registration/ Sign up Form</h1>
-          <div className="form-header">
-            <span className="section-label">Enter Details</span>
-            <span className="mandatory-note">Fields marked with * are mandatory</span>
+        <div className="register-layout">
+
+          {/* ── LEFT: Form ── */}
+          <div className="register-container">
+            <h1 className="form-title">Create Your Account</h1>
+            <div className="form-header">
+              <span className="section-label">Citizen Registration</span>
+              <span className="mandatory-note">Fields marked * are mandatory</span>
+            </div>
+
+            <form className="registration-form" onSubmit={handleSubmit}>
+
+              {/* ── Section 1: Personal Info ── */}
+              <div className="reg-section">
+                <div className="reg-section-header">
+                  <div className="reg-section-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="8" r="4" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                  <span className="reg-section-title">Personal Information</span>
+                </div>
+                <div className="reg-section-body">
+                  <div className="form-row two-column">
+                    <div className="form-group">
+                      <label className="field-label">Full Name <span className="required">*</span></label>
+                      <input
+                        type="text" name="name"
+                        className={`form-input ${getFieldError("name") ? "input-error" : ""}`}
+                        onChange={handleInputChange} onBlur={handleBlur} value={formData.name}
+                        placeholder="Enter your full name"
+                      />
+                      {getFieldError("name") && <span className="field-error">{getFieldError("name")}</span>}
+                    </div>
+                    <div className="form-group">
+                      <label className="field-label">Gender <span className="required">*</span></label>
+                      <div className="radio-group">
+                        {["Male", "Female", "Transgender"].map((g) => (
+                          <label className="radio-label" key={g}>
+                            <input
+                              type="radio" name="gender" value={g}
+                              onChange={handleInputChange} checked={formData.gender === g}
+                            />
+                            <span>{g}</span>
+                          </label>
+                        ))}
+                      </div>
+                      {getFieldError("gender") && <span className="field-error">{getFieldError("gender")}</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Section 2: Address ── */}
+              <div className="reg-section">
+                <div className="reg-section-header">
+                  <div className="reg-section-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <circle cx="12" cy="9" r="2.5" strokeWidth="2"/>
+                    </svg>
+                  </div>
+                  <span className="reg-section-title">Address Details</span>
+                </div>
+                <div className="reg-section-body">
+                  <div className="form-row two-column">
+                    <div className="form-group">
+                      <label className="field-label">Premise Number / Name <span className="required">*</span></label>
+                      <input
+                        type="text" name="premiseNumber"
+                        className={`form-input ${getFieldError("premiseNumber") ? "input-error" : ""}`}
+                        onChange={handleInputChange} onBlur={handleBlur} value={formData.premiseNumber}
+                        placeholder="House / Flat / Building"
+                      />
+                      {getFieldError("premiseNumber") && <span className="field-error">{getFieldError("premiseNumber")}</span>}
+                    </div>
+                    <div className="form-group">
+                      <label className="field-label">Locality / Sub-locality</label>
+                      <input
+                        type="text" name="subLocality"
+                        className="form-input"
+                        onChange={handleInputChange} value={formData.subLocality}
+                        placeholder="Street, area, locality"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row three-column">
+                    <div className="form-group">
+                      <label className="field-label">State <span className="required">*</span></label>
+                      <select
+                        name="state"
+                        className={`form-select ${getFieldError("state") ? "input-error" : ""}`}
+                        onChange={handleInputChange} onBlur={handleBlur} value={formData.state}
+                      >
+                        <option value="">— Select State —</option>
+                        {allStates.map((s, i) => <option key={i} value={s}>{s}</option>)}
+                      </select>
+                      {getFieldError("state") && <span className="field-error">{getFieldError("state")}</span>}
+                    </div>
+                    <div className="form-group">
+                      <label className="field-label">District <span className="required">*</span></label>
+                      <select
+                        name="district"
+                        className={`form-select ${getFieldError("district") ? "input-error" : ""}`}
+                        onChange={handleInputChange} onBlur={handleBlur} value={formData.district}
+                        disabled={!formData.state}
+                      >
+                        <option value="">— Select District —</option>
+                        {allDistricts.map((d, i) => <option key={i} value={d}>{d}</option>)}
+                      </select>
+                      {getFieldError("district") && <span className="field-error">{getFieldError("district")}</span>}
+                    </div>
+                    <div className="form-group">
+                      <label className="field-label">Pincode</label>
+                      <input
+                        type="text" name="pincode"
+                        className={`form-input ${getFieldError("pincode") ? "input-error" : ""}`}
+                        onChange={handleInputChange} onBlur={handleBlur} value={formData.pincode}
+                        placeholder="6-digit pincode"
+                      />
+                      {getFieldError("pincode") && <span className="field-error">{getFieldError("pincode")}</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Section 3: Contact & Security ── */}
+              <div className="reg-section">
+                <div className="reg-section-header">
+                  <div className="reg-section-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <span className="reg-section-title">Contact & Security</span>
+                </div>
+                <div className="reg-section-body">
+                  <div className="form-row two-column">
+                    <div className="form-group">
+                      <label className="field-label">Mobile Number <span className="required">*</span></label>
+                      <input
+                        type="tel" name="mobileNumber"
+                        className={`form-input ${getFieldError("mobileNumber") ? "input-error" : ""}`}
+                        onChange={handleInputChange} onBlur={handleBlur} value={formData.mobileNumber}
+                        placeholder="10-digit mobile number"
+                      />
+                      {getFieldError("mobileNumber") && <span className="field-error">{getFieldError("mobileNumber")}</span>}
+                    </div>
+                    <div className="form-group">
+                      <label className="field-label">Password <span className="required">*</span></label>
+                      <input
+                        type="password" name="password"
+                        className={`form-input ${getFieldError("password") ? "input-error" : ""}`}
+                        onChange={handleInputChange} onBlur={handleBlur} value={formData.password}
+                        placeholder="Min. 6 characters"
+                      />
+                      {getFieldError("password") && <span className="field-error">{getFieldError("password")}</span>}
+                    </div>
+                  </div>
+
+                  <div className="form-row two-column">
+                    <div className="form-group">
+                      <label className="field-label">Email Address <span className="required">*</span></label>
+                      <div className={`email-otp-row ${getFieldError("email") ? "input-error" : ""}`}>
+                        <input
+                          type="email" name="email"
+                          className="form-input email-otp-input"
+                          onChange={handleInputChange} onBlur={handleBlur} value={formData.email}
+                          readOnly={emailVerified}
+                          placeholder="your@email.com"
+                        />
+                        {emailVerified ? (
+                          <span className="email-verified-badge">✓ Verified</span>
+                        ) : (
+                          <button
+                            type="button"
+                            className="send-otp-btn"
+                            onClick={handleSendOtp}
+                            disabled={!formData.email.trim()}
+                          >
+                            Send OTP
+                          </button>
+                        )}
+                      </div>
+                      {getFieldError("email") && <span className="field-error">{getFieldError("email")}</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="submit-container">
+                <button type="submit" className="submit-button">
+                  <span className="submit-icon">→</span>
+                  {emailVerified ? "Create Account" : "Verify Email & Submit"}
+                </button>
+              </div>
+
+            </form>
           </div>
 
-          <form className="registration-form" onSubmit={handleSubmit}>
+          {/* ── RIGHT: Info Panel ── */}
+          <aside className="register-info-panel">
 
-            {/* ── Name & Gender ── */}
-            <div className="form-row two-column">
-              <div className="form-group">
-                <label className="field-label">Name <span className="required">*</span></label>
-                <input
-                  type="text" name="name" className={`form-input ${getFieldError("name") ? "input-error" : ""}`}
-                  onChange={handleInputChange} onBlur={handleBlur} value={formData.name}
-                />
-                {getFieldError("name") && <span className="field-error">{getFieldError("name")}</span>}
-              </div>
-              <div className="form-group">
-                <label className="field-label">Gender <span className="required">*</span></label>
-                <div className="radio-group">
-                  {["Male", "Female", "Transgender"].map((g) => (
-                    <label className="radio-label" key={g}>
-                      <input
-                        type="radio" name="gender" value={g}
-                        onChange={handleInputChange} checked={formData.gender === g}
-                      />
-                      <span>{g}</span>
-                    </label>
-                  ))}
+            <div className="info-panel-card">
+              <h3>How it works</h3>
+              <div className="info-step">
+                <div className="info-step-num">1</div>
+                <div className="info-step-text">
+                  <strong>Fill your details</strong>
+                  <span>Enter your personal, address and contact information</span>
                 </div>
-                {getFieldError("gender") && <span className="field-error">{getFieldError("gender")}</span>}
               </div>
-            </div>
-
-            {/* ── Address ── */}
-            <div className="form-group">
-              <label className="field-label">Address <span className="required">*</span></label>
-            </div>
-            <div className="form-row two-column">
-              <div className="form-group">
-                <input
-                  type="text" name="premiseNumber" placeholder="Premise Number or Name"
-                  className={`form-input ${getFieldError("premiseNumber") ? "input-error" : ""}`}
-                  onChange={handleInputChange} onBlur={handleBlur} value={formData.premiseNumber}
-                />
-                {getFieldError("premiseNumber") && <span className="field-error">{getFieldError("premiseNumber")}</span>}
-              </div>
-              <div className="form-group">
-                <input
-                  type="text" name="subLocality" placeholder="Locality"
-                  className="form-input"
-                  onChange={handleInputChange} value={formData.subLocality}
-                />
-              </div>
-            </div>
-
-            {/* ── State, District, Pincode ── */}
-            <div className="form-row three-column">
-              <div className="form-group">
-                <label className="field-label">State <span className="required">*</span></label>
-                <select
-                  name="state"
-                  className={`form-select ${getFieldError("state") ? "input-error" : ""}`}
-                  onChange={handleInputChange} onBlur={handleBlur} value={formData.state}
-                >
-                  <option value="">--Select State--</option>
-                  {allStates.map((s, i) => (
-                    <option key={i} value={s}>{s}</option>
-                  ))}
-                </select>
-                {getFieldError("state") && <span className="field-error">{getFieldError("state")}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="field-label">District <span className="required">*</span></label>
-                <select
-                  name="district"
-                  className={`form-select ${getFieldError("district") ? "input-error" : ""}`}
-                  onChange={handleInputChange} onBlur={handleBlur} value={formData.district}
-                  disabled={!formData.state}
-                >
-                  <option value="">--Select District--</option>
-                  {allDistricts.map((d, i) => (
-                    <option key={i} value={d}>{d}</option>
-                  ))}
-                </select>
-                {getFieldError("district") && <span className="field-error">{getFieldError("district")}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="field-label">Pincode</label>
-                <input
-                  type="text" name="pincode"
-                  className={`form-input ${getFieldError("pincode") ? "input-error" : ""}`}
-                  onChange={handleInputChange} onBlur={handleBlur} value={formData.pincode}
-                />
-                {getFieldError("pincode") && <span className="field-error">{getFieldError("pincode")}</span>}
-              </div>
-            </div>
-
-            {/* ── Mobile ── */}
-            <div className="form-row two-column">
-              <div className="form-group">
-                <label className="field-label">Mobile number <span className="required">*</span></label>
-                <input
-                  type="tel" name="mobileNumber"
-                  className={`form-input ${getFieldError("mobileNumber") ? "input-error" : ""}`}
-                  onChange={handleInputChange} onBlur={handleBlur} value={formData.mobileNumber}
-                />
-                {getFieldError("mobileNumber") && <span className="field-error">{getFieldError("mobileNumber")}</span>}
-              </div>
-            </div>
-
-            {/* ── Email & Password ── */}
-            <div className="form-row two-column">
-              <div className="form-group">
-                <label className="field-label">
-                  E-mail address <span className="required">*</span>
-                </label>
-                <div className="email-otp-row">
-                  <input
-                    type="email" name="email"
-                    className={`form-input email-otp-input ${getFieldError("email") ? "input-error" : ""}`}
-                    onChange={handleInputChange} onBlur={handleBlur} value={formData.email}
-                    readOnly={emailVerified}
-                  />
-                  {emailVerified ? (
-                    <span className="email-verified-badge">✓ Verified</span>
-                  ) : (
-                    <button
-                      type="button"
-                      className="send-otp-btn"
-                      onClick={handleSendOtp}
-                      disabled={!formData.email.trim()}
-                    >
-                      Send OTP
-                    </button>
-                  )}
+              <div className="info-step">
+                <div className="info-step-num">2</div>
+                <div className="info-step-text">
+                  <strong>Verify your email</strong>
+                  <span>We'll send a 6-digit OTP to confirm your email address</span>
                 </div>
-                {getFieldError("email") && <span className="field-error">{getFieldError("email")}</span>}
               </div>
-
-              <div className="form-group">
-                <label className="field-label">Password <span className="required">*</span></label>
-                <input
-                  type="password" name="password" placeholder="Create a password"
-                  className={`form-input ${getFieldError("password") ? "input-error" : ""}`}
-                  onChange={handleInputChange} onBlur={handleBlur} value={formData.password}
-                />
-                {getFieldError("password") && <span className="field-error">{getFieldError("password")}</span>}
+              <div className="info-step">
+                <div className="info-step-num">3</div>
+                <div className="info-step-text">
+                  <strong>Access your dashboard</strong>
+                  <span>File complaints, track status and engage with UrbanCare</span>
+                </div>
               </div>
             </div>
 
-            <div className="submit-container">
-              <button type="submit" className="submit-button">
-                <span className="submit-icon"></span>
-                {emailVerified ? "Submit" : "Verify Email & Submit"}
-              </button>
+            <div className="info-notice">
+              <strong>🔒 Your data is safe</strong>
+              All information is encrypted and used solely for UrbanCare services.
+              We will never share your details with third parties.
             </div>
 
-          </form>
+            <div className="info-login-card">
+              <p>Already have an account?</p>
+              <button onClick={() => navigate("/login")}>Sign In →</button>
+            </div>
+
+          </aside>
+
         </div>
       </div>
     );
