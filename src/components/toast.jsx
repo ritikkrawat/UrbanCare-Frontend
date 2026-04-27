@@ -84,18 +84,21 @@ const ToastItem = ({ id, type, title, message, onClose }) => {
 
   return (
     <div className={`mc-toast mc-toast--${type}${exiting ? " mc-toast--exit" : ""}`}>
-      <span className="mc-toast__icon">{iconMap[type]}</span>
-      <div className="mc-toast__content">
-        <div className="mc-toast__title">{title}</div>
-        <div className="mc-toast__msg">{message}</div>
+      <div className="mc-toast__inner">
+        <span className="mc-toast__icon">{iconMap[type]}</span>
+        <div className="mc-toast__content">
+          <div className="mc-toast__title">{title}</div>
+          <div className="mc-toast__msg">{message}</div>
+        </div>
+        {type !== "loading" && (
+          <button className="mc-toast__close" onClick={handleClose}>
+            <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth={2.5}>
+              <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+            </svg>
+          </button>
+        )}
       </div>
-      {type !== "loading" && (
-        <button className="mc-toast__close" onClick={handleClose}>
-          <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-            <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-          </svg>
-        </button>
-      )}
     </div>
   );
 };
