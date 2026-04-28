@@ -46,6 +46,7 @@ const navItems = [
 ];
 
 // ── Sidebar ──────────────────────────────────────────────────────────────────
+// ── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,8 +67,13 @@ const Sidebar = () => {
             <path d="M12 8v4l3 3" />
           </svg>
         </div>
-        <span className="cp-sidebar__title">Complaint Dashboard</span>
+        <div>
+          <div className="cp-sidebar__title">UrbanCare</div>
+          <div className="cp-sidebar__subtitle">Complaint Dashboard</div>
+        </div>
       </div>
+
+      <div className="cp-sidebar__section-label">Navigation</div>
 
       <nav className="cp-sidebar__nav">
         {navItems.map((item) => (
@@ -80,7 +86,7 @@ const Sidebar = () => {
             }}
             className={`cp-sidebar__nav-btn ${isActive(item.key) ? "cp-sidebar__nav-btn--active" : ""}`}
           >
-            <Icon d={item.icon} size={17} />
+            <span className="cp-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
             {item.label}
           </button>
         ))}
