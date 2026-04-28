@@ -77,8 +77,8 @@ const Sidebar = ({ active, setActive }) => {
 const mandatoryFields = {
   name:     "Name",
   gender:   "Gender",
-  state:    "State",
-  district: "District",
+  // state:    "State",
+  // district: "District",
   mobile:   "Mobile Number",
   email:    "Email Address",
 };
@@ -262,7 +262,7 @@ const EditProfileContent = ({ toast }) => {
 
           {/* State */}
           <div className="ep-form-row">
-            <label className="ep-form-row__label">State <span className="required">*</span></label>
+            <label className="ep-form-row__label">State</label>
             <div className="ep-form-row__field">
               <select
                 className={`ep-select${getFieldError("state") ? " ep-input--error" : ""}`}
@@ -277,7 +277,7 @@ const EditProfileContent = ({ toast }) => {
 
           {/* District */}
           <div className="ep-form-row">
-            <label className="ep-form-row__label">District <span className="required">*</span></label>
+            <label className="ep-form-row__label">District</label>
             <div className="ep-form-row__field">
               <select
                 className={`ep-select${getFieldError("district") ? " ep-input--error" : ""}`}
