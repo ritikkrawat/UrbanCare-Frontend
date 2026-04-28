@@ -11,7 +11,7 @@
 }
 
 /* ════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR  (matches userDashboard)
 ════════════════════════════════════════ */
 /* ════════════════════════════════════════
    SIDEBAR
@@ -159,8 +159,6 @@
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1.5px solid #d9cfd6;
 }
 
 .cf-page-header__title {
@@ -171,13 +169,13 @@
   margin: 0 0 4px;
 }
 
-.cf-mandatory-note {
+.cf-page-header__sub {
   font-size: 12px;
   color: #b08090;
   margin: 0;
 }
 
-.cf-mandatory-note .required {
+.cf-page-header__sub .required {
   color: #b52952;
 }
 
@@ -196,7 +194,6 @@
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .cf-back-btn:hover {
@@ -205,56 +202,63 @@
 }
 
 /* ════════════════════════════════════════
-   FORM CARD
+   SECTION CARDS
 ════════════════════════════════════════ */
-.cf-form-card {
+.cf-section {
   background: #fff;
   border-radius: 6px;
   border: 1px solid #e2dada;
   border-left: 4px solid #6f0047;
-  padding: 28px 28px 36px;
+  margin-bottom: 16px;
+  overflow: hidden;
 }
 
-/* ── Section Title ── */
-.cf-section-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: #6f0047;
-  text-transform: uppercase;
-  letter-spacing: 0.9px;
-  margin: 0 0 18px;
-  padding-bottom: 10px;
-  border-bottom: 1.5px solid #ede5e9;
+.cf-section-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  padding: 14px 20px;
+  background: #fdf9fb;
+  border-bottom: 1px solid #ede5e9;
 }
 
-.cf-section-title::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.cf-section-icon {
+  width: 28px;
+  height: 28px;
   background: #6f0047;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  color: #fff;
 }
 
-/* ── Divider ── */
-.cf-divider {
+.cf-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6f0047;
+  letter-spacing: 0.4px;
+  margin: 0;
+  padding: 0;
   border: none;
-  border-top: 1.5px solid #ede5e9;
-  margin: 24px 0 20px;
+  text-transform: none;
+}
+
+.cf-section-body {
+  padding: 20px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* ════════════════════════════════════════
-   FORM GRID
+   FORM ELEMENTS
 ════════════════════════════════════════ */
 .cf-two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 16px;
 }
 
 .cf-col-group {
@@ -275,41 +279,7 @@
   color: #b52952;
 }
 
-/* ── Label-left row (description, priority) ── */
-.cf-form-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 16px;
-}
-
-.cf-form-row__label {
-  width: 150px;
-  min-width: 150px;
-  text-align: right;
-  padding-top: 9px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #7a5a6a;
-  text-transform: uppercase;
-  letter-spacing: 0.7px;
-}
-
-.cf-form-row__label .required {
-  color: #b52952;
-  margin-left: 2px;
-}
-
-.cf-form-row__field {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-/* ════════════════════════════════════════
-   INPUTS
-════════════════════════════════════════ */
+/* ── Inputs ── */
 .cf-input,
 .cf-select,
 .cf-textarea {
@@ -381,14 +351,11 @@
   font-weight: 500;
 }
 
-/* ════════════════════════════════════════
-   PRIORITY RADIOS
-════════════════════════════════════════ */
+/* ── Priority radios ── */
 .cf-radio-group {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding-top: 2px;
 }
 
 .cf-radio-label {
@@ -410,13 +377,13 @@
   display: none;
 }
 
+.cf-radio-label--low:has(input:checked)    { border-color: #1e783c; background: #e8f5e9; color: #1e783c; }
+.cf-radio-label--medium:has(input:checked) { border-color: #d67d00; background: #fff3e0; color: #d67d00; }
+.cf-radio-label--high:has(input:checked)   { border-color: #8a0030; background: #fce8ee; color: #8a0030; }
+
 .cf-radio-label--low    { color: #1e783c; }
 .cf-radio-label--medium { color: #d67d00; }
 .cf-radio-label--high   { color: #8a0030; }
-
-.cf-radio-label--low:has(input:checked)    { border-color: #1e783c; background: #e8f5e9; }
-.cf-radio-label--medium:has(input:checked) { border-color: #d67d00; background: #fff3e0; }
-.cf-radio-label--high:has(input:checked)   { border-color: #8a0030; background: #fce8ee; }
 
 /* ════════════════════════════════════════
    UPLOAD
@@ -432,7 +399,6 @@
   gap: 6px;
   background: #fdfbfc;
   transition: border-color 0.15s, background 0.15s;
-  position: relative;
 }
 
 .cf-upload-area:hover {
@@ -440,22 +406,16 @@
   background: #fce8f2;
 }
 
-/* ── KEY FIX: hides the input without breaking ref.click() ── */
 .cf-upload-area input[type="file"] {
-  position: absolute;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  pointer-events: none;
-  overflow: hidden;
+  display: none;
 }
 
-.cf-upload-area svg {
+.cf-upload-icon {
   color: #c4adb8;
   transition: color 0.15s;
 }
 
-.cf-upload-area:hover svg {
+.cf-upload-area:hover .cf-upload-icon {
   color: #6f0047;
 }
 
@@ -519,15 +479,17 @@
 ════════════════════════════════════════ */
 .cf-submit-row {
   display: flex;
-  justify-content: center;
-  margin-top: 28px;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 8px;
+  gap: 8px;
 }
 
 .cf-submit-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 13px 40px;
+  padding: 13px 36px;
   background: #6f0047;
   color: #fff;
   border: none;
@@ -538,8 +500,6 @@
   letter-spacing: 0.3px;
   cursor: pointer;
   transition: background 0.15s, transform 0.1s;
-  position: relative;
-  z-index: 1;
 }
 
 .cf-submit-btn:hover:not(:disabled) {
@@ -558,11 +518,10 @@
 }
 
 .cf-submit-hint {
-  text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   color: #b08090;
-  margin-top: 8px;
-  font-weight: 500;
+  margin: 0;
+  text-align: right;
 }
 
 /* ════════════════════════════════════════
@@ -571,17 +530,6 @@
 @media (max-width: 900px) {
   .cf-two-col {
     grid-template-columns: 1fr;
-  }
-
-  .cf-form-row {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .cf-form-row__label {
-    width: auto;
-    text-align: left;
-    padding-top: 0;
   }
 }
 
@@ -628,7 +576,16 @@
     justify-content: center;
   }
 
-  .cf-form-card {
-    padding: 20px 16px 28px;
+  .cf-submit-row {
+    align-items: stretch;
+  }
+
+  .cf-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cf-submit-hint {
+    text-align: center;
   }
 }
