@@ -16,7 +16,7 @@
 .cp-sidebar {
   width: 240px;
   min-height: 100%;
-  background: #6f0047;
+  background: linear-gradient(180deg, #1a3a6b 0%, #1e4080 100%);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
