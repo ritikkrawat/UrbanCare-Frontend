@@ -1,23 +1,29 @@
+/* ===== BASE ===== */
 .topbar {
   background-color: #6f0047;
   height: 36px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 20px;
+
+  /* prevents breaking */
+  overflow: hidden;
 }
 
+/* ===== LEFT ===== */
 .topbar-left {
   display: flex;
   align-items: center;
   gap: 10px;
+
+  white-space: nowrap;
+  flex-shrink: 0; /* ❗ prevents shrinking */
 }
 
 .topbar-text {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.85);
-  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 .topbar-divider {
@@ -26,25 +32,67 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* ===== RIGHT ===== */
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
+
+  margin-left: auto; /* ❗ pushes to right */
+  white-space: nowrap;
+  flex-shrink: 0; /* ❗ prevents compression */
 }
 
 .topbar-link {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
-  text-decoration: none;
-  transition: color 0.15s;
+  transition: color 0.2s;
+  white-space: nowrap;
 }
 
 .topbar-link:hover {
-  color: #ffffff;
+  color: #fff;
 }
 
 .topbar-sep {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.3);
   font-size: 10px;
+}
+
+/* ========================= */
+/* ✅ HEIGHT RESPONSIVENESS */
+/* ========================= */
+@media (max-height: 620px) {
+
+  /* hide only long text */
+  .hide-on-short {
+    display: none;
+  }
+
+  /* remove divider */
+  .topbar-divider {
+    display: none;
+  }
+}
+
+/* ========================= */
+/* 📱 OPTIONAL WIDTH CLEANUP */
+/* ========================= */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 10px;
+  }
+
+  .topbar-right {
+    gap: 6px;
+  }
+
+  .topbar-link {
+    font-size: 10px;
+  }
+
+  .topbar-sep {
+    display: none;
+  }
 }
