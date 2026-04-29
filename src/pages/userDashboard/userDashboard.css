@@ -8,20 +8,23 @@
   min-height: calc(100vh - 160px);
   font-family: 'DM Sans', sans-serif;
   background: #f0ece9;
+  position: relative;
 }
 
 /* ════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR - Desktop Default
 ════════════════════════════════════════ */
 .ud-sidebar {
   background: linear-gradient(180deg, #1a3a6b 0%, #1e4080 100%);
   width: 240px;
   min-height: 100%;
-  /* background: #6f0047; */
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   position: relative;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  z-index: 100;
 }
 
 /* subtle dot-grid overlay */
@@ -155,7 +158,7 @@
 }
 
 /* ════════════════════════════════════════
-   MAIN
+   MAIN CONTENT
 ════════════════════════════════════════ */
 .ud-main {
   flex: 1;
@@ -698,45 +701,189 @@
 }
 
 /* ════════════════════════════════════════
-   RESPONSIVE
+   HAMBURGER BUTTON (Positioned inside layout)
 ════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .ud-stats {
-    grid-template-columns: 1fr;
-  }
+.ud-hamburger-btn {
+  display: none;
+  position: absolute; /* Changed from fixed → sits inside .ud-wrapper */
+  top: 16px;
+  left: 16px;
+  z-index: 105; /* Above content, below sidebar */
+  background: #6f0047;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(111,0,71,0.25);
+  transition: all 0.2s ease;
 }
 
+.ud-hamburger-btn:hover {
+  background: #4a0030;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(111,0,71,0.3);
+}
+
+.ud-hamburger-btn:active {
+  transform: translateY(0);
+}
+
+/* ════════════════════════════════════════
+   SIDEBAR OVERLAY (Mobile)
+════════════════════════════════════════ */
+.ud-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30,0,20,0.5);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.ud-sidebar-overlay--active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sidebar close button - hidden on desktop */
+.ud-sidebar__close-btn {
+  display: none;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  z-index: 2;
+}
+
+.ud-sidebar__close-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* ═══════════════════════════════════════
+   HAMBURGER & OVERLAY BASE (Desktop Hidden)
+════════════════════════════════════════ */
+.ud-hamburger-btn {
+  display: none;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 101;
+  background: #6f0047;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(111,0,71,0.25);
+  transition: all 0.2s ease;
+}
+
+.ud-hamburger-btn:hover {
+  background: #4a0030;
+  transform: translateY(-1px);
+}
+
+.ud-sidebar-overlay {
+  display: none; /* Enabled only in mobile query */
+  position: absolute;
+  inset: 0;
+  background: rgba(30,0,20,0.4);
+  z-index: 98;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.ud-sidebar-overlay--active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ud-sidebar__close-btn {
+  display: none;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  z-index: 2;
+}
+
+.ud-sidebar__close-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVE (≤768px)
+════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .ud-wrapper {
-    flex-direction: column;
+  .ud-hamburger-btn {
+    display: flex;
+  }
+
+  .ud-sidebar-overlay {
+    display: block;
   }
 
   .ud-sidebar {
-    width: 100%;
-    min-height: unset;
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 100%;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 100;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
   }
 
-  .ud-sidebar__nav {
+  .ud-sidebar--open {
+    transform: translateX(0);
+  }
+
+  .ud-sidebar__close-btn {
     display: flex;
-    flex-wrap: wrap;
-    padding: 8px;
-    gap: 4px;
   }
 
-  .ud-sidebar__nav-btn {
-    width: auto;
-    flex: 1;
-    min-width: 130px;
-    justify-content: center;
+  .ud-wrapper {
+    position: relative;
+    flex-direction: column;
   }
 
-  .ud-sidebar__footer,
-  .ud-sidebar__section-label {
-    display: none;
-  }
-
+  /* ✅ FIX: Add top padding to push cards below the floating hamburger */
   .ud-main {
     padding: 16px;
+    padding-top: 70px; /* Adjusts for the 16px offset + 40px button height */
+  }
+
+  .ud-stats {
+    grid-template-columns: 1fr;
   }
 
   .ud-table-card__header {
@@ -748,5 +895,98 @@
   .ud-lodge-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .ud-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .ud-controls__search input {
+    width: 100%;
+  }
+}
+
+/* Small mobile (≤480px): tighter spacing */
+@media (max-width: 480px) {
+  .ud-hamburger-btn {
+    top: 12px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .ud-main {
+    padding: 66px 12px 12px;
+  }
+
+  .ud-stat-card__value {
+    font-size: 36px;
+  }
+
+  .ud-stat-card__label {
+    font-size: 11px;
+  }
+
+  .ud-table-card__title {
+    font-size: 16px;
+  }
+
+  .ud-table th,
+  .ud-table td {
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+
+  .ud-desc {
+    max-width: 140px;
+  }
+
+  .ud-pagination {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .ud-pagination__buttons {
+    justify-content: center;
+  }
+}
+
+/* ════════════════════════════════════════
+   ACCESSIBILITY & UTILITIES
+════════════════════════════════════════ */
+.ud-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles for keyboard navigation */
+.ud-hamburger-btn:focus,
+.ud-sidebar__nav-btn:focus,
+.ud-lodge-btn:focus,
+.ud-del-btn:focus,
+.ud-modal__btn:focus,
+.ud-pagination__btn:focus,
+.ud-controls__entries select:focus,
+.ud-controls__search input:focus {
+  outline: 2px solid #6f0047;
+  outline-offset: 2px;
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

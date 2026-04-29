@@ -28,6 +28,8 @@ const icons = {
   sort:      "M8 6h13M8 12h9M8 18h5",
   loader:    "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83",
   search:    "M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z",
+  menu:      "M3 12h18M3 6h18M3 18h18",
+  close:     "M18 6L6 18M6 6l12 12",
 };
 
 // ── Nav Items ─────────────────────────────────────────────────────────────────
@@ -39,50 +41,67 @@ const navItems = [
 ];
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
-const Sidebar = ({ active, setActive }) => {
+const Sidebar = ({ active, setActive, isOpen, onClose }) => {
   const navigate = useNavigate();
+  
+  const handleNavClick = (item) => {
+    setActive(item.key);
+    onClose?.(); // Close sidebar on mobile after selection
+    if (item.key === "profile")  navigate("/editProfile");
+    if (item.key === "password") navigate("/changePassword");
+    if (item.key === "delete")   navigate("/deleteAccount");
+    if (item.key === "plus")     navigate("/complaintForm");
+  };
+
   return (
-    <aside className="ud-sidebar">
-      <div className="ud-sidebar__logo">
-        <div className="ud-sidebar__logo-icon">
-          <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}>
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <path d="M9 22V12h6v10" />
-          </svg>
-        </div>
-        <div>
-          <div className="ud-sidebar__title">UrbanCare</div>
-          <div className="ud-sidebar__subtitle">Citizen Dashboard</div>
-        </div>
-      </div>
+    <>
+      {/* Mobile Overlay */}
+      <div 
+        className={`ud-sidebar-overlay${isOpen ? " ud-sidebar-overlay--active" : ""}`} 
+        onClick={onClose}
+      />
+      
+      <aside className={`ud-sidebar${isOpen ? " ud-sidebar--open" : ""}`}>
+        {/* Mobile Close Button */}
+        <button className="ud-sidebar__close-btn" onClick={onClose}>
+          <Icon d={icons.close} size={18} />
+        </button>
 
-      <div className="ud-sidebar__section-label">Navigation</div>
-
-      <nav className="ud-sidebar__nav">
-        {navItems.map((item) => (
-          <button
-            key={item.key}
-            onClick={() => {
-              setActive(item.key);
-              if (item.key === "profile")  navigate("/editProfile");
-              if (item.key === "password") navigate("/changePassword");
-              if (item.key === "delete")   navigate("/deleteAccount");
-              if (item.key === "plus")     navigate("/complaintForm");
-            }}
-            className={`ud-sidebar__nav-btn${active === item.key ? " ud-sidebar__nav-btn--active" : ""}`}
-          >
-            <span className="ud-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
-            {item.label}
-          </button>
-        ))}
-      </nav>
-
-      <div className="ud-sidebar__footer">
-        <div className="ud-sidebar__footer-note">
-          Need help? Contact your ward officer through the complaint portal.
+        <div className="ud-sidebar__logo">
+          <div className="ud-sidebar__logo-icon">
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}>
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <path d="M9 22V12h6v10" />
+            </svg>
+          </div>
+          <div>
+            <div className="ud-sidebar__title">UrbanCare</div>
+            <div className="ud-sidebar__subtitle">Citizen Dashboard</div>
+          </div>
         </div>
-      </div>
-    </aside>
+
+        <div className="ud-sidebar__section-label">Navigation</div>
+
+        <nav className="ud-sidebar__nav">
+          {navItems.map((item) => (
+            <button
+              key={item.key}
+              onClick={() => handleNavClick(item)}
+              className={`ud-sidebar__nav-btn${active === item.key ? " ud-sidebar__nav-btn--active" : ""}`}
+            >
+              <span className="ud-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
+              {item.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="ud-sidebar__footer">
+          <div className="ud-sidebar__footer-note">
+            Need help? Contact your ward officer through the complaint portal.
+          </div>
+        </div>
+      </aside>
+    </>
   );
 };
 
@@ -204,7 +223,6 @@ const ComplaintContent = () => {
 
   return (
     <main className="ud-main">
-
       {/* ── Stat Cards ── */}
       <div className="ud-stats">
         <StatCard
@@ -398,13 +416,32 @@ const ComplaintContent = () => {
 // ── Root ──────────────────────────────────────────────────────────────────────
 const UserDashboard = () => {
   const [active, setActive] = useState("dashboard");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <>
       <Topbar />
       <Head />
       <MainNavbar type="dashboard" />
       <div className="ud-wrapper">
-        <Sidebar active={active} setActive={setActive} />
+        
+        {/* ✅ Hide hamburger when sidebar is open */}
+        {!isSidebarOpen && (
+          <button 
+            className="ud-hamburger-btn" 
+            onClick={() => setIsSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <Icon d={icons.menu} size={20} />
+          </button>
+        )}
+        
+        <Sidebar 
+          active={active} 
+          setActive={setActive} 
+          isOpen={isSidebarOpen} 
+          onClose={() => setIsSidebarOpen(false)} 
+        />
         <ComplaintContent />
       </div>
     </>
