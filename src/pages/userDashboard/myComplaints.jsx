@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
+import Topbar from "../home/TopBar/topBar";
+import Head from "../home/Head/head";
+import MainNavbar from "../home/MainNavbar/mainNavbar";
 import { useNavigate } from "react-router-dom";
+import { useToast, ToastContainer } from "../../components/toast.jsx";
 import "./myComplaints.css";
 
 // ── SVG Icon Helper ──────────────────────────────────────────────────────────
-const Icon = ({ d, size = 16 }) => (
+const Icon = ({ d, size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
     <path d={d} />
@@ -23,7 +27,6 @@ const icons = {
   user:         "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   viewDefault:  "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
   viewTile:     "M3 3h5v5H3z M10 3h5v5h-5z M17 3h4v5h-4z M3 10h5v5H3z M10 10h5v5h-5z M17 10h4v5h-4z M3 17h5v4H3z M10 17h5v4h-5z M17 17h4v4h-4z",
-  viewBlock:    "M3 5h18M3 10h18M3 15h18M3 20h18",
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -64,7 +67,6 @@ const priorityStripClass = (p) => {
 const imageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith("http")) return path;
-
   const baseUrl = process.env.REACT_APP_API_URL?.replace(/\/$/, "");
   return `${baseUrl}/${path.replace(/\\/g, "/")}`;
 };
@@ -72,7 +74,7 @@ const imageUrl = (path) => {
 // ── Lightbox ──────────────────────────────────────────────────────────────────
 const Lightbox = ({ src, onClose }) => (
   <div className="mc-lightbox" onClick={onClose}>
-    <button className="mc-lightbox__close" onClick={onClose}>
+    <button className="mc-lightbox__close" onClick={onClose} type="button">
       <Icon d={icons.close} size={18} />
     </button>
     <img
@@ -88,148 +90,149 @@ const Lightbox = ({ src, onClose }) => (
 const ComplaintCard = ({ complaint: c, onImageClick }) => {
   const [expanded, setExpanded] = useState(false);
 
-  return (<div className="mc-card">
-    <div className={`mc-card__strip ${priorityStripClass(c.priority)}`} />
+  return (
+    <div className="mc-card">
+      <div className={`mc-card__strip ${priorityStripClass(c.priority)}`} />
 
-    <div className="mc-card__head">
-      <div className="mc-card__head-left">
-        <span className="mc-card__reg">{c.registrationNumber || c.complaintId || "—"}</span>
-        <span className="mc-card__category">{c.category}</span>
-        <span className="mc-card__subcategory">{c.subCategory}</span>
+      <div className="mc-card__head">
+        <div className="mc-card__head-left">
+          <span className="mc-card__reg">{c.registrationNumber || c.complaintId || "—"}</span>
+          <span className="mc-card__category">{c.category}</span>
+          <span className="mc-card__subcategory">{c.subCategory}</span>
+        </div>
+        <div className="mc-card__badges">
+          <span className={`mc-badge ${priorityBadgeClass(c.priority)}`}>
+            {c.priority} Priority
+          </span>
+          <span className={`mc-badge ${statusBadgeClass(c.status)}`}>
+            {c.status}
+          </span>
+          <button
+            className="mc-expand-btn"
+            onClick={() => setExpanded(!expanded)}
+            type="button"
+          >
+            {expanded ? "Collapse ▲" : "Expand ▼"}
+          </button>
+        </div>
       </div>
-      <div className="mc-card__badges">
-        <span className={`mc-badge ${priorityBadgeClass(c.priority)}`}>
-          {c.priority} Priority
-        </span>
-        <span className={`mc-badge ${statusBadgeClass(c.status)}`}>
-          {c.status}
-        </span>
 
-        <button
-          className="mc-expand-btn"
-          onClick={() => setExpanded(!expanded)}
-        >
-          {expanded ? "Collapse ▲" : "Expand ▼"}
-        </button>
-      </div>
-    </div>
-
-    {expanded &&(
-      <>
-        <div className="mc-card__body">
-          <div className="mc-detail-grid">
-            <div className="mc-detail-item">
-              <span className="mc-detail-item__label">Category</span>
-              <span className="mc-detail-item__value">{c.category}</span>
-            </div>
-            <div className="mc-detail-item">
-              <span className="mc-detail-item__label">Sub Category</span>
-              <span className="mc-detail-item__value">{c.subCategory}</span>
-            </div>
-            <div className="mc-detail-item">
-              <span className="mc-detail-item__label">Priority</span>
-              <span className="mc-detail-item__value">{c.priority}</span>
-            </div>
-            <div className="mc-detail-item">
-              <span className="mc-detail-item__label">Status</span>
-              <span className="mc-detail-item__value">{c.status}</span>
-            </div>
-            <div className="mc-detail-item">
-              <span className="mc-detail-item__label">City</span>
-              <span className="mc-detail-item__value">{c.city || "—"}</span>
-            </div>
-            <div className="mc-detail-item">
-              <span className="mc-detail-item__label">State</span>
-              <span className="mc-detail-item__value">{c.state || "—"}</span>
-            </div>
-            <div className="mc-detail-item">
-              <span className="mc-detail-item__label">Pincode</span>
-              <span className="mc-detail-item__value">{c.pincode || "—"}</span>
-            </div>
-            {c.exactLocation && (
+      {expanded && (
+        <>
+          <div className="mc-card__body">
+            <div className="mc-detail-grid">
               <div className="mc-detail-item">
-                <span className="mc-detail-item__label">Exact Location</span>
-                <span className="mc-detail-item__value">{c.exactLocation}</span>
+                <span className="mc-detail-item__label">Category</span>
+                <span className="mc-detail-item__value">{c.category}</span>
+              </div>
+              <div className="mc-detail-item">
+                <span className="mc-detail-item__label">Sub Category</span>
+                <span className="mc-detail-item__value">{c.subCategory}</span>
+              </div>
+              <div className="mc-detail-item">
+                <span className="mc-detail-item__label">Priority</span>
+                <span className="mc-detail-item__value">{c.priority}</span>
+              </div>
+              <div className="mc-detail-item">
+                <span className="mc-detail-item__label">Status</span>
+                <span className="mc-detail-item__value">{c.status}</span>
+              </div>
+              <div className="mc-detail-item">
+                <span className="mc-detail-item__label">City</span>
+                <span className="mc-detail-item__value">{c.city || "—"}</span>
+              </div>
+              <div className="mc-detail-item">
+                <span className="mc-detail-item__label">State</span>
+                <span className="mc-detail-item__value">{c.state || "—"}</span>
+              </div>
+              <div className="mc-detail-item">
+                <span className="mc-detail-item__label">Pincode</span>
+                <span className="mc-detail-item__value">{c.pincode || "—"}</span>
+              </div>
+              {c.exactLocation && (
+                <div className="mc-detail-item">
+                  <span className="mc-detail-item__label">Exact Location</span>
+                  <span className="mc-detail-item__value">{c.exactLocation}</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="mc-address-block">
+              <div className="mc-address-block__label">
+                <Icon d={icons.mapPin} size={11} /> &nbsp;Full Address
+              </div>
+              <div className="mc-address-block__value">{formatAddress(c)}</div>
+            </div>
+            
+            <div className="mc-card__desc">{c.description}</div>
+            
+            {c.images && c.images.length > 0 && (
+              <div className="mc-media-section">
+                <div className="mc-media-section__title">
+                  <Icon d={icons.image} size={11} /> &nbsp;Attached Images ({c.images.length})
+                </div>
+                <div className="mc-media-row">
+                  {c.images.map((img, idx) => (
+                    <img
+                      key={idx}
+                      src={imageUrl(img)}
+                      alt={`Attachment ${idx + 1}`}
+                      className="mc-img-thumb"
+                      onClick={() => onImageClick(imageUrl(img))}
+                      onError={(e) => { e.target.style.display = "none"; }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          
+            {c.videos && c.videos.length > 0 && (
+              <div className="mc-media-section" style={{ marginTop: 14 }}>
+                <div className="mc-media-section__title">
+                  <Icon d={icons.video} size={11} /> &nbsp;Attached Videos ({c.videos.length})
+                </div>
+                <div className="mc-media-row">
+                  {c.videos.map((vid, idx) => (
+                    <a key={idx} href={imageUrl(vid)} target="_blank" rel="noreferrer" className="mc-video-chip">
+                      <Icon d={icons.video} size={14} />
+                      Video {idx + 1}
+                    </a>
+                  ))}
+                </div>
               </div>
             )}
           </div>
           
-          <div className="mc-address-block">
-            <div className="mc-address-block__label">
-              <Icon d={icons.mapPin} size={11} /> &nbsp;Full Address
-            </div>
-            <div className="mc-address-block__value">{formatAddress(c)}</div>
-          </div>
-          
-          <div className="mc-card__desc">{c.description}</div>
-          
-          {c.images && c.images.length > 0 && (
-            <div className="mc-media-section">
-              <div className="mc-media-section__title">
-                <Icon d={icons.image} size={11} /> &nbsp;Attached Images ({c.images.length})
-              </div>
-              <div className="mc-media-row">
-                {c.images.map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={imageUrl(img)}
-                    alt={`Attachment ${idx + 1}`}
-                    className="mc-img-thumb"
-                    onClick={() => onImageClick(imageUrl(img))}
-                    onError={(e) => { e.target.style.display = "none"; }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        
-          {c.videos && c.videos.length > 0 && (
-            <div className="mc-media-section" style={{ marginTop: 14 }}>
-              <div className="mc-media-section__title">
-                <Icon d={icons.video} size={11} /> &nbsp;Attached Videos ({c.videos.length})
-              </div>
-              <div className="mc-media-row">
-                {c.videos.map((vid, idx) => (
-                  <a key={idx} href={imageUrl(vid)} target="_blank" rel="noreferrer" className="mc-video-chip">
-                    <Icon d={icons.video} size={14} />
-                    Video {idx + 1}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        
-        <div className="mc-card__footer">
-          <span className="mc-card__date">
-            <Icon d={icons.calendar} size={13} />
-            {formatDate(c.createdAt)}
-          </span>
-          {c.updatedAt && c.updatedAt !== c.createdAt && (
+          <div className="mc-card__footer">
             <span className="mc-card__date">
-              <Icon d={icons.clock} size={13} />
-              Last updated {formatDate(c.updatedAt)}
+              <Icon d={icons.calendar} size={13} />
+              {formatDate(c.createdAt)}
             </span>
-          )}
-        </div>
-      </>
-    )}
+            {c.updatedAt && c.updatedAt !== c.createdAt && (
+              <span className="mc-card__date">
+                <Icon d={icons.clock} size={13} />
+                Last updated {formatDate(c.updatedAt)}
+              </span>
+            )}
+          </div>
+        </>
+      )}
 
-    {!expanded && (
-      <div className="mc-card__preview">
-        <div className="mc-card__preview-text">
-          {c.description?.slice(0, 100)}...
+      {!expanded && (
+        <div className="mc-card__preview">
+          <div className="mc-card__preview-text">
+            {c.description?.slice(0, 100)}...
+          </div>
+          <div className="mc-card__preview-date">
+            {formatDate(c.createdAt)}
+          </div>
         </div>
-
-        <div className="mc-card__preview-date">
-          {formatDate(c.createdAt)}
-        </div>
-      </div>
-    )}
-  </div>)
+      )}
+    </div>
+  );
 };
 
-// ── VIEW: Tile (compact 3-col grid) ──────────────────────────────────────────
+// ── VIEW: Tile (compact grid) ──────────────────────────────────────────
 const ComplaintTile = ({ complaint: c, onImageClick }) => (
   <div className="mc-tile">
     <div className={`mc-card__strip ${priorityStripClass(c.priority)}`} />
@@ -290,6 +293,7 @@ const ViewToggle = ({ view, setView }) => (
         title={label}
         className={`mc-view-btn ${view === key ? "mc-view-btn--active" : ""}`}
         onClick={() => setView(key)}
+        type="button"
       >
         <Icon d={icon} size={15} />
         <span className="mc-view-btn__label">{label}</span>
@@ -298,8 +302,8 @@ const ViewToggle = ({ view, setView }) => (
   </div>
 );
 
-// ── MyComplaints Page ─────────────────────────────────────────────────────────
-const MyComplaints = () => {
+// ── MyComplaints Page Content ─────────────────────────────────────────────────
+const MyComplaintsContent = ({ toast }) => {
   const navigate = useNavigate();
 
   const [complaints, setComplaints]     = useState([]);
@@ -308,19 +312,16 @@ const MyComplaints = () => {
   const [statusFilter, setStatusFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [lightboxSrc, setLightboxSrc]   = useState(null);
-  const [view, setView]                 = useState("default"); // "default" | "tile" | "block"
+  const [view, setView]                 = useState("default");
 
-  // ── Fetch ──────────────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
         const token = sessionStorage.getItem("token");
         const res = await fetch(
-          // "http://localhost:5000/api/complaint/my-complaints", 
           `${process.env.REACT_APP_API_URL}/api/complaint/my-complaints`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
         if (res.status === 401) {
           sessionStorage.removeItem("token");
@@ -332,15 +333,15 @@ const MyComplaints = () => {
         if (res.ok) setComplaints(data.complaints || []);
       } catch (err) {
         console.error("Failed to fetch complaints:", err);
+        toast?.error("Failed to load complaints");
       } finally {
         setLoading(false);
       }
     };
 
     fetchComplaints();
-  }, [navigate]);
+  }, [navigate, toast]);
 
-  // ── Filter ─────────────────────────────────────────────────────────────────
   const filtered = complaints.filter((c) => {
     const q = search.toLowerCase();
     const matchSearch = !search || (
@@ -358,121 +359,115 @@ const MyComplaints = () => {
   const handleImageClick = (src) => setLightboxSrc(src);
 
   return (
-    <div className="mc-page">
-
-      {/* ── Top Bar ── */}
-      <div className="mc-topbar">
-        <div className="mc-topbar__brand">
-          {/* <div className="mc-topbar__logo">
-            <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 8v4l3 3" />
-            </svg>
-          </div> */}
-          <span className="mc-topbar__name">My Complaints</span>
+    <main className="mc-main">
+      {/* Page Header */}
+      <div className="mc-page-header">
+        <div>
+          <h2 className="mc-page-title">My Complaints</h2>
+          <p className="mc-page-sub">All complaints filed by you — with full details and attachments</p>
         </div>
-        <div className="mc-topbar__right">
-          <button className="mc-topbar__back-btn" onClick={() => navigate("/dashboard")}>
-            <Icon d={icons.arrowLeft} size={14} />
-            Back to Dashboard
-          </button>
-        </div>
+        <button type="button" className="mc-back-btn" onClick={() => navigate("/dashboard")}>
+          <Icon d={icons.arrowLeft} size={14} />
+          Back to Dashboard
+        </button>
       </div>
 
-      {/* ── Main ── */}
-      <div className="mc-main">
-        <div className="mc-header">
-          <h1 className="mc-header__title">My Complaints</h1>
-          <p className="mc-header__sub">
-            All complaints filed by you — with full details and attachments
-          </p>
+      {/* Controls */}
+      {!loading && (
+        <div className="mc-controls">
+          <div className="mc-search-wrap">
+            <Icon d={icons.search} size={15} />
+            <input
+              placeholder="Search by category, description, city..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <select
+            className="mc-filter-select"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="All">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Closed">Closed</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+
+          <select
+            className="mc-filter-select"
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+          >
+            <option value="All">All Priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+
+          <ViewToggle view={view} setView={setView} />
+
+          <span className="mc-count">
+            {filtered.length} of {complaints.length} complaints
+          </span>
         </div>
+      )}
 
-        {/* Controls */}
-        {!loading && (
-          <div className="mc-controls">
-            {/* Search */}
-            <div className="mc-search-wrap">
-              <Icon d={icons.search} size={15} />
-              <input
-                placeholder="Search by category, description, city..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            {/* Status filter */}
-            <select
-              className="mc-filter-select"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="All">All Status</option>
-              <option value="Pending">Pending</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Closed">Closed</option>
-              <option value="Resolved">Resolved</option>
-            </select>
-
-            {/* Priority filter */}
-            <select
-              className="mc-filter-select"
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-            >
-              <option value="All">All Priority</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-
-            {/* View Toggle */}
-            <ViewToggle view={view} setView={setView} />
-
-            <span className="mc-count">
-              {filtered.length} of {complaints.length} complaints
-            </span>
-          </div>
-        )}
-
-        {/* Content */}
-        {loading ? (
-          <div className="mc-loading">
-            <div className="mc-spinner" />
-            Loading your complaints...
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="mc-empty">
-            <Icon d={icons.inbox} size={48} />
-            <span className="mc-empty__title">
-              {complaints.length === 0 ? "No complaints filed yet" : "No complaints match your filters"}
-            </span>
-            <span className="mc-empty__sub">
-              {complaints.length === 0
-                ? "Go to the dashboard and lodge your first complaint"
-                : "Try adjusting your search or filters"}
-            </span>
-          </div>
-        ) : view === "default" ? (
-          <div className="mc-grid">
-            {filtered.map((c, i) => (
-              <ComplaintCard key={c._id || i} complaint={c} onImageClick={handleImageClick} />
-            ))}
-          </div>
-        ) : view === "tile" ? (
-          <div className="mc-tile-grid">
-            {filtered.map((c, i) => (
-              <ComplaintTile key={c._id || i} complaint={c} onImageClick={handleImageClick} />
-            ))}
-          </div>
-        ) : null}
-      </div>
+      {/* Content */}
+      {loading ? (
+        <div className="mc-loading">
+          <div className="mc-spinner" />
+          Loading your complaints...
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="mc-empty">
+          <Icon d={icons.inbox} size={48} />
+          <span className="mc-empty__title">
+            {complaints.length === 0 ? "No complaints filed yet" : "No complaints match your filters"}
+          </span>
+          <span className="mc-empty__sub">
+            {complaints.length === 0
+              ? "Go to the dashboard and lodge your first complaint"
+              : "Try adjusting your search or filters"}
+          </span>
+        </div>
+      ) : view === "default" ? (
+        <div className="mc-grid">
+          {filtered.map((c, i) => (
+            <ComplaintCard key={c._id || i} complaint={c} onImageClick={handleImageClick} />
+          ))}
+        </div>
+      ) : (
+        <div className="mc-tile-grid">
+          {filtered.map((c, i) => (
+            <ComplaintTile key={c._id || i} complaint={c} onImageClick={handleImageClick} />
+          ))}
+        </div>
+      )}
 
       {/* Lightbox */}
       {lightboxSrc && (
         <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
       )}
-    </div>
+    </main>
+  );
+};
+
+// ── Root Component ───────────────────────────────────────────────────────────
+const MyComplaints = () => {
+  const { toasts, toast, removeToast } = useToast();
+  return (
+    <>
+      <Topbar />
+      <Head />
+      <MainNavbar type="dashboard" />
+      <div className="cf-wrapper">
+        <MyComplaintsContent toast={toast} />
+      </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+    </>
   );
 };
 
