@@ -1,4 +1,4 @@
-import { useState,useRef, useEffect} from "react";
+import { useState} from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
@@ -72,60 +72,6 @@ const Sidebar = ({ active, setActive }) => {
   );
 };
 
-
-/* ── Captcha generator ── */
-const CAPTCHA_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-const genCaptcha = (len = 6) =>
-  Array.from({ length: len }, () =>
-    CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)]
-  ).join("");
-
-/* ── Status mock data ── */
-const MOCK_DATA = {
-  "UC-2024-001": {
-    name: "Rajesh Kumar",
-    complaint: "Garbage accumulation near bus stop on MG Road",
-    category: "Garbage / Sanitation",
-    date: "12 Jan 2025",
-    status: "resolved",
-    timeline: [
-      { label: "Submitted", date: "12 Jan 2025", done: true },
-      { label: "Acknowledged", date: "13 Jan 2025", done: true },
-      { label: "Assigned to Department", date: "14 Jan 2025", done: true },
-      { label: "In Progress", date: "16 Jan 2025", done: true },
-      { label: "Resolved", date: "20 Jan 2025", done: true },
-    ],
-  },
-  "UC-2024-002": {
-    name: "Priya Sharma",
-    complaint: "Large pothole on NH-48 near toll plaza causing accidents",
-    category: "Road / Infrastructure",
-    date: "18 Feb 2025",
-    status: "in-progress",
-    timeline: [
-      { label: "Submitted", date: "18 Feb 2025", done: true },
-      { label: "Acknowledged", date: "19 Feb 2025", done: true },
-      { label: "Assigned to Department", date: "21 Feb 2025", done: true },
-      { label: "In Progress", date: "25 Feb 2025", done: true },
-      { label: "Resolved", date: null, done: false },
-    ],
-  },
-  "UC-2024-003": {
-    name: "Amit Singh",
-    complaint: "Street lights not working in Sector 14 for past two weeks",
-    category: "Street Lights",
-    date: "05 Mar 2025",
-    status: "acknowledged",
-    timeline: [
-      { label: "Submitted", date: "05 Mar 2025", done: true },
-      { label: "Acknowledged", date: "06 Mar 2025", done: true },
-      { label: "Assigned to Department", date: null, done: false },
-      { label: "In Progress", date: null, done: false },
-      { label: "Resolved", date: null, done: false },
-    ],
-  },
-};
-
 const STATUS_META = {
   resolved:     { label: "Resolved",     color: "#2e7d32", bg: "#e8f5e9", border: "#a5d6a7" },
   "in-progress":{ label: "In Progress",  color: "#e65100", bg: "#fff3e0", border: "#ffcc80" },
@@ -136,92 +82,49 @@ const STATUS_META = {
 const TrackStatusContent = () => {
   const [regNo, setRegNo]           = useState("");
   const [contact, setContact]       = useState("");
-  const [captchaInput, setCaptchaInput] = useState("");
-  const [captchaCode, setCaptchaCode]   = useState(genCaptcha);
   const [result, setResult]         = useState(null);
   const [error, setError]           = useState("");
   const [submitted, setSubmitted]   = useState(false);
-  const canvasRef                   = useRef(null);
 
-  /* draw captcha on canvas */
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    /* background */
-    ctx.fillStyle = "#f3f0ed";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    /* noise lines */
-    for (let i = 0; i < 5; i++) {
-      ctx.beginPath();
-      ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-      ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-      ctx.strokeStyle = `rgba(111,0,71,${0.15 + Math.random() * 0.15})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-
-    /* noise dots */
-    for (let i = 0; i < 30; i++) {
-      ctx.beginPath();
-      ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(111,0,71,${0.1 + Math.random() * 0.2})`;
-      ctx.fill();
-    }
-
-    /* characters */
-    const colors = ["#6f0047", "#4a0030", "#8b1a6b", "#c0003c"];
-    captchaCode.split("").forEach((ch, i) => {
-      ctx.save();
-      ctx.font = `bold ${18 + Math.random() * 4}px 'Courier New', monospace`;
-      ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-      ctx.translate(10 + i * 22, 22 + Math.random() * 6);
-      ctx.rotate((Math.random() - 0.5) * 0.4);
-      ctx.fillText(ch, 0, 0);
-      ctx.restore();
-    });
-  }, [captchaCode]);
-
-  const refreshCaptcha = () => {
-    setCaptchaCode(genCaptcha());
-    setCaptchaInput("");
-  };
-
-  const isFormValid = regNo.trim() && captchaInput.trim();
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
     setError("");
     setResult(null);
-
+  
     if (!regNo.trim()) return;
-    if (!captchaInput.trim()) return;
-
-    if (captchaInput !== captchaCode) {
-      setError("Incorrect security code. Please try again.");
-      refreshCaptcha();
-      return;
+  
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/complaint/track/${regNo}`
+      );
+  
+      if (res.status === 404) {
+        setError("Complaint not found");
+        return;
+      }
+  
+      const data = await res.json();
+  
+      if (!data.success) {
+        setError(data.message);
+        return;
+      }
+  
+      setResult(data.data);
+  
+    } catch (err) {
+      console.error(err);
+      setError("Server error. Please try again.");
     }
-
-    const key = regNo.trim().toUpperCase();
-    const data = MOCK_DATA[key];
-    if (!data) {
-      setError("No complaint found with this registration number. Please check and try again.");
-      refreshCaptcha();
-      return;
-    }
-
-    setResult(data);
   };
 
   const handleReset = () => {
-    setRegNo(""); setContact(""); setCaptchaInput("");
-    setResult(null); setError(""); setSubmitted(false);
-    refreshCaptcha();
+    setRegNo(""); 
+    setContact(""); 
+    setResult(null); 
+    setError(""); 
+    setSubmitted(false);
   };
 
   const meta = result ? (STATUS_META[result.status] || STATUS_META.pending) : null;
@@ -230,7 +133,7 @@ const TrackStatusContent = () => {
     <div className="vs-page">
       <div className="vs-container">
 
-        {/* ── Header ── */}
+        {/* ── Header ─ */}
         <div className="vs-page-header">
           <div className="vs-page-header-left">
             <div className="vs-page-icon">
@@ -244,173 +147,165 @@ const TrackStatusContent = () => {
               <p className="vs-page-sub">Track the status of your submitted grievance</p>
             </div>
           </div>
+          {result && (
+            <span
+              className="vs-status-badge"
+              style={{ color: meta.color, background: meta.bg, border: `1px solid ${meta.border}` }}
+            >
+              <span className="vs-status-dot" style={{ background: meta.color }}></span>
+              {meta.label}
+            </span>
+          )}
         </div>
 
         <div className="vs-page-divider"></div>
 
-        {/* ── Hint ── */}
-        <p className="vs-mandatory-note">
-          Fields marked with <span className="vs-required">*</span> are mandatory.
-          &nbsp;Try: <strong>UC-2024-001</strong>, <strong>UC-2024-002</strong>, or <strong>UC-2024-003</strong>
-        </p>
+        {/* ── Two Column Layout ── */}
+        <div className="vs-content-grid">
+          
+          {/* Left Column - Search Form */}
+          <div className="vs-search-panel">
+            <p className="vs-mandatory-note">
+              Fields marked with <span className="vs-required">*</span> are mandatory.
+              <br />Try: <strong>CMP123456</strong>, <strong>CMP515155</strong>, or <strong>CMP876516</strong>
+            </p>
 
-        {/* ── Form ── */}
-        <form className="vs-form" onSubmit={handleSubmit}>
+            <form className="vs-form" onSubmit={handleSubmit}>
+              <div className="vs-form-row">
+                <label className="vs-label">
+                  Registration Number <span className="vs-required">*</span>
+                </label>
+                <input
+                  className={`vs-input ${submitted && !regNo.trim() ? "vs-input--error" : ""}`}
+                  type="text"
+                  placeholder="e.g. CMP123456"
+                  value={regNo}
+                  onChange={(e) => setRegNo(e.target.value)}
+                />
+                {submitted && !regNo.trim() && (
+                  <span className="vs-field-error">Registration number is required</span>
+                )}
+              </div>
 
-          <div className="vs-form-row">
-            <label className="vs-label">
-              Registration Number <span className="vs-required">*</span>
-            </label>
-            <input
-              className={`vs-input ${submitted && !regNo.trim() ? "vs-input--error" : ""}`}
-              type="text"
-              placeholder="e.g. UC-2024-001"
-              value={regNo}
-              onChange={(e) => setRegNo(e.target.value)}
-            />
-            {submitted && !regNo.trim() && (
-              <span className="vs-field-error">Registration number is required</span>
-            )}
-          </div>
+              <div className="vs-form-row">
+                <label className="vs-label">
+                  Email ID or Mobile Number{" "}
+                  <span className="vs-optional">(optional)</span>
+                </label>
+                <input
+                  className="vs-input"
+                  type="text"
+                  placeholder="Enter email or 10-digit mobile number"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                />
+              </div>
 
-          <div className="vs-form-row">
-            <label className="vs-label">
-              Email ID or Mobile Number{" "}
-              <span className="vs-optional">(optional)</span>
-            </label>
-            <input
-              className="vs-input"
-              type="text"
-              placeholder="Enter email or 10-digit mobile number"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-            />
-          </div>
-
-          <div className="vs-form-row">
-            <label className="vs-label">
-              Security Code <span className="vs-required">*</span>
-            </label>
-            <div className="vs-captcha-row">
-              <input
-                className={`vs-input vs-captcha-input ${submitted && !captchaInput.trim() ? "vs-input--error" : ""}`}
-                type="text"
-                placeholder="Enter code shown"
-                value={captchaInput}
-                onChange={(e) => setCaptchaInput(e.target.value)}
-                maxLength={6}
-              />
-              <div className="vs-captcha-box">
-                <canvas ref={canvasRef} width={148} height={36} className="vs-captcha-canvas" />
-                <button
-                  type="button"
-                  className="vs-captcha-refresh"
-                  onClick={refreshCaptcha}
-                  title="Refresh code"
-                >
+              {error && (
+                <div className="vs-error-banner">
                   <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.5 8A5.5 5.5 0 112.5 5.5" stroke="#6f0047" strokeWidth="1.5" strokeLinecap="round"/>
-                    <path d="M2.5 2.5v3h3" stroke="#6f0047" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="8" cy="8" r="7" stroke="#c62828" strokeWidth="1.4"/>
+                    <path d="M8 5v3.5M8 10.5v.5" stroke="#c62828" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
+                  {error}
+                </div>
+              )}
+
+              <div className="vs-form-actions">
+                <button type="submit" className="vs-submit-btn" disabled={!regNo.trim()}>
+                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="5" stroke="white" strokeWidth="1.4"/>
+                    <path d="M10.5 10.5l3 3" stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
+                  </svg>
+                  Search
+                </button>
+                <button type="button" className="vs-reset-btn" onClick={handleReset}>
+                  Reset
                 </button>
               </div>
-            </div>
-            {submitted && !captchaInput.trim() && (
-              <span className="vs-field-error">Security code is required</span>
-            )}
+            </form>
           </div>
 
-          {error && (
-            <div className="vs-error-banner">
-              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="8" cy="8" r="7" stroke="#c62828" strokeWidth="1.4"/>
-                <path d="M8 5v3.5M8 10.5v.5" stroke="#c62828" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
-              {error}
-            </div>
-          )}
-
-          <div className="vs-form-actions">
-            <button type="submit" className="vs-submit-btn" disabled={!isFormValid}>
-              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="7" cy="7" r="5" stroke="white" strokeWidth="1.4"/>
-                <path d="M10.5 10.5l3 3" stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
-              </svg>
-              Search
-            </button>
-            <button type="button" className="vs-reset-btn" onClick={handleReset}>
-              Reset
-            </button>
-          </div>
-
-        </form>
-
-        {/* ── Result ── */}
-        {result && (
-          <div className="vs-result">
-            <div className="vs-result-header">
-              <div className="vs-result-header-left">
-                <h3 className="vs-result-title">Complaint Details</h3>
-                <p className="vs-result-reg">{regNo.trim().toUpperCase()}</p>
+          {/* Right Column - Complaint Details */}
+          {result && (
+            <div className="vs-details-panel">
+              <div className="vs-details-header">
+                <h3 className="vs-details-title">Complaint Details</h3>
+                <p className="vs-details-reg">{regNo.trim().toUpperCase()}</p>
               </div>
-              <span
-                className="vs-status-badge"
-                style={{ color: meta.color, background: meta.bg, border: `1px solid ${meta.border}` }}
-              >
-                <span className="vs-status-dot" style={{ background: meta.color }}></span>
-                {meta.label}
-              </span>
-            </div>
 
-            <div className="vs-result-grid">
-              <div className="vs-result-field">
-                <span className="vs-result-key">Complainant</span>
-                <span className="vs-result-val">{result.name}</span>
+              <div className="vs-details-grid">
+                <div className="vs-detail-card">
+                  <span className="vs-detail-label">Complainant</span>
+                  <span className="vs-detail-value">{result.name}</span>
+                </div>
+                <div className="vs-detail-card">
+                  <span className="vs-detail-label">Category</span>
+                  <span className="vs-detail-value">{result.category}</span>
+                </div>
+                <div className="vs-detail-card vs-detail-card--full">
+                  <span className="vs-detail-label">Complaint</span>
+                  <span className="vs-detail-value">{result.description}</span>
+                </div>
+                <div className="vs-detail-card">
+                  <span className="vs-detail-label">Date Submitted</span>
+                  <span className="vs-detail-value">
+                    {new Date(result.date).toLocaleDateString("en-IN", {
+                      year: "numeric",
+                      month: "short",
+                      day: "2-digit",
+                    })}{" "}
+                    •{" "}
+                    {new Date(result.date).toLocaleTimeString("en-IN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
               </div>
-              <div className="vs-result-field">
-                <span className="vs-result-key">Category</span>
-                <span className="vs-result-val">{result.category}</span>
-              </div>
-              <div className="vs-result-field vs-result-field--full">
-                <span className="vs-result-key">Complaint</span>
-                <span className="vs-result-val">{result.complaint}</span>
-              </div>
-              <div className="vs-result-field">
-                <span className="vs-result-key">Date Submitted</span>
-                <span className="vs-result-val">{result.date}</span>
-              </div>
-            </div>
 
-            {/* Timeline */}
-            <div className="vs-timeline-wrap">
-              <h4 className="vs-timeline-title">Progress Timeline</h4>
-              <div className="vs-timeline">
-                {result.timeline.map((step, i) => (
-                  <div key={i} className={`vs-t-step ${step.done ? "vs-t-step--done" : ""}`}>
-                    <div className="vs-t-left">
-                      <div className="vs-t-circle">
+              {/* Timeline */}
+              <div className="vs-timeline-section">
+                <h4 className="vs-timeline-heading">Progress Timeline</h4>
+                <div className="vs-timeline">
+                  {result.timeline.map((step, i) => (
+                    <div key={i} className={`vs-timeline-item ${step.done ? "vs-timeline-item--done" : ""}`}>
+                      <div className="vs-timeline-marker">
                         {step.done ? (
                           <svg viewBox="0 0 12 12" fill="none">
                             <path d="M2.5 6l2.5 2.5 4.5-5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                         ) : (
-                          <div className="vs-t-empty-dot"></div>
+                          <div className="vs-timeline-dot"></div>
                         )}
                       </div>
                       {i < result.timeline.length - 1 && (
-                        <div className={`vs-t-line ${step.done ? "vs-t-line--done" : ""}`}></div>
+                        <div className={`vs-timeline-connector ${step.done ? "vs-timeline-connector--done" : ""}`}></div>
                       )}
+                      <div className="vs-timeline-info">
+                        <div className="vs-timeline-label">{step.label}</div>
+                        {step.date && (
+                          <div className="vs-timeline-date">
+                            {new Date(step.date).toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}{" "}
+                            •{" "}
+                            {new Date(step.date).toLocaleTimeString("en-IN", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="vs-t-content">
-                      <div className="vs-t-label">{step.label}</div>
-                      {step.date && <div className="vs-t-date">{step.date}</div>}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
       </div>
     </div>
