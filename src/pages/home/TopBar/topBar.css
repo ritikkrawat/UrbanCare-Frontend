@@ -4,26 +4,25 @@
   height: 36px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
-
-  /* prevents breaking */
-  overflow: hidden;
+  padding: 0 16px;
+  overflow: hidden; /* prevents overflow */
 }
 
 /* ===== LEFT ===== */
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: 10px;
-
+  gap: 8px;
   white-space: nowrap;
-  flex-shrink: 0; /* ❗ prevents shrinking */
+}
+
+.brand {
+  font-weight: 500;
 }
 
 .topbar-text {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
-  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .topbar-divider {
@@ -36,19 +35,16 @@
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  margin-left: auto; /* ❗ pushes to right */
+  gap: 8px;
+  margin-left: auto;
   white-space: nowrap;
-  flex-shrink: 0; /* ❗ prevents compression */
 }
 
 .topbar-link {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px; /* 👈 unchanged as you requested */
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: color 0.2s;
-  white-space: nowrap;
 }
 
 .topbar-link:hover {
@@ -56,43 +52,50 @@
 }
 
 .topbar-sep {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.4);
   font-size: 10px;
 }
 
 /* ========================= */
-/* ✅ HEIGHT RESPONSIVENESS */
+/* 📏 HEIGHT FIX */
 /* ========================= */
 @media (max-height: 620px) {
-
-  /* hide only long text */
-  .hide-on-short {
+  .hide-on-compact {
     display: none;
   }
 
-  /* remove divider */
   .topbar-divider {
     display: none;
   }
 }
 
 /* ========================= */
-/* 📱 OPTIONAL WIDTH CLEANUP */
+/* 📱 MOBILE WIDTH FIX */
 /* ========================= */
 @media (max-width: 768px) {
-  .topbar {
-    padding: 0 10px;
+
+  /* Hide long text */
+  .hide-on-compact {
+    display: none;
   }
 
+  .topbar-divider {
+    display: none;
+  }
+
+  /* Keep links readable, no size reduction */
   .topbar-right {
     gap: 6px;
   }
 
-  .topbar-link {
-    font-size: 10px;
-  }
-
+  /* Remove separators to save space */
   .topbar-sep {
     display: none;
+  }
+
+  /* Prevent left from taking too much space */
+  .topbar-left {
+    max-width: 40%;
+    overflow: hidden;
   }
 }

@@ -7,10 +7,10 @@ const Topbar = () => {
 
       {/* LEFT */}
       <div className="topbar-left">
-        <span className="topbar-text">UrbanCare</span>
+        <span className="topbar-text brand">UrbanCare</span>
         <div className="topbar-divider"></div>
 
-        <span className="topbar-text hide-on-short">
+        <span className="topbar-text hide-on-compact">
           Public Grievance & Civic Services
         </span>
       </div>
