@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
@@ -20,6 +20,8 @@ const icons = {
   user:      "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   arrowLeft: "M19 12H5 M12 19l-7-7 7-7",
   save:      "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z M17 21v-8H7v8 M7 3v5h8",
+  search:    "M21 21l-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0z",
+  refresh:   "M21 12a9 9 0 1 1-6.219-8.56",
 };
 
 const navItems = [
@@ -36,9 +38,9 @@ const Sidebar = ({ active, setActive }) => {
     <aside className="cp-sidebar">
       <div className="cp-sidebar__logo">
         <div className="cp-sidebar__logo-icon">
-          <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}>
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <path d="M9 22V12h6v10" />
+          <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4l3 3" />
           </svg>
         </div>
         <div>
@@ -79,7 +81,8 @@ const STATUS_META = {
   pending:      { label: "Pending",       color: "#6d4c41", bg: "#efebe9", border: "#bcaaa4" },
 };
 
-const TrackStatusContent = () => {
+const TrackStatusContent = ({ toast }) => {
+  const navigate = useNavigate();
   const [regNo, setRegNo]           = useState("");
   const [contact, setContact]       = useState("");
   const [result, setResult]         = useState(null);
@@ -130,143 +133,148 @@ const TrackStatusContent = () => {
   const meta = result ? (STATUS_META[result.status] || STATUS_META.pending) : null;
 
   return (
-    <div className="vs-page">
-      <div className="vs-container">
+    <main className="vs-main">
+      {/* Page Header */}
+      <div className="vs-page-header">
+        <div>
+          <h2 className="vs-page-title">View Complaint Status</h2>
+          <p className="vs-page-sub">Track the status of your submitted grievance</p>
+        </div>
+        <button type="button" className="vs-back-btn" onClick={() => navigate("/dashboard")}>
+          <Icon d={icons.arrowLeft} size={14} />
+          Back to Dashboard
+        </button>
+      </div>
 
-        {/* ── Header ─ */}
-        <div className="vs-page-header">
-          <div className="vs-page-header-left">
-            <div className="vs-page-icon">
-              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="2" width="14" height="16" rx="2" stroke="#6f0047" strokeWidth="1.6"/>
-                <path d="M6 7h8M6 10h8M6 13h5" stroke="#6f0047" strokeWidth="1.6" strokeLinecap="round"/>
-              </svg>
+      <div className="vs-content-grid">
+        
+        {/* Left Column - Search Form */}
+        <div className="vs-search-panel">
+          <div className="vs-section">
+            <div className="vs-section-header">
+              <div className="vs-section-icon"><Icon d={icons.search} size={13} /></div>
+              <span className="vs-section-title">Search Complaint</span>
             </div>
-            <div>
-              <h1 className="vs-page-title">View Complaint Status</h1>
-              <p className="vs-page-sub">Track the status of your submitted grievance</p>
+            <div className="vs-section-body">
+              <p className="vs-mandatory-note">
+                Fields marked <span className="required">*</span> are mandatory.
+                <br />Try: <strong>CMP123456</strong>, <strong>CMP515155</strong>, or <strong>CMP876516</strong>
+              </p>
+
+              <form className="vs-form" onSubmit={handleSubmit}>
+                <div className="vs-form-row">
+                  <label className="vs-label">
+                    Registration Number <span className="required">*</span>
+                  </label>
+                  <input
+                    className={`vs-input ${submitted && !regNo.trim() ? " vs-input--error" : ""}`}
+                    type="text"
+                    placeholder="e.g. CMP123456"
+                    value={regNo}
+                    onChange={(e) => setRegNo(e.target.value)}
+                  />
+                  {submitted && !regNo.trim() && (
+                    <span className="vs-field-error">Registration number is required</span>
+                  )}
+                </div>
+
+                <div className="vs-form-row">
+                  <label className="vs-label">
+                    Email ID or Mobile Number{" "}
+                    <span className="vs-optional">(optional)</span>
+                  </label>
+                  <input
+                    className="vs-input"
+                    type="text"
+                    placeholder="Enter email or 10-digit mobile number"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                  />
+                </div>
+
+                {error && (
+                  <div className="vs-error-banner">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="8" cy="8" r="7" stroke="#c62828" strokeWidth="1.4"/>
+                      <path d="M8 5v3.5M8 10.5v.5" stroke="#c62828" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    {error}
+                  </div>
+                )}
+
+                <div className="vs-form-actions">
+                  <button type="submit" className="vs-submit-btn" disabled={!regNo.trim()}>
+                    <Icon d={icons.search} size={14} />
+                    Search
+                  </button>
+                  <button type="button" className="vs-reset-btn" onClick={handleReset}>
+                    <Icon d={icons.refresh} size={14} />
+                    Reset
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-          {result && (
-            <span
-              className="vs-status-badge"
-              style={{ color: meta.color, background: meta.bg, border: `1px solid ${meta.border}` }}
-            >
-              <span className="vs-status-dot" style={{ background: meta.color }}></span>
-              {meta.label}
-            </span>
-          )}
         </div>
 
-        <div className="vs-page-divider"></div>
-
-        {/* ── Two Column Layout ── */}
-        <div className="vs-content-grid">
-          
-          {/* Left Column - Search Form */}
-          <div className="vs-search-panel">
-            <p className="vs-mandatory-note">
-              Fields marked with <span className="vs-required">*</span> are mandatory.
-              <br />Try: <strong>CMP123456</strong>, <strong>CMP515155</strong>, or <strong>CMP876516</strong>
-            </p>
-
-            <form className="vs-form" onSubmit={handleSubmit}>
-              <div className="vs-form-row">
-                <label className="vs-label">
-                  Registration Number <span className="vs-required">*</span>
-                </label>
-                <input
-                  className={`vs-input ${submitted && !regNo.trim() ? "vs-input--error" : ""}`}
-                  type="text"
-                  placeholder="e.g. CMP123456"
-                  value={regNo}
-                  onChange={(e) => setRegNo(e.target.value)}
-                />
-                {submitted && !regNo.trim() && (
-                  <span className="vs-field-error">Registration number is required</span>
-                )}
+        {/* Right Column - Complaint Details */}
+        {result && (
+          <div className="vs-details-panel">
+            <div className="vs-section">
+              <div className="vs-section-header">
+                <div className="vs-section-icon"><Icon d={icons.user} size={13} /></div>
+                <span className="vs-section-title">Complaint Details</span>
               </div>
-
-              <div className="vs-form-row">
-                <label className="vs-label">
-                  Email ID or Mobile Number{" "}
-                  <span className="vs-optional">(optional)</span>
-                </label>
-                <input
-                  className="vs-input"
-                  type="text"
-                  placeholder="Enter email or 10-digit mobile number"
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
-                />
-              </div>
-
-              {error && (
-                <div className="vs-error-banner">
-                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="8" cy="8" r="7" stroke="#c62828" strokeWidth="1.4"/>
-                    <path d="M8 5v3.5M8 10.5v.5" stroke="#c62828" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                  {error}
+              <div className="vs-section-body">
+                <div className="vs-details-header">
+                  <h3 className="vs-details-title">{result.name}</h3>
+                  <p className="vs-details-reg">{regNo.trim().toUpperCase()}</p>
+                  {meta && (
+                    <span
+                      className="vs-status-badge"
+                      style={{ color: meta.color, background: meta.bg, border: `1px solid ${meta.border}` }}
+                    >
+                      <span className="vs-status-dot" style={{ background: meta.color }}></span>
+                      {meta.label}
+                    </span>
+                  )}
                 </div>
-              )}
 
-              <div className="vs-form-actions">
-                <button type="submit" className="vs-submit-btn" disabled={!regNo.trim()}>
-                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="7" cy="7" r="5" stroke="white" strokeWidth="1.4"/>
-                    <path d="M10.5 10.5l3 3" stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
-                  </svg>
-                  Search
-                </button>
-                <button type="button" className="vs-reset-btn" onClick={handleReset}>
-                  Reset
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Right Column - Complaint Details */}
-          {result && (
-            <div className="vs-details-panel">
-              <div className="vs-details-header">
-                <h3 className="vs-details-title">Complaint Details</h3>
-                <p className="vs-details-reg">{regNo.trim().toUpperCase()}</p>
-              </div>
-
-              <div className="vs-details-grid">
-                <div className="vs-detail-card">
-                  <span className="vs-detail-label">Complainant</span>
-                  <span className="vs-detail-value">{result.name}</span>
-                </div>
-                <div className="vs-detail-card">
-                  <span className="vs-detail-label">Category</span>
-                  <span className="vs-detail-value">{result.category}</span>
-                </div>
-                <div className="vs-detail-card vs-detail-card--full">
-                  <span className="vs-detail-label">Complaint</span>
-                  <span className="vs-detail-value">{result.description}</span>
-                </div>
-                <div className="vs-detail-card">
-                  <span className="vs-detail-label">Date Submitted</span>
-                  <span className="vs-detail-value">
-                    {new Date(result.date).toLocaleDateString("en-IN", {
-                      year: "numeric",
-                      month: "short",
-                      day: "2-digit",
-                    })}{" "}
-                    •{" "}
-                    {new Date(result.date).toLocaleTimeString("en-IN", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
+                <div className="vs-details-grid">
+                  <div className="vs-detail-card">
+                    <span className="vs-detail-label">Category</span>
+                    <span className="vs-detail-value">{result.category}</span>
+                  </div>
+                  <div className="vs-detail-card">
+                    <span className="vs-detail-label">Date Submitted</span>
+                    <span className="vs-detail-value">
+                      {new Date(result.date).toLocaleDateString("en-IN", {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                      })}{" "}
+                      •{" "}
+                      {new Date(result.date).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                  <div className="vs-detail-card vs-detail-card--full">
+                    <span className="vs-detail-label">Description</span>
+                    <span className="vs-detail-value">{result.description}</span>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Timeline */}
-              <div className="vs-timeline-section">
-                <h4 className="vs-timeline-heading">Progress Timeline</h4>
+            {/* Timeline */}
+            <div className="vs-section">
+              <div className="vs-section-header">
+                <div className="vs-section-icon"><Icon d={icons.save} size={13} /></div>
+                <span className="vs-section-title">Progress Timeline</span>
+              </div>
+              <div className="vs-section-body">
                 <div className="vs-timeline">
                   {result.timeline.map((step, i) => (
                     <div key={i} className={`vs-timeline-item ${step.done ? "vs-timeline-item--done" : ""}`}>
@@ -304,30 +312,27 @@ const TrackStatusContent = () => {
                 </div>
               </div>
             </div>
-          )}
-        </div>
-
+          </div>
+        )}
       </div>
-    </div>
+    </main>
   );
 };
 
-
 const TrackStatus = () => {
-    const { toasts, toast, removeToast } = useToast();
-    return (
-      <>
-        <Topbar />
-        <Head />
-        <MainNavbar type="dashboard" />
-        <div className="ep-wrapper">
-          <Sidebar/>
-          <TrackStatusContent toast={toast} />
-        </div>
-        <ToastContainer toasts={toasts} removeToast={removeToast} />
-      </>
-    );
-}
+  const { toasts, toast, removeToast } = useToast();
+  return (
+    <>
+      <Topbar />
+      <Head />
+      <MainNavbar type="dashboard" />
+      <div className="cf-wrapper">
+        <Sidebar />
+        <TrackStatusContent toast={toast} />
+      </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+    </>
+  );
+};
 
-
-export default TrackStatus
+export default TrackStatus;
