@@ -5,7 +5,6 @@ const Topbar = () => {
   return (
     <div className="topbar">
 
-      {/* LEFT */}
       <div className="topbar-left">
         <span className="topbar-text brand">UrbanCare</span>
         <div className="topbar-divider"></div>
@@ -15,7 +14,6 @@ const Topbar = () => {
         </span>
       </div>
 
-      {/* RIGHT */}
       <div className="topbar-right">
         <span className="topbar-link">Home</span>
         <span className="topbar-sep">|</span>

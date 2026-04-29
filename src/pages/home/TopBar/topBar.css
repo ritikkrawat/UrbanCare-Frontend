@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   padding: 0 16px;
-  overflow: hidden; /* prevents overflow */
+  overflow: hidden;
 }
 
 /* ===== LEFT ===== */
@@ -35,16 +35,15 @@
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin-left: auto;
   white-space: nowrap;
 }
 
 .topbar-link {
-  font-size: 11px; /* 👈 unchanged as you requested */
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  transition: color 0.2s;
 }
 
 .topbar-link:hover {
@@ -52,7 +51,7 @@
 }
 
 .topbar-sep {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5);
   font-size: 10px;
 }
 
@@ -74,7 +73,7 @@
 /* ========================= */
 @media (max-width: 768px) {
 
-  /* Hide long text */
+  /* Hide long text only */
   .hide-on-compact {
     display: none;
   }
@@ -83,17 +82,16 @@
     display: none;
   }
 
-  /* Keep links readable, no size reduction */
+  /* Keep separators but tighten spacing */
   .topbar-right {
-    gap: 6px;
+    gap: 4px;
   }
 
-  /* Remove separators to save space */
   .topbar-sep {
-    display: none;
+    display: inline; /* ✅ keep "|" visible */
   }
 
-  /* Prevent left from taking too much space */
+  /* Prevent left overflow */
   .topbar-left {
     max-width: 40%;
     overflow: hidden;
