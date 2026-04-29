@@ -121,9 +121,28 @@
 /* ===== HAMBURGER ===== */
 .hamburger {
   display: none;
-  font-size: 20px;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
   cursor: pointer;
-  padding: 0 10px;
+  padding: 10px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hamburger svg {
+  width: 24px;
+  height: 24px;
 }
 
 /* NAV ITEMS WRAPPER */
@@ -138,7 +157,7 @@
 
   /* show hamburger */
   .hamburger {
-    display: block;
+    display: flex;
   }
 
   /* hide nav items initially */
@@ -151,6 +170,7 @@
     flex-direction: column;
     width: 100%;
     z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   /* show dropdown when active */
