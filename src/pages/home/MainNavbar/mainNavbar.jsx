@@ -35,7 +35,12 @@ const MainNavbar = ({ type }) => {
               >
                 My Complaints
               </span>
-              <span className="nav-item">Track Status</span>
+              <span 
+                className={`nav-item ${isActive("/status") ? "nav-item--active" : ""}`}
+                onClick={() => navigate("/status")}
+              >
+                Track Status
+              </span>
             </>
           ) : (
             <>
