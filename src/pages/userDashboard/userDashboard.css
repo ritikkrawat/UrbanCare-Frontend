@@ -978,7 +978,6 @@
 .ud-pagination__btn:focus,
 .ud-controls__entries select:focus,
 .ud-controls__search input:focus {
-  outline: 2px solid #6f0047;
   outline-offset: 2px;
 }
 
