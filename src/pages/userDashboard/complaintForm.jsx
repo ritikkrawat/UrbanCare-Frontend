@@ -29,6 +29,7 @@ const icons = {
   user:      "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",
   map:       "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
   paperclip: "M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48",
+  menu: "M3 12h18M3 6h18M3 18h18",
 };
 
 const navItems = [
@@ -38,7 +39,7 @@ const navItems = [
 ];
 
 // ── Sidebar ──────────────────────────────────────────────────────────────────
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,40 +50,53 @@ const Sidebar = () => {
     return false;
   };
 
+  const handleNavClick = (key) => {
+    onClose?.();
+    if (key === "profile")  navigate("/editProfile");
+    if (key === "password") navigate("/changePassword");
+    if (key === "delete")   navigate("/deleteAccount");
+  };
+
   return (
-    <aside className="cp-sidebar">
-      <div className="cp-sidebar__logo">
-        <div className="cp-sidebar__logo-icon">
-          <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4l3 3" />
-          </svg>
-        </div>
-        <div>
-          <div className="cp-sidebar__title">UrbanCare</div>
-          <div className="cp-sidebar__subtitle">Complaint Dashboard</div>
-        </div>
-      </div>
+    <>
+      <div
+        className={`cp-sidebar-overlay${isOpen ? " cp-sidebar-overlay--active" : ""}`}
+        onClick={onClose}
+      />
+      <aside className={`cp-sidebar${isOpen ? " cp-sidebar--open" : ""}`}>
+        <button className="cp-sidebar__close-btn" onClick={onClose}>
+          <Icon d={icons.close} size={18} />
+        </button>
 
-      <div className="cp-sidebar__section-label">Navigation</div>
+        <div className="cp-sidebar__logo">
+          <div className="cp-sidebar__logo-icon">
+            <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v4l3 3" />
+            </svg>
+          </div>
+          <div>
+            <div className="cp-sidebar__title">UrbanCare</div>
+            <div className="cp-sidebar__subtitle">Complaint Dashboard</div>
+          </div>
+        </div>
 
-      <nav className="cp-sidebar__nav">
-        {navItems.map((item) => (
-          <button
-            key={item.key}
-            onClick={() => {
-              if (item.key === "profile")  navigate("/editProfile");
-              if (item.key === "password") navigate("/changePassword");
-              if (item.key === "delete")   navigate("/deleteAccount");
-            }}
-            className={`cp-sidebar__nav-btn ${isActive(item.key) ? "cp-sidebar__nav-btn--active" : ""}`}
-          >
-            <span className="cp-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
-            {item.label}
-          </button>
-        ))}
-      </nav>
-    </aside>
+        <div className="cp-sidebar__section-label">Navigation</div>
+
+        <nav className="cp-sidebar__nav">
+          {navItems.map((item) => (
+            <button
+              key={item.key}
+              onClick={() => handleNavClick(item.key)}
+              className={`cp-sidebar__nav-btn${isActive(item.key) ? " cp-sidebar__nav-btn--active" : ""}`}
+            >
+              <span className="cp-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 };
 
@@ -481,13 +495,27 @@ const ComplaintFormContent = ({ toast }) => {
 /* ── Root ── */
 const ComplaintForm = () => {
   const { toasts, toast, removeToast } = useToast();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <>
       <Topbar />
       <Head />
       <MainNavbar type="dashboard" />
       <div className="cf-wrapper">
-        <Sidebar />
+        {!isSidebarOpen && (
+          <button
+            className="cp-hamburger-btn"
+            onClick={() => setIsSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <Icon d={icons.menu} size={20} />
+          </button>
+        )}
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
         <ComplaintFormContent toast={toast} />
       </div>
       <ToastContainer toasts={toasts} removeToast={removeToast} />
