@@ -2,14 +2,12 @@ import "./mainNavbar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
 import { useToast, ToastContainer } from "../../../components/toast.jsx";
-import { useState } from "react";
 
 const MainNavbar = ({ type }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
   const { toasts, toast, removeToast } = useToast();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleSignIn = () => navigate("/login");
 
@@ -32,40 +30,20 @@ const MainNavbar = ({ type }) => {
         {/* LEFT */}
         <div className="main-navbar-left">
 
-          {/* HAMBURGER (mobile only) */}
-          {type === "dashboard" && (
-            <div 
-              className="hamburger"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            </div>
-          )}
-
-          {/* NORMAL ITEMS */}
-          <div className={`nav-items ${menuOpen ? "active" : ""}`}>
+          {/* NAV ITEMS - Always visible, horizontally scrollable on mobile */}
+          <div className="nav-items">
             {type === "dashboard" ? (
               <>
                 <span
                   className={`nav-item ${isActive("/myComplaints") ? "nav-item--active" : ""}`}
-                  onClick={() => {
-                    navigate("/myComplaints");
-                    setMenuOpen(false);
-                  }}
+                  onClick={() => navigate("/myComplaints")}
                 >
                   My Complaints
                 </span>
 
                 <span
                   className={`nav-item ${isActive("/status") ? "nav-item--active" : ""}`}
-                  onClick={() => {
-                    navigate("/status");
-                    setMenuOpen(false);
-                  }}
+                  onClick={() => navigate("/status")}
                 >
                   Track Status
                 </span>

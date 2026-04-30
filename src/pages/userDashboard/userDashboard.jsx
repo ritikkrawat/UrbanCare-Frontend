@@ -94,12 +94,6 @@ const Sidebar = ({ active, setActive, isOpen, onClose }) => {
             </button>
           ))}
         </nav>
-
-        <div className="ud-sidebar__footer">
-          <div className="ud-sidebar__footer-note">
-            Need help? Contact your ward officer through the complaint portal.
-          </div>
-        </div>
       </aside>
     </>
   );
