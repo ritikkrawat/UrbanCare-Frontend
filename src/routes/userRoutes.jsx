@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "../user/pages/home/home.jsx";
 import Login from "../user/pages/login.jsx";
 import Register from "../user/pages/register.jsx";
-import UserDashboard from "../user/pages/userDashboard/userDashboard.jsx";
+import Dashboard from "../user/pages/dashboard/dashboard.jsx";
 import EditProfile from "../user/pages/userDashboard/editProfile.jsx";
 import ChangePassword from "../user/pages/userDashboard/changePassword.jsx";
 import DeleteAccount from "../user/pages/userDashboard/deleteAccount.jsx";
@@ -22,7 +22,7 @@ const UserRoutes = () => {
       <Route path="/forgotPassword" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
 
       <Route element={<UserProtectedRoute />}>
-        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/changePassword" element={<ChangePassword />} />
         <Route path="/deleteAccount" element={<DeleteAccount />} />

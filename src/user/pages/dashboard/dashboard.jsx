@@ -3,7 +3,7 @@ import Topbar from "../../components/TopBar/topBar.jsx";
 import Head from "../../components/Head/head.jsx";
 import MainNavbar from "../../components/MainNavbar/mainNavbar.jsx";
 import { useNavigate } from "react-router-dom";
-import "./userDashboard.css";
+import "./dashboard.css";
 
 // ── Icon Helper ───────────────────────────────────────────────────────────────
 const Icon = ({ d, size = 20 }) => (
@@ -408,7 +408,7 @@ const ComplaintContent = () => {
 };
 
 // ── Root ──────────────────────────────────────────────────────────────────────
-const UserDashboard = () => {
+const Dashboard = () => {
   const [active, setActive] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -442,4 +442,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default Dashboard;
