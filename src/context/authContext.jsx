@@ -21,11 +21,16 @@ export const AuthProvider = ({ children }) => {
   });
 
   const login = (data) => {
-    sessionStorage.setItem("token", data.token);
-    sessionStorage.setItem("user", JSON.stringify(data.user));
+     const userData = {
+      ...data.user,
+      role: data.user?.role || "admin"
+    };
 
-    setUser(data.user);
-    setToken(data.token); // ✅ IMPORTANT
+    sessionStorage.setItem("token", data.token);
+    sessionStorage.setItem("user", JSON.stringify(userData));
+
+    setUser(userData);
+    setToken(data.token); 
   };
 
   const logout = () => {
@@ -33,10 +38,10 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem("user");
 
     setUser(null);
-    setToken(null); // ✅ IMPORTANT
+    setToken(null); 
   };
 
-  const isAuthenticated = !!token || !!sessionStorage.getItem("token");
+  const isAuthenticated = !!token && !!user;
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>

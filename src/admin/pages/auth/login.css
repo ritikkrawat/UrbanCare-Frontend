@@ -1,0 +1,209 @@
+/* ── Admin Login ───────────────────────────────────────────────────────────── */
+
+.alog-page {
+  min-height: 100vh;
+  display: flex;
+  background: var(--admin-bg);
+}
+
+/* Left panel */
+.alog-left {
+  width: 420px;
+  flex-shrink: 0;
+  background: var(--admin-primary-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.alog-left::before {
+  content: "";
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.alog-left::after {
+  content: "";
+  position: absolute;
+  bottom: -60px; left: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+
+.alog-left__emblem {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 28px;
+}
+.alog-left__title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.alog-left__subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+.alog-left__divider {
+  width: 48px; height: 3px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  margin-bottom: 28px;
+}
+.alog-left__feature {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+}
+.alog-left__feature-icon {
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Right panel */
+.alog-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.alog-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.alog-card__header {
+  margin-bottom: 28px;
+}
+.alog-card__pretitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--admin-primary);
+  margin-bottom: 6px;
+}
+.alog-card__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--admin-text-primary);
+}
+.alog-card__sub {
+  font-size: 13px;
+  color: var(--admin-text-muted);
+  margin-top: 4px;
+}
+
+.alog-form-group {
+  margin-bottom: 18px;
+}
+.alog-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--admin-text-secondary);
+  margin-bottom: 6px;
+}
+.alog-input-wrap {
+  position: relative;
+}
+.alog-input-icon {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--admin-text-muted);
+  display: flex;
+}
+.alog-input {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-sm);
+  background: var(--admin-bg);
+  color: var(--admin-text-primary);
+  font-size: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+.alog-input:focus {
+  border-color: var(--admin-primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(26,75,140,0.08);
+}
+.alog-input--error { border-color: var(--admin-accent) !important; }
+.alog-field-error {
+  font-size: 11.5px;
+  color: var(--admin-accent);
+  margin-top: 4px;
+  display: block;
+}
+
+.alog-eye-btn {
+  position: absolute;
+  right: 10px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--admin-text-muted);
+  display: flex;
+  padding: 2px;
+}
+.alog-eye-btn:hover { color: var(--admin-text-secondary); }
+
+.alog-error-banner {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--admin-accent-light);
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #991b1b;
+  margin-bottom: 18px;
+}
+
+.alog-submit {
+  width: 100%;
+  padding: 10px;
+  background: var(--admin-primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background 0.18s;
+  margin-top: 4px;
+}
+.alog-submit:hover:not(:disabled) { background: var(--admin-primary-dark); }
+.alog-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.alog-footer {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--admin-text-muted);
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .alog-left { display: none; }
+}

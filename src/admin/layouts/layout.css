@@ -1,0 +1,23 @@
+/* ── layout.css ────────────────────────────────────────────────────────────── */
+
+.al-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.al-main {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--topbar-height);
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+  background: var(--admin-bg);
+  transition: margin-left 0.28s ease;
+}
+
+@media (max-width: 900px) {
+  .al-main {
+    margin-left: 0;
+    padding: 16px;
+  }
+}
