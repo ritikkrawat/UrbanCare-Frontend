@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import Topbar from "./home/TopBar/topBar.jsx";
-import Head from "./home/Head/head";
-import MainNavbar from "./home/MainNavbar/mainNavbar";
+import Topbar from "../user/components/TopBar/topBar.jsx";
+import Head from "../user/components/Head/head.jsx";
+import MainNavbar from "../user/components/MainNavbar/mainNavbar.jsx";
 // import Footer from "./home/Footer/footer";
 import "./forgotPassword.css";
 import { useNavigate } from "react-router-dom";
