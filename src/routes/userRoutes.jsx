@@ -1,16 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../user/pages/home/home.jsx";
-import Login from "../pages/login.jsx";
-import Register from "../pages/register.jsx";
-import UserDashboard from "../pages/userDashboard/userDashboard.jsx";
-import EditProfile from "../pages/userDashboard/editProfile.jsx";
-import ChangePassword from "../pages/userDashboard/changePassword.jsx";
-import DeleteAccount from "../pages/userDashboard/deleteAccount.jsx";
-import ComplaintForm from "../pages/userDashboard/complaintForm.jsx";
-import ForgotPassword from "../pages/forgotPassword.jsx";
-import MyComplaints from "../pages/userDashboard/myComplaints.jsx";
-import TrackStatus from "../pages/userDashboard/trackStatus.jsx";
-
+import Login from "../user/pages/login.jsx";
+import Register from "../user/pages/register.jsx";
+import UserDashboard from "../user/pages/userDashboard/userDashboard.jsx";
+import EditProfile from "../user/pages/userDashboard/editProfile.jsx";
+import ChangePassword from "../user/pages/userDashboard/changePassword.jsx";
+import DeleteAccount from "../user/pages/userDashboard/deleteAccount.jsx";
+import ComplaintForm from "../user/pages/userDashboard/complaintForm.jsx";
+import ForgotPassword from "../user/pages/forgotPassword.jsx";
+import MyComplaints from "../user/pages/userDashboard/myComplaints.jsx";
+import TrackStatus from "../user/pages/userDashboard/trackStatus.jsx";
 import UserProtectedRoute from "./userProtectedRoute.jsx";
 import PublicRoute from "./publicRoutes.jsx";
 

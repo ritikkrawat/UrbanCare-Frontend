@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import Topbar from "../../user/components/TopBar/topBar.jsx";
-import Head from "../../user/components/Head/head.jsx";
-import MainNavbar from "../../user/components/MainNavbar/mainNavbar.jsx";
+import Topbar from "../../components/TopBar/topBar.jsx";
+import Head from "../../components/Head/head.jsx";
+import MainNavbar from "../../components/MainNavbar/mainNavbar.jsx";
 import { useNavigate } from "react-router-dom";
-import { statesData } from "../../shared/utils/statesAndDistrict.js";
+import { statesData } from "../../../shared/utils/statesAndDistrict.js"; 
 import "./editProfile.css";
-import { useToast, ToastContainer } from "../../shared/components/toast.jsx";
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx"; 
 
 const Icon = ({ d, size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"

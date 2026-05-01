@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Topbar from "../../user/components/TopBar/topBar.jsx";
-import Head from "../../user/components/Head/head.jsx";
-import MainNavbar from "../../user/components/MainNavbar/mainNavbar.jsx";
+import Topbar from "../../components/TopBar/topBar.jsx";
+import Head from "../../components/Head/head.jsx";
+import MainNavbar from "../../components/MainNavbar/mainNavbar.jsx";
 import { useNavigate } from "react-router-dom";
 import "./changePassword.css";
-import { useAuth } from "../../context/authContext";
-import { useToast, ToastContainer } from "../../shared/components/toast.jsx";
+import { useAuth } from "../../../context/authContext.jsx";
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx"; 
 
 const Icon = ({ d, size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
