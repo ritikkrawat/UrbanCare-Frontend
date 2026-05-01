@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Topbar from "../home/TopBar/topBar";
-import Head from "../home/Head/head";
-import MainNavbar from "../home/MainNavbar/mainNavbar";
+import Topbar from "../../user/components/TopBar/topBar.jsx";
+import Head from "../../user/components/Head/head.jsx";
+import MainNavbar from "../../user/components/MainNavbar/mainNavbar.jsx";
 import { useNavigate } from "react-router-dom";
 import { useToast, ToastContainer } from "../../shared/components/toast.jsx";
 import "./myComplaints.css";
