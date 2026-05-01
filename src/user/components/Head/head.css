@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+
+.head-section {
+  background-color: #ffffff;
+  border-bottom: 3px solid #6f0047;
+  padding: 0 28px;
+}
+
+.head-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.head-titles {
+  flex: 1;
+}
+
+.head-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #6f0047;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  margin-bottom: 5px;
+}
+
+.head-sub {
+  font-size: 13px;
+  color: #888888;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+.head-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.head-accessibility {
+  display: flex;
+  gap: 6px;
+}
+
+.acc-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555555;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.acc-btn:hover {
+  border-color: #6f0047;
+  color: #6f0047;
+}
+
+.head-date {
+  font-size: 11px;
+  color: #aaaaaa;
+  text-align: right;
+}
+
+/* Marquee */
+.marquee-wrap {
+  background: #6f0047;
+  overflow: hidden;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-label {
+  background: #f5a623;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 14px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.marquee-track {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  flex: 1;
+}
+
+.marquee-inner {
+  display: flex;
+  animation: marquee-scroll 22s linear infinite;
+  white-space: nowrap;
+}
+
+.marquee-item {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.88);
+  padding: 0 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.marquee-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #f5a623;
+  flex-shrink: 0;
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .head-inner {
+    height: auto;
+    padding: 16px 0;
+  }
+
+  .head-right {
+    display: none;
+  }
+}
