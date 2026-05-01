@@ -1,5 +1,5 @@
 import MainLayout from "../layouts/mainLayout";
-import MainContent from "./home/MainContent/mainContent";
+import MainContent from "../user/pages/home/MainContent/mainContent";
 
 const Register = () => {
   return (

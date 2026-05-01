@@ -276,7 +276,7 @@
   color: #b52952;
 }
 
-/* ── Inputs ── */
+/* ── Inputs ─ */
 .cf-input,
 .cf-select,
 .cf-textarea {
@@ -538,13 +538,13 @@
 
   .cp-sidebar {
     position: absolute !important;
-    top: 0 ;
-    left: 0 ;
+    top: 0;
+    left: 0;
     height: 100%;
     width: 280px !important;
     max-width: 85vw;
     min-height: unset;
-    z-index: 100 ;
+    z-index: 100;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     flex-direction: column;
@@ -607,7 +607,7 @@
 }
 
 /* ════════════════════════════════════════
-   SIDEBAR MOBILE BEHAVIOUR (mirrors userDashboard)
+   SIDEBAR MOBILE BEHAVIOUR
 ════════════════════════════════════════ */
 .cp-hamburger-btn {
   display: none;
@@ -673,7 +673,7 @@
 
 @media (max-width: 768px) {
   .cf-wrapper {
-    position: relative;    /* needed for absolute sidebar + overlay */
+    position: relative;
   }
 
   .cp-hamburger-btn {
@@ -694,7 +694,6 @@
     z-index: 100;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    /* Remove the mobile stacking styles from the old rule below */
     flex-direction: column;
   }
 
@@ -709,5 +708,20 @@
   .cf-main {
     padding: 16px;
     padding-top: 70px;
+  }
+}
+
+/* ════════════════════════════════════════
+   MOBILE FIX - CRITICAL
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .cp-sidebar__nav-btn {
+    flex: none !important;
+    height: auto !important;
+    padding: 12px 16px !important;
+  }
+  
+  .cp-sidebar__nav {
+    gap: 12px !important;
   }
 }

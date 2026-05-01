@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./adminLogin.css";
+import { useAuth } from "../../context/authContext";
 
 // ── SVG Icon Helper ──────────────────────────────────────────────────────────
 const Icon = ({ d, size = 16 }) => (
@@ -26,6 +27,7 @@ const icons = {
 // ── Admin Login ───────────────────────────────────────────────────────────────
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [form, setForm]               = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -76,9 +78,17 @@ const AdminLogin = () => {
         setError(data.message || "Invalid credentials");
         return;
       }
+       // ✅ USE CONTEXT (IMPORTANT)
+      login({
+        token: data.token,
+        user: data.user,
+      });
 
-      sessionStorage.setItem("adminToken", data.token);
-      sessionStorage.setItem("admin", JSON.stringify(data.admin));
+      // ✅ REDIRECT
+      navigate("/admin/dashboard", { replace: true });
+
+      // sessionStorage.setItem("adminToken", data.token);
+      // sessionStorage.setItem("admin", JSON.stringify(data.admin));
 
       navigate("/admin/dashboard", { replace: true });
 
