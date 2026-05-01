@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./adminLogin.css";
+import "./login.css";
 import { useAuth } from "../../context/authContext"; 
 
 // ── SVG Icon Helper ──────────────────────────────────────────────────────────

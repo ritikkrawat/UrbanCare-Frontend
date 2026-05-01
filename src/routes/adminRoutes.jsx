@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import AdminLogin from "../admin/pages/adminLogin";
-import AdminDashboard from "../admin/pages/adminDashboard/adminDashboard";
+import AdminLogin from "../admin/pages/login";
+import AdminDashboard from "../admin/pages/dashboard/dashboard";
 
 import PublicRoute from "./publicRoutes";
 import AdminProtectedRoute from "./adminProtectedRoute";
