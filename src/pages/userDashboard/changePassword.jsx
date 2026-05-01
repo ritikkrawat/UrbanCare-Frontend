@@ -5,7 +5,7 @@ import MainNavbar from "../home/MainNavbar/mainNavbar";
 import { useNavigate } from "react-router-dom";
 import "./changePassword.css";
 import { useAuth } from "../../context/authContext";
-import { useToast, ToastContainer } from "../../components/toast.jsx";
+import { useToast, ToastContainer } from "../../shared/components/toast.jsx";
 
 const Icon = ({ d, size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"

@@ -5,7 +5,7 @@ import MainNavbar from "./home/MainNavbar/mainNavbar";
 // import Footer from "./home/Footer/footer";
 import "./forgotPassword.css";
 import { useNavigate } from "react-router-dom";
-import { useToast, ToastContainer } from "../components/toast.jsx";
+import { useToast, ToastContainer } from "../shared/components/toast.jsx";
 import axios from "axios";
 
 // ── Inline SVG Icon Helper ───────────────────────────────────────────────────

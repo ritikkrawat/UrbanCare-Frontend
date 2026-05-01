@@ -1,7 +1,7 @@
 import "./mainNavbar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
-import { useToast, ToastContainer } from "../../../components/toast.jsx";
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx";
 
 const MainNavbar = ({ type }) => {
   const navigate = useNavigate();
