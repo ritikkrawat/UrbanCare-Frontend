@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../../layouts/layout.jsx";
 import "./dashboard.css";
@@ -74,7 +74,7 @@ const Dashboard = () => {
   const [users,    setUsers   ] = useState([]);
   const [loading,  setLoading ] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const token = sessionStorage.getItem("adminToken");
@@ -103,9 +103,9 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   const statCards = [
     { icon: icons.total,    iconClass: "ad-stat__icon--total",    value: stats?.total    ?? 0, label: "Total Complaints",       trend: { dir: "up",   text: "This month" } },
