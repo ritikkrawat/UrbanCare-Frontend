@@ -1,7 +1,6 @@
-import Topbar from "../pages/home/TopBar/topBar";
-import Head from "../pages/home/Head/head";
-import MainNavbar from "../pages/home/MainNavbar/mainNavbar";
-// import Footer from "../pages/home/Footer/footer";
+import Topbar from "../user/components/TopBar/topBar";
+import Head from "../user/components/Head/head";
+import MainNavbar from "../user/components/MainNavbar/mainNavbar";
 
 const MainLayout = ({ children }) => {
   return (
