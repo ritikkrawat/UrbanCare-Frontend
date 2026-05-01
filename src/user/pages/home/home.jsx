@@ -1,5 +1,5 @@
 import MainContent from './MainContent/mainContent.jsx';
-import MainLayout from '../../../layouts/mainLayout.jsx';
+import MainLayout from '../../layouts/mainLayout.jsx';
 
 const Home = () => {
   return (

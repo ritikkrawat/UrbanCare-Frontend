@@ -1,4 +1,4 @@
-import MainLayout from "../../layouts/mainLayout";
+import MainLayout from "../layouts/mainLayout";
 import MainContent from "./home/MainContent/mainContent";
 
 const Login = () => {
