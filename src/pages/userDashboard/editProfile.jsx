@@ -3,9 +3,9 @@ import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
 import { useNavigate } from "react-router-dom";
-import { statesData } from "../../utils/statesAndDistrict.js";
+import { statesData } from "../../shared/utils/statesAndDistrict.js";
 import "./editProfile.css";
-import { useToast, ToastContainer } from "../../components/toast.jsx";
+import { useToast, ToastContainer } from "../../shared/components/toast.jsx";
 
 const Icon = ({ d, size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"

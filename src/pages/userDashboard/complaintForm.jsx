@@ -4,8 +4,8 @@ import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./complaintForm.css";
-import { useToast, ToastContainer } from "../../components/toast.jsx";
-import { complaint } from "../../utils/complaintCategory.js";
+import { useToast, ToastContainer } from "../../shared/components/toast.jsx";
+import { complaint } from "../../shared/utils/complaintCategory.js";
 import axios from "axios";
 
 const Icon = ({ d, size = 18 }) => (

@@ -4,9 +4,9 @@ import AboutSection from "./aboutSection/aboutSection";
 import BoxSection from "./boxSection/boxSection";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { statesData } from "../../../utils/statesAndDistrict.js";
+import { statesData } from "../../../shared/utils/statesAndDistrict.js";
 import { useAuth } from "../../../context/authContext.jsx";
-import { useToast, ToastContainer } from "../../../components/toast.jsx";
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx";
 
 /* ─── OTP helpers ──────────────────────────────────────────── */
 const OTP_EXPIRY_SECONDS = 120;

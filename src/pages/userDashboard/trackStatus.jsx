@@ -3,7 +3,7 @@ import Topbar from "../home/TopBar/topBar";
 import Head from "../home/Head/head";
 import MainNavbar from "../home/MainNavbar/mainNavbar";
 import { useNavigate } from "react-router-dom";
-import { useToast, ToastContainer } from "../../components/toast.jsx";
+import { useToast, ToastContainer } from "../../shared/components/toast.jsx";
 import "./trackStatus.css";
 
 const Icon = ({ d, size = 18 }) => (
