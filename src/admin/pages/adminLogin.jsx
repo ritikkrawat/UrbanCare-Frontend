@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./adminLogin.css";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/authContext"; 
 
 // ── SVG Icon Helper ──────────────────────────────────────────────────────────
 const Icon = ({ d, size = 16 }) => (
