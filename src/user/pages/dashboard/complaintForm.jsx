@@ -82,6 +82,12 @@ const Sidebar = () => {
           </button>
         ))}
       </nav>
+
+      <div className="cp-sidebar__footer">
+        <div className="cp-sidebar__footer-note">
+          Need help? Contact your ward officer through the complaint portal.
+        </div>
+      </div>
     </aside>
   );
 };

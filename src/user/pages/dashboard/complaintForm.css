@@ -138,6 +138,19 @@
   background: rgba(255,255,255,0.2);
 }
 
+.cp-sidebar__footer {
+  padding: 14px 16px 18px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.cp-sidebar__footer-note {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.6;
+}
+
 /* ════════════════════════════════════════
    MAIN
 ════════════════════════════════════════ */
