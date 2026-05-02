@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import Topbar from "../../components/TopBar/topBar.jsx";
 import Head from "../../components/Head/head.jsx";
 import MainNavbar from "../../components/MainNavbar/mainNavbar.jsx";
+import Sidebar from "../../components/Sidebar/sidebar.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./complaintForm.css";
-import { useToast, ToastContainer } from "../../../shared/components/toast.jsx"; 
-import { complaint } from "../../../shared/utils/complaintCategory.js"; 
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx";
+import { complaint } from "../../../shared/utils/complaintCategory.js";
 import axios from "axios";
 
 const Icon = ({ d, size = 18 }) => (
@@ -16,9 +17,6 @@ const Icon = ({ d, size = 18 }) => (
 );
 
 const icons = {
-  edit:      "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
-  lock:      "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
-  trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
   form:      "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8",
   upload:    "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12",
   save:      "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z M17 21v-8H7v8 M7 3v5h8",
@@ -29,67 +27,23 @@ const icons = {
   user:      "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",
   map:       "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
   paperclip: "M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48",
+  edit:      "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
+  lock:      "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
+  trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
+  menu:      "M3 12h18M3 6h18M3 18h18",
 };
 
-const navItems = [
+// ── Nav config for this page ──────────────────────────────────────────────────
+const cfNavItems = [
   { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
   { key: "password", label: "Change Password", icon: icons.lock  },
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
-/* ── Sidebar ── */
-const Sidebar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const isActive = (key) => {
-    if (key === "profile")  return location.pathname === "/editProfile";
-    if (key === "password") return location.pathname === "/changePassword";
-    if (key === "delete")   return location.pathname === "/deleteAccount";
-    return false;
-  };
-
-  return (
-    <aside className="cp-sidebar">
-      <div className="cp-sidebar__logo">
-        <div className="cp-sidebar__logo-icon">
-          <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}>
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <path d="M9 22V12h6v10" />
-          </svg>
-        </div>
-        <div>
-          <div className="cp-sidebar__title">UrbanCare</div>
-          <div className="cp-sidebar__subtitle">Citizen Dashboard</div>
-        </div>
-      </div>
-
-      <div className="cp-sidebar__section-label">Navigation</div>
-
-      <nav className="cp-sidebar__nav">
-        {navItems.map((item) => (
-          <button
-            key={item.key}
-            onClick={() => {
-              if (item.key === "profile")  navigate("/editProfile");
-              if (item.key === "password") navigate("/changePassword");
-              if (item.key === "delete")   navigate("/deleteAccount");
-            }}
-            className={`cp-sidebar__nav-btn${isActive(item.key) ? " cp-sidebar__nav-btn--active" : ""}`}
-          >
-            <span className="cp-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
-            {item.label}
-          </button>
-        ))}
-      </nav>
-
-      <div className="cp-sidebar__footer">
-        <div className="cp-sidebar__footer-note">
-          Need help? Contact your ward officer through the complaint portal.
-        </div>
-      </div>
-    </aside>
-  );
+const cfRoutes = {
+  profile:  "/editProfile",
+  password: "/changePassword",
+  delete:   "/deleteAccount",
 };
 
 /* ── File Chip ── */
@@ -476,14 +430,50 @@ const ComplaintFormContent = ({ toast }) => {
 
 /* ── Root ── */
 const ComplaintForm = () => {
+  const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Derive active key from current route
+  const getActiveKey = () => {
+    if (location.pathname === "/editProfile")    return "profile";
+    if (location.pathname === "/changePassword") return "password";
+    if (location.pathname === "/deleteAccount")  return "delete";
+    return "";
+  };
+
+  const [active, setActive] = useState(getActiveKey);
   const { toasts, toast, removeToast } = useToast();
+
   return (
     <>
       <Topbar />
       <Head />
       <MainNavbar type="dashboard" />
       <div className="cf-wrapper">
-        <Sidebar />
+
+        {/* Hamburger — hidden when sidebar is open */}
+        {!isSidebarOpen && (
+          <button
+            className="cf-hamburger-btn"
+            onClick={() => setIsSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d={icons.menu} />
+            </svg>
+          </button>
+        )}
+
+        <Sidebar
+          active={active}
+          setActive={setActive}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          navItems={cfNavItems}
+          routes={cfRoutes}
+        />
+
         <ComplaintFormContent toast={toast} />
       </div>
       <ToastContainer toasts={toasts} removeToast={removeToast} />

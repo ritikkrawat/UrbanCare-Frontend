@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Topbar from "../../components/TopBar/topBar.jsx";
 import Head from "../../components/Head/head.jsx";
 import MainNavbar from "../../components/MainNavbar/mainNavbar.jsx";
+import Sidebar from "../../components/Sidebar/sidebar.jsx";
 import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
 
@@ -17,86 +18,14 @@ const Icon = ({ d, size = 20 }) => (
 );
 
 const icons = {
-  dashboard: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10",
-  plus:      "M12 5v14M5 12h14",
-  edit:      "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
-  lock:      "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
-  trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
   complaint: "M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
   pending:   "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8",
   closed:    "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3",
   sort:      "M8 6h13M8 12h9M8 18h5",
-  loader:    "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83",
   search:    "M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z",
   menu:      "M3 12h18M3 6h18M3 18h18",
-  close:     "M18 6L6 18M6 6l12 12",
-};
-
-// ── Nav Items ─────────────────────────────────────────────────────────────────
-const navItems = [
-  { key: "plus",     label: "Lodge Complaint", icon: icons.plus  },
-  { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
-  { key: "password", label: "Change Password", icon: icons.lock  },
-  { key: "delete",   label: "Delete Account",  icon: icons.trash },
-];
-
-// ── Sidebar ───────────────────────────────────────────────────────────────────
-const Sidebar = ({ active, setActive, isOpen, onClose }) => {
-  const navigate = useNavigate();
-  
-  const handleNavClick = (item) => {
-    setActive(item.key);
-    onClose?.(); // Close sidebar on mobile after selection
-    if (item.key === "profile")  navigate("/editProfile");
-    if (item.key === "password") navigate("/changePassword");
-    if (item.key === "delete")   navigate("/deleteAccount");
-    if (item.key === "plus")     navigate("/complaintForm");
-  };
-
-  return (
-    <>
-      {/* Mobile Overlay */}
-      <div 
-        className={`ud-sidebar-overlay${isOpen ? " ud-sidebar-overlay--active" : ""}`} 
-        onClick={onClose}
-      />
-      
-      <aside className={`ud-sidebar${isOpen ? " ud-sidebar--open" : ""}`}>
-        {/* Mobile Close Button */}
-        <button className="ud-sidebar__close-btn" onClick={onClose}>
-          <Icon d={icons.close} size={18} />
-        </button>
-
-        <div className="ud-sidebar__logo">
-          <div className="ud-sidebar__logo-icon">
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}>
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <path d="M9 22V12h6v10" />
-            </svg>
-          </div>
-          <div>
-            <div className="ud-sidebar__title">UrbanCare</div>
-            <div className="ud-sidebar__subtitle">Citizen Dashboard</div>
-          </div>
-        </div>
-
-        <div className="ud-sidebar__section-label">Navigation</div>
-
-        <nav className="ud-sidebar__nav">
-          {navItems.map((item) => (
-            <button
-              key={item.key}
-              onClick={() => handleNavClick(item)}
-              className={`ud-sidebar__nav-btn${active === item.key ? " ud-sidebar__nav-btn--active" : ""}`}
-            >
-              <span className="ud-sidebar__nav-icon"><Icon d={item.icon} size={15} /></span>
-              {item.label}
-            </button>
-          ))}
-        </nav>
-      </aside>
-    </>
-  );
+  plus:      "M12 5v14M5 12h14",
+  trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
 };
 
 // ── Stat Card ─────────────────────────────────────────────────────────────────
@@ -358,10 +287,10 @@ const ComplaintContent = () => {
           </span>
           <div className="ud-pagination__buttons">
             {[
-              { label: "«", action: () => setPage(1),                        disabled: page === 1 },
-              { label: "‹", action: () => setPage((p) => Math.max(1, p-1)), disabled: page === 1 },
-              { label: "›", action: () => setPage((p) => Math.min(totalPages, p+1)), disabled: page === totalPages },
-              { label: "»", action: () => setPage(totalPages),               disabled: page === totalPages },
+              { label: "«", action: () => setPage(1),                               disabled: page === 1        },
+              { label: "‹", action: () => setPage((p) => Math.max(1, p - 1)),      disabled: page === 1        },
+              { label: "›", action: () => setPage((p) => Math.min(totalPages, p + 1)), disabled: page === totalPages },
+              { label: "»", action: () => setPage(totalPages),                      disabled: page === totalPages },
             ].map(({ label, action, disabled }) => (
               <button key={label} className="ud-pagination__btn" onClick={action} disabled={disabled}>
                 {label}
@@ -418,24 +347,28 @@ const Dashboard = () => {
       <Head />
       <MainNavbar type="dashboard" />
       <div className="ud-wrapper">
-        
-        {/* ✅ Hide hamburger when sidebar is open */}
+
+        {/* Hamburger — hidden when sidebar is open */}
         {!isSidebarOpen && (
-          <button 
-            className="ud-hamburger-btn" 
+          <button
+            className="ud-hamburger-btn"
             onClick={() => setIsSidebarOpen(true)}
             aria-label="Open menu"
           >
-            <Icon d={icons.menu} size={20} />
+            <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
           </button>
         )}
-        
-        <Sidebar 
-          active={active} 
-          setActive={setActive} 
-          isOpen={isSidebarOpen} 
-          onClose={() => setIsSidebarOpen(false)} 
+
+        <Sidebar
+          active={active}
+          setActive={setActive}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         />
+
         <ComplaintContent />
       </div>
     </>
