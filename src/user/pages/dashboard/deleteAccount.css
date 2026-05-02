@@ -401,8 +401,8 @@
   }
 
   .da-back-btn {
-    width: 100%;
-    justify-content: center;
+    width: 172px;
+    margin-left: auto;
   }
 }
 

@@ -607,7 +607,7 @@
   }
 
   .ud-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .ud-table-card__header {
@@ -617,8 +617,8 @@
   }
 
   .ud-lodge-btn {
-    width: 100%;
-    justify-content: center;
+    width: 125px;
+    margin-left: auto;
   }
 
   .ud-controls {
@@ -643,12 +643,36 @@
     padding: 66px 12px 12px;
   }
 
+  .ud-stats {
+    gap: 8px;
+  }
+
+  .ud-stat-card {
+    padding: 12px 10px 0;
+  }
+
+  .ud-stat-card__top {
+    margin-bottom: 6px;
+  }
+
+  .ud-stat-card__icon-wrap {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+  }
+
   .ud-stat-card__value {
-    font-size: 36px;
+    font-size: 26px;
   }
 
   .ud-stat-card__label {
-    font-size: 11px;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+    margin-bottom: 10px;
+  }
+
+  .ud-stat-card__bar {
+    margin: 0 -10px;
   }
 
   .ud-table-card__title {
