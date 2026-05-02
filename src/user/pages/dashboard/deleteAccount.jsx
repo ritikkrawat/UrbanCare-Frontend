@@ -2,9 +2,10 @@ import { useState } from "react";
 import Topbar from "../../components/TopBar/topBar.jsx";
 import Head from "../../components/Head/head.jsx";
 import MainNavbar from "../../components/MainNavbar/mainNavbar.jsx";
+import Sidebar from "../../components/Sidebar/sidebar.jsx";
 import "./deleteAccount.css";
 import { useNavigate } from "react-router-dom";
-import { useToast, ToastContainer } from "../../../shared/components/toast.jsx"; 
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx";
 import axios from "axios";
 import { useAuth } from "../../../context/authContext.jsx";
 
@@ -22,57 +23,20 @@ const icons = {
   alert:     "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01",
   arrowLeft: "M19 12H5 M12 19l-7-7 7-7",
   clock:     "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z M12 6v6l4 2",
-  shield:    "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+  menu:      "M3 12h18M3 6h18M3 18h18",
 };
 
-const navItems = [
+// ── Nav config for this page ──────────────────────────────────────────────────
+const daNavItems = [
   { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
   { key: "password", label: "Change Password", icon: icons.lock  },
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
-// ── Sidebar ───────────────────────────────────────────────────────────────────
-const Sidebar = ({ active, setActive }) => {
-  const navigate = useNavigate();
-
-  return (
-    <aside className="da-sidebar">
-      <div className="da-sidebar__logo">
-        <div className="da-sidebar__logo-icon">
-          <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}>
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <path d="M9 22V12h6v10" />
-          </svg>
-        </div>
-        <div>
-          <div className="da-sidebar__title">UrbanCare</div>
-          <div className="da-sidebar__subtitle">Citizen Dashboard</div>
-        </div>
-      </div>
-
-      <div className="da-sidebar__section-label">Navigation</div>
-
-      <nav className="da-sidebar__nav">
-        {navItems.map((item) => (
-          <button
-            key={item.key}
-            onClick={() => {
-              setActive(item.key);
-              if (item.key === "profile")  navigate("/editProfile");
-              if (item.key === "password") navigate("/changePassword");
-              if (item.key === "delete")   navigate("/deleteAccount");
-            }}
-            className={`da-sidebar__nav-btn${active === item.key ? " da-sidebar__nav-btn--active" : ""}`}
-          >
-            <span className="da-sidebar__nav-icon">
-              <Icon d={item.icon} size={15} />
-            </span>
-            {item.label}
-          </button>
-        ))}
-      </nav>
-    </aside>
-  );
+const daRoutes = {
+  profile:  "/editProfile",
+  password: "/changePassword",
+  delete:   "/deleteAccount",
 };
 
 // ── Confirm Modal ─────────────────────────────────────────────────────────────
@@ -239,8 +203,9 @@ const DeleteAccountContent = ({ toast }) => {
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 const DeleteAccount = () => {
-  const [active, setActive] = useState("delete");
-  const { toasts, toast, removeToast } = useToast();
+  const [active, setActive]               = useState("delete");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { toasts, toast, removeToast }    = useToast();
 
   return (
     <>
@@ -248,7 +213,30 @@ const DeleteAccount = () => {
       <Head />
       <MainNavbar type="dashboard" />
       <div className="da-wrapper">
-        <Sidebar active={active} setActive={setActive} />
+
+        {/* Hamburger — hidden when sidebar is open */}
+        {!isSidebarOpen && (
+          <button
+            className="da-hamburger-btn"
+            onClick={() => setIsSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d={icons.menu} />
+            </svg>
+          </button>
+        )}
+
+        <Sidebar
+          active={active}
+          setActive={setActive}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          navItems={daNavItems}
+          routes={daRoutes}
+        />
+
         <DeleteAccountContent toast={toast} />
       </div>
       <ToastContainer toasts={toasts} removeToast={removeToast} />
