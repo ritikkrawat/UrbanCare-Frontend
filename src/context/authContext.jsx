@@ -21,16 +21,13 @@ export const AuthProvider = ({ children }) => {
   });
 
   const login = (data) => {
-     const userData = {
-      ...data.user,
-      role: data.user?.role || "admin"
-    };
-
+    const userData = data.user;
+    
     sessionStorage.setItem("token", data.token);
     sessionStorage.setItem("user", JSON.stringify(userData));
-
+    
     setUser(userData);
-    setToken(data.token); 
+    setToken(data.token);
   };
 
   const logout = () => {
