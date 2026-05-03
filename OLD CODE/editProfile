@@ -141,74 +141,35 @@ const EditProfileContent = ({ toast }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const allTouched = Object.keys(mandatoryFields).reduce(
-      (acc, f) => ({ ...acc, [f]: true }),
-      {}
-    );
+    const allTouched = Object.keys(mandatoryFields).reduce((acc, f) => ({ ...acc, [f]: true }), {});
     setTouched(allTouched);
-  
     const err = validate();
-    if (err) {
-      toast.error(err);
-      return;
-    }
-  
-    if (!hasChanges()) {
-      toast.error("No changes detected.");
-      return;
-    }
-  
+    if (err) { toast.error(err); return; }
+    if (!hasChanges()) { toast.error("No changes detected."); return; }
+
     const loadingToast = toast.loading("Updating profile...");
-  
     try {
       const token = sessionStorage.getItem("token");
-    
-      // =========================
-      // ⏱️ API TIME START
-      // =========================
-      const startTime = performance.now();
-    
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/api/user/update-profile`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify(form),
         }
       );
-    
-      const endTime = performance.now();
-    
-      // =========================
-      // 📊 CLEAN LOG (ms format)
-      // =========================
-      console.log(`Update Profile API time: ${(endTime - startTime).toFixed(2)} ms`);
-    
-      // =========================
-      // RESPONSE HANDLING
-      // =========================
       if (res.status === 401) {
         sessionStorage.removeItem("token");
         toast.error("Session expired. Please log in again.", { id: loadingToast });
         setTimeout(() => navigate("/login"), 200);
         return;
       }
-    
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Update failed");
-    
       toast.success("Profile updated successfully!", { id: loadingToast });
-    
       originalForm.current = { ...form };
-    
     } catch (error) {
-      toast.error(error.message || "Something went wrong.", {
-        id: loadingToast,
-      });
+      toast.error(error.message || "Something went wrong.", { id: loadingToast });
     }
   };
 

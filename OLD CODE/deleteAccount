@@ -80,22 +80,12 @@ const DeleteAccountContent = ({ toast }) => {
     try {
       const token = sessionStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-    
-      // =========================
-      // ⏱️ API TIME START
-      // =========================
-      const startTime = performance.now();
-    
+
       if (modal === "instant") {
         await axios.delete(
           `${process.env.REACT_APP_API_URL}/api/user/delete-instant`,
           config
         );
-      
-        const endTime = performance.now();
-      
-        console.log(`Delete Account (Instant) API time: ${(endTime - startTime).toFixed(2)} ms`);
-      
         toast.success("Your account has been permanently deleted.");
       } else {
         const res = await axios.post(
@@ -103,21 +93,14 @@ const DeleteAccountContent = ({ toast }) => {
           {},
           config
         );
-      
-        const endTime = performance.now();
-      
-        console.log(`Delete Account (Request) API time: ${(endTime - startTime).toFixed(2)} ms`);
-      
         toast.success(res.data.message);
       }
-    
+
       logout();
       setTimeout(() => navigate("/login", { replace: true }), 200);
       setModal(null);
-    
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
-    
       if (error.response?.status === 401) {
         logout();
         navigate("/login", { replace: true });

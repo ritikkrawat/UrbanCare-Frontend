@@ -351,7 +351,7 @@ const MainContent = ({ type }) => {
       const duration = (end - start).toFixed(2);
 
       console.log("Register API time:", duration, "ms");
-      console.log("REGISTER RESPONSE:", res.data);
+      // console.log("REGISTER RESPONSE:", res.data);
 
       // ✅ Save auth (same as login)
       login(res.data);

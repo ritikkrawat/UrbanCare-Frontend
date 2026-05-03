@@ -94,40 +94,28 @@ const TrackStatusContent = ({ toast }) => {
     setSubmitted(true);
     setError("");
     setResult(null);
-    
+  
     if (!regNo.trim()) return;
-    
+  
     try {
-      // =========================
-      // ⏱️ API TIME START
-      // =========================
-      const startTime = performance.now();
-    
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/api/complaint/track/${regNo}`
       );
-    
-      const endTime = performance.now();
-    
-      // =========================
-      // 📊 CLEAN LOG (ms format)
-      // =========================
-      console.log(`Track Complaint API time: ${(endTime - startTime).toFixed(2)} ms`);
-    
+  
       if (res.status === 404) {
         setError("Complaint not found");
         return;
       }
-    
+  
       const data = await res.json();
-    
+  
       if (!data.success) {
         setError(data.message);
         return;
       }
-    
+  
       setResult(data.data);
-    
+  
     } catch (err) {
       console.error(err);
       setError("Server error. Please try again.");

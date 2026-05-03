@@ -150,6 +150,7 @@ const ComplaintFormContent = ({ toast }) => {
     setImages(prev => [...prev, ...selectedFiles].slice(0, 5));    
     e.target.value = "";
   };
+
   const handleVideoChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setVideos(prev => [...prev, ...selectedFiles].slice(0, 2));
@@ -182,47 +183,143 @@ const ComplaintFormContent = ({ toast }) => {
   };
 
   const uploadToCloudinary = async (file, type = "image") => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/cloudinary/signature`);
-    const { timestamp, signature, cloudName, apiKey } = await res.json();
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("api_key", apiKey);
-    formData.append("timestamp", timestamp);
-    formData.append("signature", signature);
-    const uploadRes = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/${type === "video" ? "video" : "image"}/upload`,
-      { method: "POST", body: formData }
-    );
-    const data = await uploadRes.json();
-    if (!data.secure_url) throw new Error("Cloudinary upload failed");
-    return data.secure_url;
+    try {
+      // ⏱️ TOTAL START
+      const startTime = performance.now();
+
+      // 🔐 Signature API
+      const sigStart = performance.now();
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/cloudinary/signature`
+      );
+      const { timestamp, signature, cloudName, apiKey } = await res.json();
+      const sigEnd = performance.now();
+
+      // Prepare form data
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp);
+      formData.append("signature", signature);
+
+      // ☁️ Cloudinary Upload
+      const uploadStart = performance.now();
+      const uploadRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/${
+          type === "video" ? "video" : "image"
+        }/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await uploadRes.json();
+      const uploadEnd = performance.now();
+
+      if (!data.secure_url) throw new Error("Cloudinary upload failed");
+
+      // ⏱️ TOTAL END
+      const endTime = performance.now();
+
+      // 📊 CLEAN LOGS (ms format)
+      console.log(`Signature API time: ${(sigEnd - sigStart).toFixed(2)} ms`);
+      console.log(`Cloudinary Upload time: ${(uploadEnd - uploadStart).toFixed(2)} ms`);
+      console.log(`Total Upload time: ${(endTime - startTime).toFixed(2)} ms`);
+
+      return data.secure_url;
+    } catch (error) {
+      console.error("Upload failed:", error);
+      throw error;
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const allTouched = Object.keys(mandatoryFields).reduce((acc, f) => ({ ...acc, [f]: true }), {});
+    
+    const allTouched = Object.keys(mandatoryFields).reduce(
+      (acc, f) => ({ ...acc, [f]: true }),
+      {}
+    );
     setTouched(allTouched);
+  
     const err = validate();
-    if (err) { toast.error(err); return; }
-
+    if (err) {
+      toast.error(err);
+      return;
+    }
+  
     try {
       const token = sessionStorage.getItem("token");
+    
+      // =========================
+      // ⏱️ FILE UPLOAD TIME
+      // =========================
+      const uploadStart = performance.now();
+    
       const uploadToast = toast.loading("Uploading files...");
-      const imageUrls = await Promise.all(images.map(img => uploadToCloudinary(img, "image")));
-      const videoUrls = await Promise.all(videos.map(vid => uploadToCloudinary(vid, "video")));
+    
+      const imageUrls = await Promise.all(
+        images.map((img) => uploadToCloudinary(img, "image"))
+      );
+    
+      const videoUrls = await Promise.all(
+        videos.map((vid) => uploadToCloudinary(vid, "video"))
+      );
+    
+      const uploadEnd = performance.now();
+    
+      console.log(`Upload API time: ${(uploadEnd - uploadStart).toFixed(2)} ms`);
+    
       toast.success("Files uploaded!", { id: uploadToast });
-
+    
+      // =========================
+      // ⏱️ SUBMIT API TIME
+      // =========================
+      const submitStart = performance.now();
+    
       const submitToast = toast.loading("Submitting complaint...");
+    
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/complaint/submit`,
-        { ...form, images: imageUrls, videos: videoUrls },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          ...form,
+          images: imageUrls,
+          videos: videoUrls,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      toast.success(res.data.message || "Complaint submitted!", { id: submitToast });
-
-      setForm({ category: "", subCategory: "", description: "", addressLine1: "",
-        addressLine2: "", city: "", state: "", pincode: "", exactLocation: "", priority: "Medium" });
-      setImages([]); setVideos([]); setTouched({});
+    
+      const submitEnd = performance.now();
+    
+      console.log(`Submit API time: ${(submitEnd - submitStart).toFixed(2)} ms`);
+    
+      toast.success(res.data.message || "Complaint submitted!", {
+        id: submitToast,
+      });
+    
+      // =========================
+      // RESET FORM
+      // =========================
+      setForm({
+        category: "",
+        subCategory: "",
+        description: "",
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        state: "",
+        pincode: "",
+        exactLocation: "",
+        priority: "Medium",
+      });
+    
+      setImages([]);
+      setVideos([]);
+      setTouched({});
+    
       setTimeout(() => navigate("/dashboard"), 500);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
