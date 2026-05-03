@@ -42,16 +42,20 @@ const MainNavbar = ({ type }) => {
                 </span>
 
                 <span
-                  className={`nav-item ${isActive("/status") ? "nav-item--active" : ""}`}
-                  onClick={() => navigate("/status")}
+                  className={`nav-item ${isActive("/track-status") ? "nav-item--active" : ""}`}
+                  onClick={() => navigate("/track-status")}
                 >
                   Track Status
                 </span>
               </>
             ) : (
               <>
-                <span className="nav-item">View Status</span>
-                <span className="nav-item">Complaint Process</span>
+                <span 
+                  className={`nav-item ${isActive("/status") ? "nav-item--active" : ""}`}
+                  onClick={() => navigate("/status")}
+                >
+                  View Status
+                </span>
               </>
             )}
           </div>

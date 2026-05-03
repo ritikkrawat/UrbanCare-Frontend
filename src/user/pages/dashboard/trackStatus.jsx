@@ -51,7 +51,6 @@ const STATUS_META = {
 const TrackStatusContent = ({ toast }) => {
   const navigate = useNavigate();
   const [regNo, setRegNo]         = useState("");
-  const [contact, setContact]     = useState("");
   const [result, setResult]       = useState(null);
   const [error, setError]         = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -66,13 +65,23 @@ const TrackStatusContent = ({ toast }) => {
 
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/complaint/track/${regNo}`
+        `${process.env.REACT_APP_API_URL}/api/complaint/track/${regNo.trim()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
       );
 
       if (res.status === 404) {
         setError("Complaint not found");
         return;
       }
+
+      if (res.status === 403) { 
+        setError("Email does not match this complaint."); 
+        return; 
+      } 
 
       const data = await res.json();
 
@@ -89,7 +98,7 @@ const TrackStatusContent = ({ toast }) => {
   };
 
   const handleReset = () => {
-    setRegNo(""); setContact(""); setResult(null); setError(""); setSubmitted(false);
+    setRegNo(""); setResult(null); setError(""); setSubmitted(false);
   };
 
   const meta = result ? (STATUS_META[result.status] || STATUS_META.pending) : null;
@@ -139,20 +148,6 @@ const TrackStatusContent = ({ toast }) => {
                   {submitted && !regNo.trim() && (
                     <span className="vs-field-error">Registration number is required</span>
                   )}
-                </div>
-
-                <div className="vs-form-row">
-                  <label className="vs-label">
-                    Email ID or Mobile Number{" "}
-                    <span className="vs-optional">(optional)</span>
-                  </label>
-                  <input
-                    className="vs-input"
-                    type="text"
-                    placeholder="Enter email or 10-digit mobile number"
-                    value={contact}
-                    onChange={(e) => setContact(e.target.value)}
-                  />
                 </div>
 
                 {error && (

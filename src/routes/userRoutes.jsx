@@ -28,7 +28,7 @@ const UserRoutes = () => {
         <Route path="/deleteAccount" element={<DeleteAccount />} />
         <Route path="/complaintForm" element={<ComplaintForm />} />
         <Route path="/myComplaints" element={<MyComplaints />} />
-        <Route path="/status" element={<TrackStatus />} />
+        <Route path="/track-status" element={<TrackStatus />} />
       </Route>
     </Routes>
   );

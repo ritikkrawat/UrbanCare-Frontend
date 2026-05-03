@@ -576,3 +576,66 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+.sp-wrapper {
+  display: flex;
+  min-height: calc(100vh - 160px);
+  font-family: 'DM Sans', sans-serif;
+  background: #f0ece9;
+}
+
+/* Sign-in nudge card */
+.sp-signin-card {
+  margin-top: 0; /* vs-section already has margin-bottom: 16px */
+}
+
+.sp-signin-text {
+  font-size: 13px;
+  color: #7a5a6a;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.sp-signin-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 18px;
+  background: #6f0047;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.sp-signin-btn:hover {
+  background: #4a0030;
+  transform: translateY(-1px);
+}
+
+.sp-signin-nudge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  background: #fdf9fb;
+  border: 1px solid #e2dada;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.sp-signin-nudge p {
+  font-size: 13px;
+  color: #7a5a6a;
+  margin: 0;
+}
+
+/* Fix details-header to not wrap weirdly */
+.vs-details-header {
+  align-items: flex-start;
+}

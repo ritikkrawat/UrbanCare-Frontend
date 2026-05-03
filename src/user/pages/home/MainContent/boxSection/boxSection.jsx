@@ -23,7 +23,7 @@ const BoxSection = () => {
 
       <div className="box-sep"></div>
 
-      <div className="box-card pink">
+      <div className="box-card pink" onClick={() => navigate("/status")}>
         <div className="box-overlay"></div>
         <div className="box-inner">
           <div className="box-icon-wrap">
