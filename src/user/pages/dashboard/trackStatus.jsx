@@ -2,8 +2,9 @@ import { useState } from "react";
 import Topbar from "../../components/TopBar/topBar.jsx";
 import Head from "../../components/Head/head.jsx";
 import MainNavbar from "../../components/MainNavbar/mainNavbar.jsx";
+import Sidebar from "../../components/Sidebar/sidebar.jsx";
 import { useNavigate } from "react-router-dom";
-import { useToast, ToastContainer } from "../../../shared/components/toast.jsx"; 
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx";
 import "./trackStatus.css";
 
 const Icon = ({ d, size = 18 }) => (
@@ -22,100 +23,65 @@ const icons = {
   save:      "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z M17 21v-8H7v8 M7 3v5h8",
   search:    "M21 21l-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0z",
   refresh:   "M21 12a9 9 0 1 1-6.219-8.56",
+  menu:      "M3 12h18M3 6h18M3 18h18",
 };
 
-const navItems = [
+// ── Nav config for this page ──────────────────────────────────────────────────
+const tsNavItems = [
   { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
   { key: "password", label: "Change Password", icon: icons.lock  },
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
-// ── Sidebar ───────────────────────────────────────────────────────────────────
-const Sidebar = ({ active, setActive }) => {
-  const navigate = useNavigate();
-
-  return (
-    <aside className="cp-sidebar">
-      <div className="cp-sidebar__logo">
-        <div className="cp-sidebar__logo-icon">
-          <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}>
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4l3 3" />
-          </svg>
-        </div>
-        <div>
-          <div className="cp-sidebar__title">UrbanCare</div>
-          <div className="cp-sidebar__subtitle">Citizen Dashboard</div>
-        </div>
-      </div>
-
-      <div className="cp-sidebar__section-label">Navigation</div>
-
-      <nav className="cp-sidebar__nav">
-        {navItems.map((item) => (
-          <button
-            key={item.key}
-            onClick={() => {
-              setActive(item.key);
-              if (item.key === "profile")  navigate("/editProfile");
-              if (item.key === "password") navigate("/changePassword");
-              if (item.key === "delete")   navigate("/deleteAccount");
-            }}
-            className={`cp-sidebar__nav-btn${active === item.key ? " cp-sidebar__nav-btn--active" : ""}`}
-          >
-            <span className="cp-sidebar__nav-icon">
-              <Icon d={item.icon} size={15} />
-            </span>
-            {item.label}
-          </button>
-        ))}
-      </nav>
-    </aside>
-  );
+const tsRoutes = {
+  profile:  "/editProfile",
+  password: "/changePassword",
+  delete:   "/deleteAccount",
 };
 
+// ── Status Meta ───────────────────────────────────────────────────────────────
 const STATUS_META = {
-  resolved:     { label: "Resolved",     color: "#2e7d32", bg: "#e8f5e9", border: "#a5d6a7" },
-  "in-progress":{ label: "In Progress",  color: "#e65100", bg: "#fff3e0", border: "#ffcc80" },
-  acknowledged: { label: "Acknowledged", color: "#1565c0", bg: "#e3f2fd", border: "#90caf9" },
-  pending:      { label: "Pending",       color: "#6d4c41", bg: "#efebe9", border: "#bcaaa4" },
+  resolved:      { label: "Resolved",     color: "#2e7d32", bg: "#e8f5e9", border: "#a5d6a7" },
+  "in-progress": { label: "In Progress",  color: "#e65100", bg: "#fff3e0", border: "#ffcc80" },
+  acknowledged:  { label: "Acknowledged", color: "#1565c0", bg: "#e3f2fd", border: "#90caf9" },
+  pending:       { label: "Pending",      color: "#6d4c41", bg: "#efebe9", border: "#bcaaa4" },
 };
 
+// ── Track Status Content ──────────────────────────────────────────────────────
 const TrackStatusContent = ({ toast }) => {
   const navigate = useNavigate();
-  const [regNo, setRegNo]           = useState("");
-  const [contact, setContact]       = useState("");
-  const [result, setResult]         = useState(null);
-  const [error, setError]           = useState("");
-  const [submitted, setSubmitted]   = useState(false);
+  const [regNo, setRegNo]         = useState("");
+  const [contact, setContact]     = useState("");
+  const [result, setResult]       = useState(null);
+  const [error, setError]         = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
     setError("");
     setResult(null);
-  
+
     if (!regNo.trim()) return;
-  
+
     try {
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/api/complaint/track/${regNo}`
       );
-  
+
       if (res.status === 404) {
         setError("Complaint not found");
         return;
       }
-  
+
       const data = await res.json();
-  
+
       if (!data.success) {
         setError(data.message);
         return;
       }
-  
+
       setResult(data.data);
-  
     } catch (err) {
       console.error(err);
       setError("Server error. Please try again.");
@@ -123,17 +89,14 @@ const TrackStatusContent = ({ toast }) => {
   };
 
   const handleReset = () => {
-    setRegNo(""); 
-    setContact(""); 
-    setResult(null); 
-    setError(""); 
-    setSubmitted(false);
+    setRegNo(""); setContact(""); setResult(null); setError(""); setSubmitted(false);
   };
 
   const meta = result ? (STATUS_META[result.status] || STATUS_META.pending) : null;
 
   return (
     <main className="vs-main">
+
       {/* Page Header */}
       <div className="vs-page-header">
         <div>
@@ -147,7 +110,7 @@ const TrackStatusContent = ({ toast }) => {
       </div>
 
       <div className="vs-content-grid">
-        
+
         {/* Left Column - Search Form */}
         <div className="vs-search-panel">
           <div className="vs-section">
@@ -167,7 +130,7 @@ const TrackStatusContent = ({ toast }) => {
                     Registration Number <span className="required">*</span>
                   </label>
                   <input
-                    className={`vs-input ${submitted && !regNo.trim() ? " vs-input--error" : ""}`}
+                    className={`vs-input${submitted && !regNo.trim() ? " vs-input--error" : ""}`}
                     type="text"
                     placeholder="e.g. CMP123456"
                     value={regNo}
@@ -249,14 +212,10 @@ const TrackStatusContent = ({ toast }) => {
                     <span className="vs-detail-label">Date Submitted</span>
                     <span className="vs-detail-value">
                       {new Date(result.date).toLocaleDateString("en-IN", {
-                        year: "numeric",
-                        month: "short",
-                        day: "2-digit",
-                      })}{" "}
-                      •{" "}
+                        year: "numeric", month: "short", day: "2-digit",
+                      })}{" "}•{" "}
                       {new Date(result.date).toLocaleTimeString("en-IN", {
-                        hour: "2-digit",
-                        minute: "2-digit",
+                        hour: "2-digit", minute: "2-digit",
                       })}
                     </span>
                   </div>
@@ -277,7 +236,7 @@ const TrackStatusContent = ({ toast }) => {
               <div className="vs-section-body">
                 <div className="vs-timeline">
                   {result.timeline.map((step, i) => (
-                    <div key={i} className={`vs-timeline-item ${step.done ? "vs-timeline-item--done" : ""}`}>
+                    <div key={i} className={`vs-timeline-item${step.done ? " vs-timeline-item--done" : ""}`}>
                       <div className="vs-timeline-marker">
                         {step.done ? (
                           <svg viewBox="0 0 12 12" fill="none">
@@ -288,21 +247,17 @@ const TrackStatusContent = ({ toast }) => {
                         )}
                       </div>
                       {i < result.timeline.length - 1 && (
-                        <div className={`vs-timeline-connector ${step.done ? "vs-timeline-connector--done" : ""}`}></div>
+                        <div className={`vs-timeline-connector${step.done ? " vs-timeline-connector--done" : ""}`}></div>
                       )}
                       <div className="vs-timeline-info">
                         <div className="vs-timeline-label">{step.label}</div>
                         {step.date && (
                           <div className="vs-timeline-date">
                             {new Date(step.date).toLocaleDateString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })}{" "}
-                            •{" "}
+                              day: "2-digit", month: "short", year: "numeric",
+                            })}{" "}•{" "}
                             {new Date(step.date).toLocaleTimeString("en-IN", {
-                              hour: "2-digit",
-                              minute: "2-digit",
+                              hour: "2-digit", minute: "2-digit",
                             })}
                           </div>
                         )}
@@ -319,15 +274,42 @@ const TrackStatusContent = ({ toast }) => {
   );
 };
 
+// ── Root ──────────────────────────────────────────────────────────────────────
 const TrackStatus = () => {
-  const { toasts, toast, removeToast } = useToast();
+  const [active, setActive]               = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { toasts, toast, removeToast }    = useToast();
+
   return (
     <>
       <Topbar />
       <Head />
       <MainNavbar type="dashboard" />
-      <div className="cf-wrapper">
-        <Sidebar />
+      <div className="ts-wrapper">
+
+        {/* Hamburger — hidden when sidebar is open */}
+        {!isSidebarOpen && (
+          <button
+            className="ts-hamburger-btn"
+            onClick={() => setIsSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d={icons.menu} />
+            </svg>
+          </button>
+        )}
+
+        <Sidebar
+          active={active}
+          setActive={setActive}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          navItems={tsNavItems}
+          routes={tsRoutes}
+        />
+
         <TrackStatusContent toast={toast} />
       </div>
       <ToastContainer toasts={toasts} removeToast={removeToast} />

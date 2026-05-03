@@ -168,6 +168,7 @@ const EditProfileContent = ({ toast }) => {
       if (!res.ok) throw new Error(data.message || "Update failed");
       toast.success("Profile updated successfully!", { id: loadingToast });
       originalForm.current = { ...form };
+      setTimeout(() => navigate("/login"), 200);
     } catch (error) {
       toast.error(error.message || "Something went wrong.", { id: loadingToast });
     }

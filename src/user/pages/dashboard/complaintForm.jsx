@@ -146,11 +146,14 @@ const ComplaintFormContent = ({ toast }) => {
   const handleBlur = (field) => () => setTouched(prev => ({ ...prev, [field]: true }));
 
   const handleImageChange = (e) => {
-    setImages(prev => [...prev, ...Array.from(e.target.files)].slice(0, 5));
+    const selectedFiles = Array.from(e.target.files);
+    setImages(prev => [...prev, ...selectedFiles].slice(0, 5));    
     e.target.value = "";
   };
+
   const handleVideoChange = (e) => {
-    setVideos(prev => [...prev, ...Array.from(e.target.files)].slice(0, 2));
+    const selectedFiles = Array.from(e.target.files);
+    setVideos(prev => [...prev, ...selectedFiles].slice(0, 2));
     e.target.value = "";
   };
   const removeImage = (i) => setImages(prev => prev.filter((_, idx) => idx !== i));
