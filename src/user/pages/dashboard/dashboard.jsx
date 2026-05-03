@@ -83,35 +83,18 @@ const ComplaintContent = () => {
     const fetchComplaints = async () => {
       try {
         const token = sessionStorage.getItem("token");
-      
-        // =========================
-        // ⏱️ API TIME START
-        // =========================
-        const startTime = performance.now();
-      
         const res = await fetch(
           `${process.env.REACT_APP_API_URL}/api/complaint/my-complaints`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-      
-        const endTime = performance.now();
-      
-        // =========================
-        // 📊 CLEAN LOG (ms format)
-        // =========================
-        console.log(`Fetch Complaints API time: ${(endTime - startTime).toFixed(2)} ms`);
-      
         if (res.status === 401) {
           sessionStorage.removeItem("token");
           navigate("/login", { replace: true });
           return;
         }
-      
         const data = await res.json();
         await new Promise((r) => setTimeout(r, 200));
-      
         if (res.ok) setComplaints(data.complaints || []);
-      
       } catch (err) {
         console.error("Failed to fetch complaints:", err);
       } finally {
@@ -123,38 +106,14 @@ const ComplaintContent = () => {
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
-    
     setDeleting(true);
-    
     try {
       const token = sessionStorage.getItem("token");
-    
-      // =========================
-      // ⏱️ API TIME START
-      // =========================
-      const startTime = performance.now();
-    
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/api/complaint/${deleteTarget.id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { method: "DELETE", headers: { Authorization: `Bearer ${token}` } }
       );
-    
-      const endTime = performance.now();
-    
-      // =========================
-      // 📊 CLEAN LOG (ms format)
-      // =========================
-      console.log(`Delete Complaint API time: ${(endTime - startTime).toFixed(2)} ms`);
-    
-      if (res.ok) {
-        setComplaints((prev) =>
-          prev.filter((c) => c._id !== deleteTarget.id)
-        );
-      }
-    
+      if (res.ok) setComplaints((prev) => prev.filter((c) => c._id !== deleteTarget.id));
     } catch (err) {
       console.error("Delete error:", err);
     } finally {

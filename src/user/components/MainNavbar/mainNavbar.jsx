@@ -12,30 +12,11 @@ const MainNavbar = ({ type }) => {
   const handleSignIn = () => navigate("/login");
 
   const handleLogout = () => {
-    try {
-      // =========================
-      // ⏱️ LOGOUT TIME START
-      // =========================
-      const startTime = performance.now();
-    
-      toast.success("Logged out successfully!");
-    
-      setTimeout(() => {
-        logout(); // clears auth (context/session)
-      
-        const endTime = performance.now();
-      
-        // =========================
-        // 📊 CLEAN LOG (ms format)
-        // =========================
-        console.log(`Logout Process time: ${(endTime - startTime).toFixed(2)} ms`);
-      
-        navigate("/login", { replace: true });
-      }, 200);
-    
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
+    toast.success("Logged out successfully!");
+    setTimeout(() => {
+      logout();
+      navigate("/login", { replace: true });
+    }, 200);
   };
 
   const isActive = (path) => location.pathname === path;
