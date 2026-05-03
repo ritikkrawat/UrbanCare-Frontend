@@ -734,8 +734,8 @@
   }
 
   .mc-back-btn {
-    width: 100%;
-    justify-content: center;
+    width: 172px;
+    margin-left: auto;
   }
 
   .mc-card__head {
