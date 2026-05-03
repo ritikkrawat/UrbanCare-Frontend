@@ -163,7 +163,7 @@ const DeleteAccountContent = ({ toast }) => {
         </div>
 
         {/* Option 2 — Delete Request */}
-        <div className="da-option-card da-option-card--amber">
+        {/* <div className="da-option-card da-option-card--amber">
           <div className="da-option-card__header">
             <div className="da-option-card__icon da-option-card__icon--amber">
               <Icon d={icons.clock} size={18} />
@@ -186,7 +186,7 @@ const DeleteAccountContent = ({ toast }) => {
             <Icon d={icons.clock} size={15} />
             Request Deletion
           </button>
-        </div>
+        </div> */}
 
       </div>
 
