@@ -54,8 +54,10 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
     }
   };
 
-  /* auto-send on mount */
-  useEffect(() => { sendOtp(); }, []); // eslint-disable-line
+  useEffect(() => {
+    setOtpSent(true);  
+    setSecondsLeft(OTP_EXPIRY_SECONDS);
+  }, [])
 
   /* countdown timer */
   useEffect(() => {
@@ -299,7 +301,7 @@ const MainContent = ({ type }) => {
   };
 
   /* ── "Send OTP" button click ── */
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!formData.email.trim()) {
       toast.error("Please enter your email address first.");
@@ -315,7 +317,22 @@ const MainContent = ({ type }) => {
       toast.error("Please fill all required fields before verifying email.");
       return;
     }
-    setShowOtpModal(true);
+
+    const start = performance.now();
+    // ── Pre-check: is email already registered? ──
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/send-otp`,
+        { email: formData.email }
+      );
+
+      console.log("Send OTP API time:", (performance.now() - start).toFixed(2), "ms");
+      setShowOtpModal(true);
+
+    } catch (error) {
+      console.log("Send OTP failed:", (performance.now() - start).toFixed(2), "ms");
+      toast.error(error.response?.data?.message || "Failed to send OTP");
+    }
   };
 
   /* ── Called by OtpModal after successful verification ── */
