@@ -15,8 +15,8 @@ const Head = () => {
         <div className="head-inner">
 
           <div className="head-titles">
-            <h1 className="head-h1">UrbanCare Portal</h1>
-            <p className="head-sub">Public Grievance &amp; Civic Services Management System</p>
+            <h1 className="head-h1">UrbanCare</h1>
+            <p className="head-sub">Civic Issue Reporting & Resolution Platform</p>
           </div>
 
           <div className="head-right">

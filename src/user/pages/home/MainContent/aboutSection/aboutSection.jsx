@@ -11,7 +11,7 @@ const AboutSection = () => {
             <span className="hero-badge-dot" />
             Live Platform
           </div>
-          <h1 className="hero-title">UrbanCare</h1>
+          <h1 className="hero-title">Your City, Your Voice.</h1>
           <p className="hero-subtitle">
             A centralized platform for citizens to report, track, and resolve
             public infrastructure issues — built for transparency between
