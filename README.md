@@ -3,8 +3,6 @@
 A modern, responsive frontend for **UrbanCare – Civic Complaint Management System**, built using React.  
 This application enables users to **register, submit complaints with media, and track their status in real-time**.
 
----
-
 ## 🌍 Live Demo
 
 👉 https://urbancaredev.vercel.app  
