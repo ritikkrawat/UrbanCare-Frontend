@@ -92,6 +92,7 @@ const SectionHeader = ({ iconD, title }) => (
 /* ── Complaint Form Content ── */
 const ComplaintFormContent = ({ toast }) => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [userInfo, setUserInfo] = useState({ name: "", email: "", mobile: "" });
 
   useEffect(() => {
@@ -203,11 +204,14 @@ const ComplaintFormContent = ({ toast }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;          // ← guard against double-submit
+
     const allTouched = Object.keys(mandatoryFields).reduce((acc, f) => ({ ...acc, [f]: true }), {});
     setTouched(allTouched);
     const err = validate();
     if (err) { toast.error(err); return; }
 
+    setIsSubmitting(true);             // ← lock
     try {
       const token = sessionStorage.getItem("token");
       const uploadToast = toast.loading("Uploading files...");
@@ -229,6 +233,8 @@ const ComplaintFormContent = ({ toast }) => {
       setTimeout(() => navigate("/dashboard"), 500);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
@@ -419,9 +425,13 @@ const ComplaintFormContent = ({ toast }) => {
 
         {/* Submit */}
         <div className="cf-submit-row">
-          <button type="submit" className="cf-submit-btn" disabled={!isFormValid()}>
+          <button 
+            type="submit" 
+            className="cf-submit-btn" 
+            disabled={!isFormValid() || isSubmitting}
+          >
             <Icon d={icons.save} size={15} />
-            Submit Complaint
+            {isSubmitting ? "Submitting..." : "Submit Complaint"}
           </button>
           {!isFormValid() && (
             <p className="cf-submit-hint">Fill all required fields and add at least one image or video</p>

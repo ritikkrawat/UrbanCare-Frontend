@@ -43,7 +43,7 @@ const daRoutes = {
 };
 
 // ── Confirm Modal ─────────────────────────────────────────────────────────────
-const ConfirmModal = ({ type, onConfirm, onCancel }) => {
+const ConfirmModal = ({ type, onConfirm, onCancel, isDeleting  }) => {
   const isInstant = type === "instant";
   return (
     <div className="da-modal-overlay" onClick={(e) => e.target === e.currentTarget && onCancel()}>
@@ -64,8 +64,11 @@ const ConfirmModal = ({ type, onConfirm, onCancel }) => {
           <button
             className={isInstant ? "da-modal__confirm da-modal__confirm--red" : "da-modal__confirm da-modal__confirm--amber"}
             onClick={onConfirm}
+            disabled={isDeleting}
           >
-            {isInstant ? "Yes, Delete Now" : "Yes, Schedule Deletion"}
+            {isDeleting
+              ? "Please wait..."
+              : isInstant ? "Yes, Delete Now" : "Yes, Schedule Deletion"}
           </button>
         </div>
       </div>
@@ -76,10 +79,13 @@ const ConfirmModal = ({ type, onConfirm, onCancel }) => {
 // ── Delete Account Content ────────────────────────────────────────────────────
 const DeleteAccountContent = ({ toast }) => {
   const [modal, setModal] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false); // ← add
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleConfirm = async () => {
+    if (isDeleting) return; 
+    setIsDeleting(true);             // ← lock
     try {
       const token = sessionStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -108,6 +114,8 @@ const DeleteAccountContent = ({ toast }) => {
         logout();
         navigate("/login", { replace: true });
       }
+    } finally {
+      setIsDeleting(false);          // ← unlock
     }
   };
 
@@ -198,6 +206,7 @@ const DeleteAccountContent = ({ toast }) => {
           type={modal}
           onConfirm={handleConfirm}
           onCancel={() => setModal(null)}
+          isDeleting={isDeleting}
         />
       )}
     </main>

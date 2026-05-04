@@ -162,6 +162,7 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
 /* ─── Main Component ────────────────────────────────────────── */
 const MainContent = ({ type }) => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const { toasts, toast, removeToast } = useToast();
 
@@ -292,7 +293,9 @@ const MainContent = ({ type }) => {
 
   /* ── Actual registration API call ── */
   const submitRegistration = async () => {
+    if(isSubmitting) return;
     const loadingToast = toast.loading("Creating account…");
+    setIsSubmitting(true);
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/register`,
@@ -318,6 +321,8 @@ const MainContent = ({ type }) => {
         error.response?.data?.message || "Registration failed",
         { id: loadingToast }
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -336,7 +341,9 @@ const MainContent = ({ type }) => {
   /* ── Login submit ── */
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    if(isSubmitting) return;
     const loadingToast = toast.loading("Signing in…");
+    setIsSubmitting(true);
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/login`,
@@ -351,6 +358,8 @@ const MainContent = ({ type }) => {
         error.response?.data?.message || "Invalid credentials",
         { id: loadingToast }
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -420,9 +429,9 @@ const MainContent = ({ type }) => {
                   <button
                     type="submit"
                     className="login-submit-btn"
-                    disabled={!isLoginValid}
+                    disabled={!isLoginValid || isSubmitting}
                   >
-                    Sign In →
+                    {isSubmitting ? "Signing in..." : "Sign In →"}
                   </button>
 
                 </form>
@@ -703,9 +712,15 @@ const MainContent = ({ type }) => {
               </div>
 
               <div className="submit-container">
-                <button type="submit" className="submit-button">
+                <button
+                  type="submit"
+                  className="submit-button"
+                  disabled={isSubmitting}
+                >
                   <span className="submit-icon">→</span>
-                  {emailVerified ? "Create Account" : "Verify Email & Submit"}
+                  {isSubmitting
+                    ? "Please wait..."
+                    : emailVerified ? "Create Account" : "Verify Email & Submit"}
                 </button>
               </div>
 
