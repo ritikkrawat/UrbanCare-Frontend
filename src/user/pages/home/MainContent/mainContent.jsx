@@ -363,7 +363,7 @@ const MainContent = ({ type }) => {
         <div className="login-wrap">
 
           {/* ── LFFT: Login Card ── */}
-          <div>
+          <div className="login-card-wrapper">
             <div className="login-card">
               <div className="login-card-header">
                 <h2 className="login-card-title">Welcome back</h2>
@@ -454,7 +454,7 @@ const MainContent = ({ type }) => {
                 and engage with your local administration, all in one place.
               </p>
             </div>
-    
+
             <div className="login-features">
               <h3>What you can do</h3>
               <div className="login-feature-item">
@@ -474,27 +474,27 @@ const MainContent = ({ type }) => {
                 <span className="login-feature-text">View resolved issues and civic activity near you</span>
               </div>
             </div>
-
-            <div
-               className="officer-card"
-               onClick={() => window.open("/admin/login", "_blank")}
-             >
-               <div className="officer-left">
-                 <div className="officer-icon">
-                   <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
-                     <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
-                   </svg>
-                 </div>
-                 <div>
-                   <div className="officer-label">Officer / Admin Login</div>
-                   <div className="officer-sub">Restricted access</div>
-                 </div>
-               </div>
-               <span className="officer-arrow">→</span>
-             </div>
-    
           </aside>
+
+          {/* Officer card - separate sibling */}
+          <div
+            className="officer-card-wrapper"
+            onClick={() => window.open("/admin/login", "_blank")}
+          >
+            <div className="officer-left">
+              <div className="officer-icon">
+                <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
+                  <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div>
+                <div className="officer-label">Officer / Admin Login</div>
+                <div className="officer-sub">Restricted access</div>
+              </div>
+            </div>
+            <span className="officer-arrow">→</span>
+          </div>
 
         </div>
       </div>
