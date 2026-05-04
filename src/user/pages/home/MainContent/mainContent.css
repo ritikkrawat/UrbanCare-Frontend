@@ -12,47 +12,19 @@
 .login-wrap {
   display: grid;
   grid-template-columns: 1fr 340px;
-  grid-template-rows: auto auto;
   gap: 24px;
   width: 100%;
   max-width: 860px;
   align-items: start;
 }
 
-.login-card-wrapper {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-}
-
 /* ── Left info panel ── */
 .login-info-panel {
-   grid-column: 2;
-  grid-row: 1;
   position: sticky;
   top: 24px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.officer-card-wrapper {
-  grid-column: 2;
-  grid-row: 2;
-  /* reuse officer-card styles */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  background: #fdf9fb;
-  border: 1.5px dashed #d4aec0;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.officer-card-wrapper:hover {
-  border-color: #6f0047;
-  background: #fce8f2;
 }
 
 .login-brand {
@@ -385,7 +357,6 @@
 @media (max-width: 768px) {
   .login-wrap {
     grid-template-columns: 1fr;
-    grid-template-rows: unset;
     max-width: 480px;
   }
 
@@ -396,13 +367,19 @@
     gap: 12px;
     order: -1;
   }
-  
-  .login-card-wrapper { order: 2; }
-  .login-info-panel   { order: 1; position: static; }
-  .officer-card-wrapper { order: 3; }
 
   .login-brand {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-info-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .login-brand {
+    grid-column: span 1;
   }
 }
 
