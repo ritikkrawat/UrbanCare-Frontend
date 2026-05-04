@@ -84,18 +84,13 @@ GET /api/complaint/track/:id
 POST /api/auth/login
 POST /api/auth/register1
 
-
-
 ---
 
 ## 🛠 Installation & Setup
 
 `bash
 # Clone repository
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO
-
-# Navigate to frontend
-cd frontend
+git clone https://github.com/ritikkrawat/UrbanCare-Frontend
 
 # Install dependencies
 npm install
