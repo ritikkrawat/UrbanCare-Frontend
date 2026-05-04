@@ -363,7 +363,7 @@ const MainContent = ({ type }) => {
         <div className="login-wrap">
 
           {/* ── LFFT: Login Card ── */}
-          <div>
+          <div className="login-card-wrapper">
             <div className="login-card">
               <div className="login-card-header">
                 <h2 className="login-card-title">Welcome back</h2>
@@ -443,10 +443,8 @@ const MainContent = ({ type }) => {
             </div>
           </div>
 
-
           {/* ── RIGHT: Info Panel ── */}
           <aside className="login-info-panel">
-    
             <div className="login-brand">
               <h1 className="login-brand-name">UrbanCare</h1>
               <p className="login-brand-tagline">
@@ -475,10 +473,8 @@ const MainContent = ({ type }) => {
               </div>
             </div>
 
-            <div
-              className="officer-card"
-              onClick={() => window.open("/admin/login", "_blank")}
-            >
+            {/* Officer card — now a direct sibling in login-wrap */}
+            <div className="officer-card" onClick={() => window.open("/admin/login", "_blank")}>
               <div className="officer-left">
                 <div className="officer-icon">
                   <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -494,7 +490,6 @@ const MainContent = ({ type }) => {
               <span className="officer-arrow">→</span>
             </div>
           </aside>
-
         </div>
       </div>
     );

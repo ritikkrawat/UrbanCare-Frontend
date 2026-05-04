@@ -358,18 +358,28 @@
   .login-wrap {
     grid-template-columns: 1fr;
     max-width: 480px;
+    flex-direction: column;
   }
 
   .login-info-panel {
     position: static;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    order: -1;
+    display: contents;
   }
 
   .login-brand {
     display: none;
+  }
+
+  .login-features {
+    order: 1;
+  }
+
+  .login-card-wrapper {
+    order: 2;
+  }
+
+  .officer-card {
+    order: 3;
   }
 }
 
