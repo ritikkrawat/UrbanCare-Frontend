@@ -25,16 +25,19 @@ const icons = {
   check:     "M20 6L9 17l-5-5",
   x:         "M18 6L6 18M6 6l12 12",
   menu:      "M3 12h18M3 6h18M3 18h18",
+  plus:  "M12 5v14M5 12h14",
 };
 
 // ── Nav config for this page ──────────────────────────────────────────────────
 const cpNavItems = [
+  { key: "plus",  label: "Lodge Complaint",    icon: icons.plus  },
   { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
   { key: "password", label: "Change Password", icon: icons.lock  },
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
 const cpRoutes = {
+  plus:     "/complaintForm",  
   profile:  "/editProfile",
   password: "/changePassword",
   delete:   "/deleteAccount",

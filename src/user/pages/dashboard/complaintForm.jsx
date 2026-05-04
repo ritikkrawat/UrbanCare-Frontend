@@ -31,10 +31,12 @@ const icons = {
   lock:      "M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
   trash:     "M3 6h18 M19 6l-1 14H6L5 6 M10 11v6 M14 11v6 M9 6V4h6v2",
   menu:      "M3 12h18M3 6h18M3 18h18",
+  plus:      "M12 5v14M5 12h14",
 };
 
 // ── Nav config for this page ──────────────────────────────────────────────────
 const cfNavItems = [
+  { key: "plus",     label: "Lodge Complaint", icon: icons.plus  },
   { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
   { key: "password", label: "Change Password", icon: icons.lock  },
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
@@ -438,6 +440,7 @@ const ComplaintForm = () => {
 
   // Derive active key from current route
   const getActiveKey = () => {
+    if (location.pathname === "/complaintForm")    return "plus";
     if (location.pathname === "/editProfile")    return "profile";
     if (location.pathname === "/changePassword") return "password";
     if (location.pathname === "/deleteAccount")  return "delete";

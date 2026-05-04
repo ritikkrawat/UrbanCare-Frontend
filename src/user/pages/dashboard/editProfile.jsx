@@ -22,16 +22,19 @@ const icons = {
   arrowLeft: "M19 12H5 M12 19l-7-7 7-7",
   save:      "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z M17 21v-8H7v8 M7 3v5h8",
   menu:      "M3 12h18M3 6h18M3 18h18",
+  plus:  "M12 5v14M5 12h14",
 };
 
 // ── Nav config for this page ──────────────────────────────────────────────────
 const epNavItems = [
+  { key: "plus",     label: "Lodge Complaint", icon: icons.plus  },
   { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
   { key: "password", label: "Change Password", icon: icons.lock  },
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
 const epRoutes = {
+  plus: "/complaintForm",
   profile:  "/editProfile",
   password: "/changePassword",
   delete:   "/deleteAccount",

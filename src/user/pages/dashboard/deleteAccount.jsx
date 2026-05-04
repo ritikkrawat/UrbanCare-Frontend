@@ -24,16 +24,19 @@ const icons = {
   arrowLeft: "M19 12H5 M12 19l-7-7 7-7",
   clock:     "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z M12 6v6l4 2",
   menu:      "M3 12h18M3 6h18M3 18h18",
+  plus:  "M12 5v14M5 12h14",
 };
 
 // ── Nav config for this page ──────────────────────────────────────────────────
 const daNavItems = [
+  { key: "plus",  label: "Lodge Complaint",    icon: icons.plus  },
   { key: "profile",  label: "Edit Profile",    icon: icons.edit  },
   { key: "password", label: "Change Password", icon: icons.lock  },
   { key: "delete",   label: "Delete Account",  icon: icons.trash },
 ];
 
 const daRoutes = {
+  plus:  "/complaintForm",
   profile:  "/editProfile",
   password: "/changePassword",
   delete:   "/deleteAccount",
