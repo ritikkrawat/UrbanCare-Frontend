@@ -23,19 +23,12 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
 
   /* send / resend OTP */
   const sendOtp = async () => {
-    const start = performance.now(); // ⏱ start
     try {
       setSending(true);
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/send-otp`,
         { email }
       );
-
-      const end = performance.now();
-      const duration = (end - start).toFixed(2);
-
-      console.log("Send OTP API time:", duration, "ms");
-
       setSending(false);
       setOtpSent(true);
       setOtp(["", "", "", "", "", ""]);
@@ -43,9 +36,6 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
       setSecondsLeft(OTP_EXPIRY_SECONDS);
       toast.success(`OTP sent to ${email}`);
     } catch (error) {
-      const end = performance.now();
-      console.log("Send OTP failed time:", (end - start).toFixed(2), "ms");
-
       setSending(false);
       toast.error(error.response?.data?.message || "Failed to send OTP");
     }
