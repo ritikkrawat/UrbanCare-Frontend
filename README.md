@@ -7,8 +7,6 @@ This application enables users to **register, submit complaints with media, and 
 
 👉 https://urbancaredev.vercel.app  
 
----
-
 ## 📌 Overview
 
 UrbanCare is designed to provide a **clean, intuitive, and real-world user experience** for handling civic complaints.
@@ -19,8 +17,6 @@ This frontend interacts with a RESTful backend API to:
 - Track complaint status using a unique ID  
 - Provide role-based dashboards  
 
----
-
 ## ✨ Features
 
 ### 👤 User Features
@@ -30,23 +26,17 @@ This frontend interacts with a RESTful backend API to:
 - 🔍 Track complaint status using unique ID  
 - 📊 View complaint history  
 
----
-
 ### 🛠 Admin Features
 - 📋 View and manage all complaints  
 - 🔄 Update complaint status (Pending → In Progress → Closed)  
 - 👥 Manage users and officers  
 - 📈 Analytics dashboard  
 
----
-
 ### 🎨 UI/UX Highlights
 - Clean and responsive design  
 - Government-style civic interface  
 - Toast notifications for user feedback  
 - Form validation with real-time error handling  
-
----
 
 ## 🧠 Tech Stack
 
@@ -56,7 +46,6 @@ This frontend interacts with a RESTful backend API to:
 - React Hot Toast  
 - Styled Components / CSS  
 
----
 
 ## 🔐 Authentication Flow
 
