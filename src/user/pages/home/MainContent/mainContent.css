@@ -122,7 +122,7 @@
 }
 
 .login-card-body {
-  padding: 24px 28px 28px;
+  padding: 24px 24px 24px;
 }
 
 /* ── Input groups ── */
@@ -281,7 +281,7 @@
   text-align: center;
   font-size: 13px;
   color: #9a7a8a;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .login-signup-row span {
@@ -354,17 +354,18 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .login-wrap {
     grid-template-columns: 1fr;
-    max-width: 420px;
+    max-width: 480px;
   }
 
   .login-info-panel {
     position: static;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
+    order: 1;
   }
 
   .login-brand {
@@ -538,6 +539,67 @@
 
   .info-login-card {
     grid-column: span 2;
+  }
+
+  .login-features {
+    min-width: auto;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #e2dada;
+    border-left: 4px solid #6f0047;
+    padding: 20px;
+  }
+
+  .login-features h3 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6f0047;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 0 0 14px;
+  }
+
+  .login-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .login-feature-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .login-feature-dot {
+    width: 6px;
+    height: 6px;
+    background: #6f0047;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .login-feature-text {
+    font-size: 13px;
+    color: #5a3a4a;
+    line-height: 1.5;
+  }
+
+  .officer-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: #fdf9fb;
+    border: 1.5px dashed #d4aec0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .officer-card:hover {
+    border-color: #6f0047;
+    background: #fce8f2;
   }
 }
 

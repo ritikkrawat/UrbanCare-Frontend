@@ -439,29 +439,10 @@ const MainContent = ({ type }) => {
                   New user?{" "}
                   <span onClick={() => navigate("/register")}>Create an account</span>
                 </div>
-
-                <div
-                  className="officer-card"
-                  onClick={() => window.open("/admin/login", "_blank")}
-                >
-                  <div className="officer-left">
-                    <div className="officer-icon">
-                      <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
-                        <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="officer-label">Officer / Admin Login</div>
-                      <div className="officer-sub">Restricted access</div>
-                    </div>
-                  </div>
-                  <span className="officer-arrow">→</span>
-                </div>
-
               </div>
             </div>
           </div>
+
 
           {/* ── RIGHT: Info Panel ── */}
           <aside className="login-info-panel">
@@ -493,6 +474,25 @@ const MainContent = ({ type }) => {
                 <span className="login-feature-text">View resolved issues and civic activity near you</span>
               </div>
             </div>
+
+            <div
+               className="officer-card"
+               onClick={() => window.open("/admin/login", "_blank")}
+             >
+               <div className="officer-left">
+                 <div className="officer-icon">
+                   <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
+                     <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
+                   </svg>
+                 </div>
+                 <div>
+                   <div className="officer-label">Officer / Admin Login</div>
+                   <div className="officer-sub">Restricted access</div>
+                 </div>
+               </div>
+               <span className="officer-arrow">→</span>
+             </div>
     
           </aside>
 
