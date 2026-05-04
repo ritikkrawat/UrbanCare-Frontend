@@ -46,14 +46,11 @@ This frontend interacts with a RESTful backend API to:
 - React Hot Toast  
 - Styled Components / CSS  
 
-
 ## 🔐 Authentication Flow
 
 - JWT token stored in `sessionStorage`  
 - Protected routes using middleware logic  
 - OTP-based verification for registration and password reset  
-
----
 
 ## ☁️ Media Upload Flow
 
@@ -62,16 +59,12 @@ This frontend interacts with a RESTful backend API to:
 3. Secure URLs are returned  
 4. URLs are sent to backend with complaint data  
 
----
-
 ## 🔌 API Integration
 The frontend communicates with backend using Axios:
 POST /api/complaint/submit
 GET /api/complaint/track/:id
 POST /api/auth/login
 POST /api/auth/register1
-
----
 
 ## 🛠 Installation & Setup
 
