@@ -60,28 +60,6 @@ This frontend interacts with a RESTful backend API to:
 
 ---
 
-## ⚙️ Project Structure
-src/
-│
-├── admin/ # Admin panel
-│ ├── components/
-│ ├── pages/
-│ └── layouts/
-│
-├── user/ # User panel
-│ ├── components/
-│ ├── pages/
-│ └── layouts/
-│
-├── shared/ # Shared components/utilities
-├── context/ # Global state (Auth, etc.)
-├── routes/ # Route management
-├── assets/ # Static files
-└── App.jsx # Main app entry
-
-
----
-
 ## 🔐 Authentication Flow
 
 - JWT token stored in `sessionStorage`  
