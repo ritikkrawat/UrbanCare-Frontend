@@ -451,13 +451,15 @@
   }
 
   .cf-page-header {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
     gap: 12px;
   }
 
   .cf-back-btn {
-    width: 172px;
-    margin-left: auto;
+    width: auto;        
+    margin-left: 0;
   }
 
   .cf-submit-row {
