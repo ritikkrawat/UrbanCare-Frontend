@@ -46,7 +46,7 @@ const daRoutes = {
 const ConfirmModal = ({ type, onConfirm, onCancel, isDeleting  }) => {
   const isInstant = type === "instant";
   return (
-    <div className="da-modal-overlay" onClick={(e) => e.target === e.currentTarget && onCancel()}>
+    <div className="da-modal-overlay" onClick={(e) => e.target === e.currentTarget && !isDeleting && onCancel()}>
       <div className="da-modal">
         <div className={`da-modal__icon-wrap ${isInstant ? "da-modal__icon-wrap--red" : "da-modal__icon-wrap--amber"}`}>
           <Icon d={isInstant ? icons.alert : icons.clock} size={22} />
@@ -60,7 +60,7 @@ const ConfirmModal = ({ type, onConfirm, onCancel, isDeleting  }) => {
             : "Your account will be scheduled for deletion and permanently removed after 7 days. You can restore it anytime within this period by logging back in."}
         </p>
         <div className="da-modal__actions">
-          <button className="da-modal__cancel" onClick={onCancel}>Cancel</button>
+          <button className="da-modal__cancel" onClick={onCancel} disabled={isDeleting}>Cancel</button>
           <button
             className={isInstant ? "da-modal__confirm da-modal__confirm--red" : "da-modal__confirm da-modal__confirm--amber"}
             onClick={onConfirm}

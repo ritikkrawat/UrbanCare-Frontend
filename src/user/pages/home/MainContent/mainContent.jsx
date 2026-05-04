@@ -100,8 +100,16 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
     `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   return (
-    <div className="otp-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="otp-modal">
+    <div className="otp-overlay">
+      <div 
+        className="otp-modal"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && otp.join("").length === 6 && !expired) {
+            handleVerify();
+          }
+        }}
+        tabIndex={0}
+      >
         <button className="otp-modal-close" onClick={onClose} aria-label="Close">✕</button>
         <div className="otp-modal-icon">✉</div>
         <h2 className="otp-modal-title">Verify Your Email</h2>
@@ -442,7 +450,7 @@ const MainContent = ({ type }) => {
                   <div className="login-or-line" />
                 </div>
 
-                <button className="login-otp-btn">Login with OTP</button>
+                {/* <button className="login-otp-btn">Login with OTP</button> */}
 
                 <div className="login-signup-row">
                   New user?{" "}

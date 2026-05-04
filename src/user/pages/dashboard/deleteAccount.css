@@ -348,6 +348,18 @@
 
 .da-modal__cancel:hover { background: #ede5e9; }
 
+.da-modal__cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.da-modal__confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .da-modal__confirm {
   flex: 1;
   padding: 11px 0;
