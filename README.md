@@ -1,70 +1,129 @@
-# Getting Started with Create React App
+🚀 UrbanCare Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive frontend for UrbanCare – Civic Complaint Management System, built using React.
+This application enables users to register, submit complaints with media, and track their status in real-time.
 
-## Available Scripts
+🌍 Live Demo
 
-In the project directory, you can run:
+👉 https://urbancaredev.vercel.app
 
-### `npm start`
+📌 Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+UrbanCare is designed to provide a clean, intuitive, and real-world user experience for handling civic complaints.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This frontend interacts with a RESTful backend API to:
 
-### `npm test`
+Authenticate users securely
+Submit complaints with images/videos
+Track complaint status using a unique ID
+Provide role-based dashboards
+✨ Features
+👤 User Features
+🔐 Login & Registration with OTP verification
+📝 Submit complaints with detailed information
+📸 Upload images (max 5) and 🎥 videos (max 2)
+🔍 Track complaint status using unique ID
+📊 View complaint history
+🛠 Admin Features
+📋 View and manage all complaints
+🔄 Update complaint status (Pending → In Progress → Closed)
+👥 Manage users and officers
+📈 Analytics dashboard
+🎨 UI/UX Highlights
+Clean and responsive design
+Government-style civic interface
+Toast notifications for user feedback
+Form validation with real-time error handling
+🧠 Tech Stack
+React 18
+React Router DOM
+Axios
+React Hot Toast
+Styled Components / CSS
+⚙️ Project Structure
+src/
+│
+├── admin/                # Admin panel
+│   ├── components/
+│   ├── pages/
+│   └── layouts/
+│
+├── user/                 # User panel
+│   ├── components/
+│   ├── pages/
+│   └── layouts/
+│
+├── shared/               # Shared components/utilities
+├── context/              # Global state (Auth, etc.)
+├── routes/               # Route management
+├── assets/               # Static files
+└── App.jsx               # Main app entry
+🔐 Authentication Flow
+JWT token stored in sessionStorage
+Protected routes using middleware logic
+OTP-based verification for registration and password reset
+☁️ Media Upload Flow
+User selects images/videos
+Files are uploaded to Cloudinary via signed API
+Secure URLs are returned
+URLs are sent to backend with complaint data
+🔌 API Integration
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The frontend communicates with backend using Axios:
 
-### `npm run build`
+POST /api/complaint/submit
+GET  /api/complaint/track/:id
+POST /api/auth/login
+POST /api/auth/register
+🛠 Installation & Setup
+# Clone repository
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Navigate to frontend
+cd frontend
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Install dependencies
+npm install
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Start development server
+npm start
+🔧 Environment Variables
 
-### `npm run eject`
+Create a .env file in the root:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+REACT_APP_API_URL=your_backend_url
+🚀 Deployment
+Hosted on Vercel
+Optimized for production builds
+Environment variables configured via Vercel dashboard
+📸 Screenshots
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Add screenshots here (Home Page, Dashboard, Complaint Form)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+🤝 Contribution
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Contributions, suggestions, and improvements are welcome!
 
-## Learn More
+Feel free to:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Open issues
+Submit pull requests
+Share feedback
+💬 Feedback
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+If you try this project, please:
 
-### Code Splitting
+Submit a real complaint scenario
+Explore all features
+Share your feedback
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+📩 DM me for improvements or collaboration ideas
 
-### Analyzing the Bundle Size
+📄 License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This project is licensed under the ISC License.
 
-### Making a Progressive Web App
+👨‍💻 Author
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Ritik
+Frontend & Full Stack Developer
