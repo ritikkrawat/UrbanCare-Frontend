@@ -69,10 +69,11 @@ const MainNavbar = ({ type }) => {
             </button>
           ) : (
             <>
-              <div className="language-box">
-                <svg className="lang-globe" viewBox="0 0 14 14">
-                  <circle cx="7" cy="7" r="6" stroke="rgba(255,255,255,0.65)" strokeWidth="1.2" />
-                  <path d="M7 1c-2 2-2 8 0 12M7 1c2 2 2 8 0 12M1 7h12" stroke="rgba(255,255,255,0.65)" strokeWidth="1.2" />
+              {/* <div className="language-box">
+                <svg className="lang-globe" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="6.5" stroke="rgba(255,255,255,0.65)" strokeWidth="1.2" />
+                  <ellipse cx="8" cy="8" rx="2.8" ry="6.5" stroke="rgba(255,255,255,0.65)" strokeWidth="1.2" />
+                  <path d="M1.5 5.5h13M1.5 10.5h13" stroke="rgba(255,255,255,0.65)" strokeWidth="1.2" strokeLinecap="round" />
                 </svg>
                 <select>
                   <option>English</option>
@@ -80,7 +81,7 @@ const MainNavbar = ({ type }) => {
                 </select>
               </div>
 
-              <div className="nav-divider"></div>
+              <div className="nav-divider"></div> */}
 
               <button className="signin-btn" onClick={handleSignIn}>
                 Sign In
