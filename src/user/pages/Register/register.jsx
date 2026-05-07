@@ -22,19 +22,30 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
 
   /* send / resend OTP */
   const sendOtp = async () => {
+    const start = performance.now(); // ⏱ start
     try {
       setSending(true);
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/send-otp`,
         { email }
       );
+
+      const end = performance.now();
+      const duration = (end - start).toFixed(2);
+
+      console.log("Send OTP API time:", duration, "ms");
+
       setSending(false);
       setOtpSent(true);
       setOtp(["", "", "", "", "", ""]);
       setExpired(false);
       setSecondsLeft(OTP_EXPIRY_SECONDS);
-      toast.success(`OTP sent to ${email}`);
+
+      toast.success(`OTP sent to ${email} (${duration} ms)`);
     } catch (error) {
+      const end = performance.now();
+      console.log("Send OTP failed time:", (end - start).toFixed(2), "ms");
+
       setSending(false);
       toast.error(error.response?.data?.message || "Failed to send OTP");
     }
@@ -79,17 +90,33 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
 
   const handleVerify = async () => {
     const entered = otp.join("");
+
     if (entered.length < 6) { toast.error("Please enter all 6 digits."); return; }
+
     if (expired) { toast.error("OTP has expired. Please resend."); return; }
+
+    const start = performance.now(); // ⏱ start
+
     try {
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/verify-registration-otp`,
         { email, otp: entered }
       );
-      toast.success("Email verified successfully!");
+
+      const end = performance.now();
+      const duration = (end - start).toFixed(2);
+
+      console.log("Verify OTP API time:", duration, "ms");
+
+      toast.success(`Email verified successfully! (${duration} ms)`);
+
       onVerified();
     } catch (error) {
+      const end = performance.now();
+      console.log("Verify OTP failed time:", (end - start).toFixed(2), "ms");
+
       toast.error(error.response?.data?.message || "Invalid or expired OTP");
+
       setOtp(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
     }
@@ -255,7 +282,8 @@ const Register = () => {
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
-  const handleSendOtp = (e) => {
+  /* ── "Send OTP" button click ── */
+   const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!formData.email.trim()) {
       toast.error("Please enter your email address first.");
@@ -271,7 +299,22 @@ const Register = () => {
       toast.error("Please fill all required fields before verifying email.");
       return;
     }
-    setShowOtpModal(true);
+
+    const start = performance.now();
+    // ── Pre-check: is email already registered? ──
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/send-otp`,
+        { email: formData.email }
+      );
+
+      console.log("Send OTP API time:", (performance.now() - start).toFixed(2), "ms");
+      setShowOtpModal(true);
+
+    } catch (error) {
+      console.log("Send OTP failed:", (performance.now() - start).toFixed(2), "ms");
+      toast.error(error.response?.data?.message || "Failed to send OTP");
+    }
   };
 
   const handleOtpVerified = () => {
@@ -281,36 +324,60 @@ const Register = () => {
   };
 
   const submitRegistration = async () => {
-    if (isSubmitting) return;
+    const start = performance.now(); // ⏱ start timing
     const loadingToast = toast.loading("Creating account…");
-    setIsSubmitting(true);
+
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/register`,
         {
-          name:     formData.name,
-          email:    formData.email,
-          mobile:   formData.mobileNumber,
+          name: formData.name,
+          email: formData.email,
+          mobile: formData.mobileNumber,
           password: formData.password,
-          gender:   formData.gender,
-          state:    formData.state,
+          gender: formData.gender,
+          state: formData.state,
           district: formData.district,
-          pincode:  formData.pincode,
+          pincode: formData.pincode,
           address1: formData.premiseNumber,
           address2: formData.subLocality,
         }
       );
+
+      const end = performance.now();
+      const duration = (end - start).toFixed(2);
+
+      console.log("Register API time:", duration, "ms");
+      // console.log("REGISTER RESPONSE:", res.data);
+
+      // ✅ Save auth (same as login)
       login(res.data);
       sessionStorage.setItem("token", res.data.token);
-      toast.success(res.data.message || "Registration successful!", { id: loadingToast });
-      setTimeout(() => navigate("/dashboard", { replace: true }), 200);
+
+      toast.success(
+        res.data.message || `Registration successful! (${duration} ms)`,
+        { id: loadingToast }
+      );
+
+      // ✅ Navigate (same logic as login)
+      if (res.data?.user?.role === "ADMIN") {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+
     } catch (error) {
+      const end = performance.now();
+      console.log(
+        "Register failed time:",
+        (end - start).toFixed(2),
+        "ms"
+      );
+
       toast.error(
         error.response?.data?.message || "Registration failed",
         { id: loadingToast }
       );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
