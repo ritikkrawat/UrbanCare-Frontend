@@ -2,10 +2,10 @@ import "./register.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { statesData } from "../../shared/utils/statesAndDistrict.js";
-import { useAuth } from "../../context/authContext.jsx";
-import { useToast, ToastContainer } from "../../shared/components/toast.jsx"; 
-import MainLayout from "../layouts/mainLayout";
+import { statesData } from "../../../shared/utils/statesAndDistrict.js";
+import { useAuth } from "../../../context/authContext.jsx";
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx";
+import MainLayout from "../../layouts/mainLayout.jsx";
 
 /* ─── OTP helpers ──────────────────────────────────────────── */
 const OTP_EXPIRY_SECONDS = 120;
@@ -23,18 +23,13 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
   /* send / resend OTP */
   const sendOtp = async () => {
     const start = performance.now(); // ⏱ start
-
     try {
       setSending(true);
-
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/send-otp`,
         { email }
       );
-
-      const end = performance.now();
-      const duration = (end - start).toFixed(2);
-
+      const duration = (performance.now() - start).toFixed(2);
       console.log("Send OTP API time:", duration, "ms");
 
       setSending(false);
@@ -42,19 +37,19 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
       setOtp(["", "", "", "", "", ""]);
       setExpired(false);
       setSecondsLeft(OTP_EXPIRY_SECONDS);
-
       toast.success(`OTP sent to ${email} (${duration} ms)`);
     } catch (error) {
-      const end = performance.now();
-      console.log("Send OTP failed time:", (end - start).toFixed(2), "ms");
-
+      console.log("Send OTP failed time:", (performance.now() - start).toFixed(2), "ms");
       setSending(false);
       toast.error(error.response?.data?.message || "Failed to send OTP");
     }
   };
 
   /* auto-send on mount */
-  useEffect(() => { sendOtp(); }, []); // eslint-disable-line
+  useEffect(() => {
+    setOtpSent(true);
+    setSecondsLeft(OTP_EXPIRY_SECONDS);
+  }, []);
 
   /* countdown timer */
   useEffect(() => {
@@ -92,39 +87,23 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
 
   const handleVerify = async () => {
     const entered = otp.join("");
-
-    if (entered.length < 6) {
-      toast.error("Please enter all 6 digits.");
-      return;
-    }
-
-    if (expired) {
-      toast.error("OTP has expired. Please resend.");
-      return;
-    }
+    if (entered.length < 6) { toast.error("Please enter all 6 digits."); return; }
+    if (expired) { toast.error("OTP has expired. Please resend."); return; }
 
     const start = performance.now(); // ⏱ start
-
     try {
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/verify-registration-otp`,
         { email, otp: entered }
       );
-
-      const end = performance.now();
-      const duration = (end - start).toFixed(2);
-
+      const duration = (performance.now() - start).toFixed(2);
       console.log("Verify OTP API time:", duration, "ms");
 
       toast.success(`Email verified successfully! (${duration} ms)`);
-
       onVerified();
     } catch (error) {
-      const end = performance.now();
-      console.log("Verify OTP failed time:", (end - start).toFixed(2), "ms");
-
+      console.log("Verify OTP failed time:", (performance.now() - start).toFixed(2), "ms");
       toast.error(error.response?.data?.message || "Invalid or expired OTP");
-
       setOtp(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
     }
@@ -134,7 +113,7 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
     `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   return (
-    <div className="otp-overlay">
+    <div className="otp-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div
         className="otp-modal"
         onKeyDown={(e) => {
@@ -290,6 +269,7 @@ const Register = () => {
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
+  /* ── "Send OTP" button click ── */
   const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!formData.email.trim()) {
@@ -307,122 +287,76 @@ const Register = () => {
       return;
     }
 
-    const start = performance.now();
-    // ── Pre-check: is email already registered? ──
+    const start = performance.now(); // ⏱ start
     try {
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/send-otp`,
         { email: formData.email }
       );
-
       console.log("Send OTP API time:", (performance.now() - start).toFixed(2), "ms");
       setShowOtpModal(true);
-
     } catch (error) {
       console.log("Send OTP failed:", (performance.now() - start).toFixed(2), "ms");
       toast.error(error.response?.data?.message || "Failed to send OTP");
     }
   };
 
+  /* ── Called by OtpModal after successful verification ── */
   const handleOtpVerified = () => {
     setEmailVerified(true);
     setShowOtpModal(false);
     setTimeout(() => submitRegistration(), 300);
   };
 
+  /* ── Actual registration API call ── */
   const submitRegistration = async () => {
-  const start = performance.now();
+    if (isSubmitting) return;
+    const start = performance.now(); // ⏱ start
+    const loadingToast = toast.loading("Creating account…");
+    setIsSubmitting(true);
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/register`,
+        {
+          name:     formData.name,
+          email:    formData.email,
+          mobile:   formData.mobileNumber,
+          password: formData.password,
+          gender:   formData.gender,
+          state:    formData.state,
+          district: formData.district,
+          pincode:  formData.pincode,
+          address1: formData.premiseNumber,
+          address2: formData.subLocality,
+        }
+      );
+      const duration = (performance.now() - start).toFixed(2);
+      console.log("Register API time:", duration, "ms");
 
-  setIsSubmitting(true);
+      login(res.data);
+      sessionStorage.setItem("token", res.data.token);
+      toast.success(
+        res.data.message || `Registration successful! (${duration} ms)`,
+        { id: loadingToast }
+      );
 
-  const loadingToast = toast.loading("Creating account…");
-
-  try {
-    console.log("🚀 Registration started");
-
-    // ================= API REQUEST =================
-    const apiStart = performance.now();
-
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/auth/register`,
-      {
-        name: formData.name,
-        email: formData.email,
-        mobile: formData.mobileNumber,
-        password: formData.password,
-        gender: formData.gender,
-        state: formData.state,
-        district: formData.district,
-        pincode: formData.pincode,
-        address1: formData.premiseNumber,
-        address2: formData.subLocality,
+      if (res.data?.user?.role === "ADMIN") {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
       }
-    );
-
-    const apiEnd = performance.now();
-
-    console.log(
-      `📡 Register API response: ${(apiEnd - apiStart).toFixed(2)} ms`
-    );
-
-    // ================= AUTH SAVE =================
-    const authStart = performance.now();
-
-    login(res.data);
-
-    sessionStorage.setItem("token", res.data.token);
-
-    const authEnd = performance.now();
-
-    console.log(
-      `🔐 Auth save time: ${(authEnd - authStart).toFixed(2)} ms`
-    );
-
-    // ================= TOTAL =================
-    const totalEnd = performance.now();
-
-    console.log(
-      `🧠 Total registration flow: ${(totalEnd - start).toFixed(2)} ms`
-    );
-
-    toast.success(
-      res.data.message ||
-      `Registration successful! (${(totalEnd - start).toFixed(2)} ms)`,
-      { id: loadingToast }
-    );
-
-    // ================= NAVIGATION =================
-    const navStart = performance.now();
-
-    if (res.data?.user?.role === "ADMIN") {
-      navigate("/admin/dashboard", { replace: true });
-    } else {
-      navigate("/dashboard", { replace: true });
+    } catch (error) {
+      console.log("Register failed time:", (performance.now() - start).toFixed(2), "ms");
+      toast.error(
+        error.response?.data?.message || "Registration failed",
+        { id: loadingToast }
+      );
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
-    const navEnd = performance.now();
-
-    console.log(
-      `🧭 Navigation time: ${(navEnd - navStart).toFixed(2)} ms`
-    );
-
-  } catch (error) {
-    const end = performance.now();
-
-    console.log(
-      `❌ Registration failed: ${(end - start).toFixed(2)} ms`
-    );
-
-    toast.error(
-      error.response?.data?.message || "Registration failed",
-      { id: loadingToast }
-    );
-
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  /* ── Form submit guard ── */
   const handleSubmit = (e) => {
     e.preventDefault();
     touchAll();
