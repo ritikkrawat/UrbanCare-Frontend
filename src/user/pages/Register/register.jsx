@@ -2,10 +2,10 @@ import "./register.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { statesData } from "../../../shared/utils/statesAndDistrict.js";
-import { useAuth } from "../../../context/authContext.jsx";
-import { useToast, ToastContainer } from "../../../shared/components/toast.jsx"; 
-import MainLayout from "../../layouts/mainLayout.jsx";
+import { statesData } from "../../shared/utils/statesAndDistrict.js";
+import { useAuth } from "../../context/authContext.jsx";
+import { useToast, ToastContainer } from "../../shared/components/toast.jsx"; 
+import MainLayout from "../layouts/mainLayout";
 
 /* ─── OTP helpers ──────────────────────────────────────────── */
 const OTP_EXPIRY_SECONDS = 120;
@@ -23,8 +23,10 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
   /* send / resend OTP */
   const sendOtp = async () => {
     const start = performance.now(); // ⏱ start
+
     try {
       setSending(true);
+
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/send-otp`,
         { email }
@@ -91,9 +93,15 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
   const handleVerify = async () => {
     const entered = otp.join("");
 
-    if (entered.length < 6) { toast.error("Please enter all 6 digits."); return; }
+    if (entered.length < 6) {
+      toast.error("Please enter all 6 digits.");
+      return;
+    }
 
-    if (expired) { toast.error("OTP has expired. Please resend."); return; }
+    if (expired) {
+      toast.error("OTP has expired. Please resend.");
+      return;
+    }
 
     const start = performance.now(); // ⏱ start
 
@@ -282,8 +290,7 @@ const Register = () => {
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
-  /* ── "Send OTP" button click ── */
-   const handleSendOtp = async (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!formData.email.trim()) {
       toast.error("Please enter your email address first.");
@@ -324,62 +331,97 @@ const Register = () => {
   };
 
   const submitRegistration = async () => {
-    const start = performance.now(); // ⏱ start timing
-    const loadingToast = toast.loading("Creating account…");
+  const start = performance.now();
 
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/register`,
-        {
-          name: formData.name,
-          email: formData.email,
-          mobile: formData.mobileNumber,
-          password: formData.password,
-          gender: formData.gender,
-          state: formData.state,
-          district: formData.district,
-          pincode: formData.pincode,
-          address1: formData.premiseNumber,
-          address2: formData.subLocality,
-        }
-      );
+  setIsSubmitting(true);
 
-      const end = performance.now();
-      const duration = (end - start).toFixed(2);
+  const loadingToast = toast.loading("Creating account…");
 
-      console.log("Register API time:", duration, "ms");
-      // console.log("REGISTER RESPONSE:", res.data);
+  try {
+    console.log("🚀 Registration started");
 
-      // ✅ Save auth (same as login)
-      login(res.data);
-      sessionStorage.setItem("token", res.data.token);
+    // ================= API REQUEST =================
+    const apiStart = performance.now();
 
-      toast.success(
-        res.data.message || `Registration successful! (${duration} ms)`,
-        { id: loadingToast }
-      );
-
-      // ✅ Navigate (same logic as login)
-      if (res.data?.user?.role === "ADMIN") {
-        navigate("/admin/dashboard", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/api/auth/register`,
+      {
+        name: formData.name,
+        email: formData.email,
+        mobile: formData.mobileNumber,
+        password: formData.password,
+        gender: formData.gender,
+        state: formData.state,
+        district: formData.district,
+        pincode: formData.pincode,
+        address1: formData.premiseNumber,
+        address2: formData.subLocality,
       }
+    );
 
-    } catch (error) {
-      const end = performance.now();
-      console.log(
-        "Register failed time:",
-        (end - start).toFixed(2),
-        "ms"
-      );
+    const apiEnd = performance.now();
 
-      toast.error(
-        error.response?.data?.message || "Registration failed",
-        { id: loadingToast }
-      );
+    console.log(
+      `📡 Register API response: ${(apiEnd - apiStart).toFixed(2)} ms`
+    );
+
+    // ================= AUTH SAVE =================
+    const authStart = performance.now();
+
+    login(res.data);
+
+    sessionStorage.setItem("token", res.data.token);
+
+    const authEnd = performance.now();
+
+    console.log(
+      `🔐 Auth save time: ${(authEnd - authStart).toFixed(2)} ms`
+    );
+
+    // ================= TOTAL =================
+    const totalEnd = performance.now();
+
+    console.log(
+      `🧠 Total registration flow: ${(totalEnd - start).toFixed(2)} ms`
+    );
+
+    toast.success(
+      res.data.message ||
+      `Registration successful! (${(totalEnd - start).toFixed(2)} ms)`,
+      { id: loadingToast }
+    );
+
+    // ================= NAVIGATION =================
+    const navStart = performance.now();
+
+    if (res.data?.user?.role === "ADMIN") {
+      navigate("/admin/dashboard", { replace: true });
+    } else {
+      navigate("/dashboard", { replace: true });
     }
-  };
+
+    const navEnd = performance.now();
+
+    console.log(
+      `🧭 Navigation time: ${(navEnd - navStart).toFixed(2)} ms`
+    );
+
+  } catch (error) {
+    const end = performance.now();
+
+    console.log(
+      `❌ Registration failed: ${(end - start).toFixed(2)} ms`
+    );
+
+    toast.error(
+      error.response?.data?.message || "Registration failed",
+      { id: loadingToast }
+    );
+
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
