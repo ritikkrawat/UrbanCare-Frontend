@@ -1,19 +1,18 @@
-import "./mainContent.css";
+import "./register.css";
 import axios from "axios";
-import AboutSection from "./aboutSection/aboutSection";
-import BoxSection from "./boxSection/boxSection";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { statesData } from "../../../../shared/utils/statesAndDistrict.js";
-import { useAuth } from "../../../../context/authContext.jsx";
-import { useToast, ToastContainer } from "../../../../shared/components/toast.jsx";
+import { statesData } from "../../../shared/utils/statesAndDistrict.js";
+import { useAuth } from "../../../context/authContext.jsx";
+import { useToast, ToastContainer } from "../../../shared/components/toast.jsx"; 
+import MainLayout from "../../layouts/mainLayout.jsx";
 
 /* ─── OTP helpers ──────────────────────────────────────────── */
 const OTP_EXPIRY_SECONDS = 120;
 
 /* ─── OTP Modal ─────────────────────────────────────────────── */
 const OtpModal = ({ email, onVerified, onClose, toast }) => {
-  const [otp, setOtp]             = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp]                 = useState(["", "", "", "", "", ""]);
   const [secondsLeft, setSecondsLeft] = useState(OTP_EXPIRY_SECONDS);
   const [expired, setExpired]         = useState(false);
   const [sending, setSending]         = useState(false);
@@ -101,7 +100,7 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
 
   return (
     <div className="otp-overlay">
-      <div 
+      <div
         className="otp-modal"
         onKeyDown={(e) => {
           if (e.key === "Enter" && otp.join("").length === 6 && !expired) {
@@ -167,32 +166,30 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
   );
 };
 
-/* ─── Main Component ────────────────────────────────────────── */
-const MainContent = ({ type }) => {
+/* ─── Register Component ────────────────────────────────────────── */
+const Register = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const { toasts, toast, removeToast } = useToast();
 
-  /* ── Register state ── */
   const [formData, setFormData] = useState({
     name: "", gender: "", state: "", district: "", pincode: "",
     mobileNumber: "", email: "", password: "",
     premiseNumber: "", subLocality: ""
   });
 
-  /* ── Touched & validation ── */
   const [touched, setTouched] = useState({});
 
   const mandatoryFields = {
-    name:         "Name",
-    gender:       "Gender",
-    state:        "State",
-    district:     "District",
-    premiseNumber:"Premise Number",
-    mobileNumber: "Mobile Number",
-    email:        "Email Address",
-    password:     "Password",
+    name:          "Name",
+    gender:        "Gender",
+    state:         "State",
+    district:      "District",
+    premiseNumber: "Premise Number",
+    mobileNumber:  "Mobile Number",
+    email:         "Email Address",
+    password:      "Password",
   };
 
   const getFieldError = (field) => {
@@ -217,7 +214,6 @@ const MainContent = ({ type }) => {
     setTouched(allTouched);
   };
 
-  /* ── Dynamic state/district ── */
   const allStates = statesData.states.map((s) => s.state);
   const allDistricts = formData.state
     ? statesData.states.find((s) => s.state === formData.state)?.districts || []
@@ -233,15 +229,9 @@ const MainContent = ({ type }) => {
     formData.password.trim().length >= 6 &&
     (!formData.pincode || /^\d{6}$/.test(formData.pincode));
 
-  /* ── OTP modal state ── */
   const [showOtpModal, setShowOtpModal]   = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
 
-  /* ── Login state ── */
-  const [loginData, setLoginData] = useState({ identifier: "", password: "" });
-  const isLoginValid = loginData.identifier.trim() && loginData.password.trim();
-
-  /* ── Handlers ── */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -253,12 +243,10 @@ const MainContent = ({ type }) => {
 
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // mark gender touched on change (no blur event for radios)
     if (name === "gender") {
       setTouched((prev) => ({ ...prev, gender: true }));
     }
 
-    // reset email-verified if user changes email after verifying
     if (name === "email") setEmailVerified(false);
   };
 
@@ -267,12 +255,6 @@ const MainContent = ({ type }) => {
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
-  const handleLoginChange = (e) => {
-    const { name, value } = e.target;
-    setLoginData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  /* ── "Send OTP" button click ── */
   const handleSendOtp = (e) => {
     e.preventDefault();
     if (!formData.email.trim()) {
@@ -292,16 +274,14 @@ const MainContent = ({ type }) => {
     setShowOtpModal(true);
   };
 
-  /* ── Called by OtpModal after successful verification ── */
   const handleOtpVerified = () => {
     setEmailVerified(true);
     setShowOtpModal(false);
     setTimeout(() => submitRegistration(), 300);
   };
 
-  /* ── Actual registration API call ── */
   const submitRegistration = async () => {
-    if(isSubmitting) return;
+    if (isSubmitting) return;
     const loadingToast = toast.loading("Creating account…");
     setIsSubmitting(true);
     try {
@@ -334,7 +314,6 @@ const MainContent = ({ type }) => {
     }
   };
 
-  /* ── Form submit guard ── */
   const handleSubmit = (e) => {
     e.preventDefault();
     touchAll();
@@ -346,175 +325,8 @@ const MainContent = ({ type }) => {
     }
   };
 
-  /* ── Login submit ── */
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    if(isSubmitting) return;
-    const loadingToast = toast.loading("Signing in…");
-    setIsSubmitting(true);
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/login`,
-        { identifier: loginData.identifier, password: loginData.password }
-      );
-      login(res.data);
-      sessionStorage.setItem("token", res.data.token);
-      toast.success(res.data.message || "Login successful!", { id: loadingToast });
-      setTimeout(() => navigate("/dashboard", { replace: true }), 200);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Invalid credentials",
-        { id: loadingToast }
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  /* ═══════════════════════════ LOGIN PAGE ══════════════════════════ */
-  if (type === "login") {
-    return (
-      <div className="login-page">
-        <ToastContainer toasts={toasts} removeToast={removeToast} />
-
-        <div className="login-wrap">
-
-          {/* ── LFFT: Login Card ── */}
-          <div className="login-card-wrapper">
-            <div className="login-card">
-              <div className="login-card-header">
-                <h2 className="login-card-title">Welcome back</h2>
-                <p className="login-card-sub">Sign in to your UrbanCare account</p>
-              </div>
-
-              <div className="login-card-body">
-                <form onSubmit={handleLoginSubmit}>
-
-                  <div className="login-input-group">
-                    <label>Mobile No / Email ID</label>
-                    <div className="login-input-row">
-                      <div className="login-input-icon">
-                        <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="7.5" cy="5" r="3" stroke="#c4adb8" strokeWidth="1.3" />
-                          <path d="M2 14c0-3.04 2.46-5.5 5.5-5.5S13 10.96 13 14" stroke="#c4adb8" strokeWidth="1.3" strokeLinecap="round" />
-                        </svg>
-                      </div>
-                      <input
-                        className="login-input-field"
-                        type="text"
-                        name="identifier"
-                        placeholder="Enter mobile or email"
-                        onChange={handleLoginChange}
-                        value={loginData.identifier}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="login-input-group">
-                    <label>Password</label>
-                    <div className="login-input-row">
-                      <div className="login-input-icon">
-                        <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <rect x="2.5" y="6.5" width="10" height="7" rx="1.5" stroke="#c4adb8" strokeWidth="1.3" />
-                          <path d="M5 6.5V4.5a2.5 2.5 0 015 0v2" stroke="#c4adb8" strokeWidth="1.3" strokeLinecap="round" />
-                        </svg>
-                      </div>
-                      <input
-                        className="login-input-field"
-                        type="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        onChange={handleLoginChange}
-                        value={loginData.password}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="login-forgot">
-                    <span onClick={() => navigate("/forgotPassword")}>Forgot password?</span>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="login-submit-btn"
-                    disabled={!isLoginValid || isSubmitting}
-                  >
-                    {isSubmitting ? "Signing in..." : "Sign In →"}
-                  </button>
-
-                </form>
-
-                <div className="login-or-row">
-                  <div className="login-or-line" />
-                  <span className="login-or-text">or</span>
-                  <div className="login-or-line" />
-                </div>
-
-                {/* <button className="login-otp-btn">Login with OTP</button> */}
-
-                <div className="login-signup-row">
-                  New user?{" "}
-                  <span onClick={() => navigate("/register")}>Create an account</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── RIGHT: Info Panel ── */}
-          <aside className="login-info-panel">
-            <div className="login-brand">
-              <h1 className="login-brand-name">UrbanCare</h1>
-              <p className="login-brand-tagline">
-                Your civic companion — file complaints, track resolutions,
-                and engage with your local administration, all in one place.
-              </p>
-            </div>
-    
-            <div className="login-features">
-              <h3>What you can do</h3>
-              <div className="login-feature-item">
-                <div className="login-feature-dot" />
-                <span className="login-feature-text">File and track civic complaints in real time</span>
-              </div>
-              <div className="login-feature-item">
-                <div className="login-feature-dot" />
-                <span className="login-feature-text">Get status updates directly to your dashboard</span>
-              </div>
-              <div className="login-feature-item">
-                <div className="login-feature-dot" />
-                <span className="login-feature-text">Connect with your ward officer and local teams</span>
-              </div>
-              <div className="login-feature-item">
-                <div className="login-feature-dot" />
-                <span className="login-feature-text">View resolved issues and civic activity near you</span>
-              </div>
-            </div>
-
-            {/* Officer card — now a direct sibling in login-wrap */}
-            <div className="officer-card" onClick={() => window.open("/admin/login", "_blank")}>
-              <div className="officer-left">
-                <div className="officer-icon">
-                  <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="11" height="11" rx="2" stroke="#7b003f" strokeWidth="1.3" />
-                    <path d="M5 7.5h5M7.5 5v5" stroke="#7b003f" strokeWidth="1.3" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="officer-label">Officer / Admin Login</div>
-                  <div className="officer-sub">Restricted access</div>
-                </div>
-              </div>
-              <span className="officer-arrow">→</span>
-            </div>
-          </aside>
-        </div>
-      </div>
-    );
-  }
-
-    /* ═════════════════════════ REGISTER PAGE ══════════════════════════ */
-  if (type === "register") {
-    return (
+  return (
+    <MainLayout>
       <div className="register-wrapper">
         <ToastContainer toasts={toasts} removeToast={removeToast} />
 
@@ -529,7 +341,7 @@ const MainContent = ({ type }) => {
 
         <div className="register-layout">
 
-          {/* ── LEFT: Form ── */}
+          {/* ── Left: Form ── */}
           <div className="register-container">
             <h1 className="form-title">Create Your Account</h1>
             <div className="form-header">
@@ -735,9 +547,8 @@ const MainContent = ({ type }) => {
             </form>
           </div>
 
-          {/* ── RIGHT: Info Panel ── */}
+          {/* ── Right: Info Panel ── */}
           <aside className="register-info-panel">
-
             <div className="info-panel-card">
               <h3>How it works</h3>
               <div className="info-step">
@@ -773,27 +584,12 @@ const MainContent = ({ type }) => {
               <p>Already have an account?</p>
               <button onClick={() => navigate("/login")}>Sign In →</button>
             </div>
-
           </aside>
 
         </div>
       </div>
-    );
-  }
-
-  /* ═══════════════════════════ HOME PAGE ═══════════════════════════ */
-
-  if (type === "home") {
-    return (
-      <>
-        <ToastContainer toasts={toasts} removeToast={removeToast} />
-        <div>
-          <AboutSection />
-          <BoxSection />
-        </div>
-      </>
-    );
-  }
+    </MainLayout>
+  );
 };
 
-export default MainContent;
+export default Register;

@@ -1,13 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../user/pages/home/home.jsx";
-import Login from "../user/pages/login.jsx";
-import Register from "../user/pages/register.jsx";
+import Login from "../user/pages/Login/login.jsx";
+import Register from "../user/pages/Register/register.jsx";
 import Dashboard from "../user/pages/dashboard/dashboard.jsx";
 import EditProfile from "../user/pages/dashboard/editProfile.jsx";
 import ChangePassword from "../user/pages/dashboard/changePassword.jsx";
 import DeleteAccount from "../user/pages/dashboard/deleteAccount.jsx";
 import ComplaintForm from "../user/pages/dashboard/complaintForm.jsx";
-import ForgotPassword from "../user/pages/forgotPassword.jsx";
+import ForgotPassword from "../user/pages/ForgotPassword/forgotPassword.jsx"
 import MyComplaints from "../user/pages/dashboard/myComplaints.jsx";
 import TrackStatus from "../user/pages/dashboard/trackStatus.jsx";
 import UserProtectedRoute from "./userProtectedRoute.jsx";

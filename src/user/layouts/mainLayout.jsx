@@ -9,7 +9,6 @@ const MainLayout = ({ children }) => {
       <Head />
       <MainNavbar />
       {children}
-      {/* <Footer /> */}
     </>
   );
 };

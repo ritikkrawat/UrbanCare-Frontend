@@ -1,0 +1,368 @@
+/* ═══════════════════════════ LOGIN PAGE ═══════════════════════════ */
+.login-page {
+  background: #f0ece9;
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 25px 24px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.login-wrap {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  width: 100%;
+  max-width: 860px;
+  align-items: start;
+}
+
+/* ── Right info panel ── */
+.login-info-panel {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-brand {
+  padding: 28px;
+  background: #6f0047;
+  border-radius: 6px;
+}
+
+.login-brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+  letter-spacing: -0.3px;
+}
+
+.login-brand-tagline {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.login-features {
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #e2dada;
+  border-left: 4px solid #6f0047;
+  padding: 20px;
+}
+
+.login-features h3 {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6f0047;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 0 0 14px;
+}
+
+.login-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.login-feature-item:last-child {
+  margin-bottom: 0;
+}
+
+.login-feature-dot {
+  width: 6px;
+  height: 6px;
+  background: #6f0047;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.login-feature-text {
+  font-size: 13px;
+  color: #5a3a4a;
+  line-height: 1.5;
+}
+
+/* ── Left: card ── */
+.login-card {
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e2dada;
+  border-left: 4px solid #6f0047;
+  overflow: hidden;
+}
+
+.login-card-header {
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid #ede5e9;
+  background: #fdf9fb;
+}
+
+.login-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #6f0047;
+  margin: 0 0 4px;
+}
+
+.login-card-sub {
+  font-size: 13px;
+  color: #a0728a;
+  margin: 0;
+}
+
+.login-card-body {
+  padding: 24px;
+}
+
+/* ── Input groups ── */
+.login-input-group {
+  margin-bottom: 16px;
+}
+
+.login-input-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #7a5a6a;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 6px;
+}
+
+.login-input-row {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #ddd0d5;
+  border-radius: 4px;
+  background: #fdfbfc;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.login-input-row:focus-within {
+  border-color: #6f0047;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(111, 0, 71, 0.08);
+}
+
+.login-input-icon {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.login-input-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.login-input-field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 11px 12px 11px 0;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: #2a1a22;
+  outline: none;
+}
+
+.login-input-field::placeholder {
+  color: #c4adb8;
+}
+
+/* ── Forgot ── */
+.login-forgot {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+
+.login-forgot span {
+  font-size: 12px;
+  color: #6f0047;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.login-forgot span:hover {
+  text-decoration: underline;
+}
+
+/* ── Submit button ── */
+.login-submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: #6f0047;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.15s, transform 0.1s;
+  margin-bottom: 14px;
+}
+
+.login-submit-btn:hover {
+  background: #4a0030;
+  transform: translateY(-1px);
+}
+
+.login-submit-btn:active {
+  transform: translateY(0);
+}
+
+.login-submit-btn:disabled {
+  background: #c4a8b6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── OR divider ── */
+.login-or-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.login-or-line {
+  flex: 1;
+  height: 1px;
+  background: #ede5e9;
+}
+
+.login-or-text {
+  font-size: 11px;
+  color: #c4adb8;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Sign up link ── */
+.login-signup-row {
+  text-align: center;
+  font-size: 13px;
+  color: #9a7a8a;
+}
+
+.login-signup-row span {
+  color: #6f0047;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-signup-row span:hover {
+  text-decoration: underline;
+}
+
+/* ── Officer card ── */
+.officer-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #fdf9fb;
+  border: 1.5px dashed #d4aec0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.officer-card:hover {
+  border-color: #6f0047;
+  background: #fce8f2;
+}
+
+.officer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.officer-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #fce8f0;
+  border: 1px solid #e8b4ce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.officer-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.officer-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6f0047;
+}
+
+.officer-sub {
+  font-size: 11px;
+  color: #c4adb8;
+  margin-top: 1px;
+}
+
+.officer-arrow {
+  color: #6f0047;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .login-wrap {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    flex-direction: column;
+  }
+
+  .login-info-panel {
+    position: static;
+    display: contents;
+  }
+
+  .login-brand {
+    display: none;
+  }
+
+  .login-features {
+    order: 1;
+  }
+
+  .login-card-wrapper {
+    order: 2;
+  }
+
+  .officer-card {
+    order: 3;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-info-panel {
+    grid-template-columns: 1fr;
+  }
+}

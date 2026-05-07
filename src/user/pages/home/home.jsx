@@ -1,11 +1,13 @@
-import MainContent from './MainContent/mainContent.jsx';
-import MainLayout from '../../layouts/mainLayout.jsx';
+import MainLayout from "../../layouts/mainLayout";
+import AboutSection from "./MainContent/aboutSection/aboutSection";
+import BoxSection from "./MainContent/boxSection/boxSection";
 
 const Home = () => {
   return (
-      <MainLayout>
-        <MainContent type="home"/>
-      </MainLayout>
+    <MainLayout>
+      <AboutSection />
+      <BoxSection />
+    </MainLayout>
   );
 };
 
