@@ -13,7 +13,7 @@ const Icon = ({ d, size = 15 }) => (
 const icons = {
   officers: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M22 11l-4 4-2-2",
   active:   "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3",
-  inactive: "M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728L5.636 5.636",
+  inactive: "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z M18.364 5.636L5.636 18.364",
   search:   "M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z",
   plus:     "M12 5v14M5 12h14",
   edit:     "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
@@ -26,9 +26,8 @@ const icons = {
 };
 
 const DEPARTMENTS = [
-  "Roads & Infrastructure", "Water Supply", "Electricity",
-  "Sanitation & Waste", "Public Safety", "Parks & Recreation",
-  "Noise & Pollution", "Street Lighting", "Drainage & Sewage", "General",
+  "Sanitation & Garbage", "Street Light & Electricity", "Traffic & Roads", "Parks & Public Spaces",
+  "Animal Issues", "Water Supply & Drainage", "Noise & Pollution", "Safety & Emergency", "Public Health & Hygiene"
 ];
 
 const formatDate = (iso) => iso
