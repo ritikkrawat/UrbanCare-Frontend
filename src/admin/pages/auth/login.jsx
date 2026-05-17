@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/authContext";
 import "../../admin.css";
 import "./login.css";
 
@@ -30,7 +29,6 @@ const FEATURES = [
 ];
 
 const AdminLogin = () => {
-  const { login } = useAuth();
   const navigate = useNavigate();
   const [form,        setForm       ] = useState({ email: "", password: "" });
   const [showPass,    setShowPass   ] = useState(false);
@@ -65,10 +63,8 @@ const AdminLogin = () => {
 
       if (!res.ok) { setError(data.message || "Invalid credentials"); return; }
 
-      login({
-        token: data.token,
-        user: data
-      });
+      sessionStorage.setItem("adminToken", data.token);
+      sessionStorage.setItem("adminName", data.admin?.name || "Administrator");
 
       navigate("/admin/dashboard", { replace: true });
     } catch (err) {
