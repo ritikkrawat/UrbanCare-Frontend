@@ -1,11 +1,12 @@
 import "./register.css";
-import axios from "axios";
+import axios from "../../../shared/utils/axiosPerformance.js";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { statesData } from "../../../shared/utils/statesAndDistrict.js";
 import { useAuth } from "../../../context/authContext.jsx";
 import { useToast, ToastContainer } from "../../../shared/components/toast.jsx";
 import MainLayout from "../../layouts/mainLayout.jsx";
+import usePerformanceTracker from "../../../shared/utils/usePerformanceTracker.js";
 
 /* ─── OTP helpers ──────────────────────────────────────────── */
 const OTP_EXPIRY_SECONDS = 120;
@@ -51,7 +52,7 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
       setSecondsLeft((s) => {
         if (s <= 1) { clearInterval(timerRef.current); setExpired(true); return 0; }
         return s - 1;
-      });
+      }); 
     }, 1000);
     return () => clearInterval(timerRef.current);
   }, [otpSent]);
@@ -168,6 +169,7 @@ const OtpModal = ({ email, onVerified, onClose, toast }) => {
 
 /* ─── Register Component ────────────────────────────────────────── */
 const Register = () => {
+  usePerformanceTracker("Register");
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
