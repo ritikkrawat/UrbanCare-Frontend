@@ -446,6 +446,17 @@ const Officers = () => {
               <option value="">All Departments</option>
               {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--admin-text-muted)" }}>
+              Show
+              <select
+                value={entries}
+                onChange={(e) => { setEntries(e.target.value); setPage(1); }}
+                style={{ padding: "4px 6px", border: "1px solid var(--admin-border)", borderRadius: "var(--radius-sm)", background: "var(--admin-bg)", fontSize: 12 }}
+              >
+                {["10", "15", "25", "50"].map((n) => <option key={n}>{n}</option>)}
+              </select>
+              entries
+            </div>
           </div>
         </div>
 

@@ -83,9 +83,10 @@ const Donut = ({ segments, total }) => {
 };
 
 // ── Bar chart ─────────────────────────────────────────────────────────────────
-const BarChart = ({ data, color = "#3b82f6", color2 }) => {
+const BarChart = ({ data, color = "#3b82f6", color2, colors, maxVal: externalMax }) => {
   const [hovered, setHovered] = useState(null);
-  const maxVal = Math.max(...data.map((d) => d.value), 1);
+  const maxVal = externalMax ?? Math.max(...data.map((d) => d.value), 1);
+
   const gridLines = [0.25, 0.5, 0.75, 1];
 
   return (
@@ -105,7 +106,7 @@ const BarChart = ({ data, color = "#3b82f6", color2 }) => {
       <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 160, paddingLeft: 28, paddingBottom: 24 }}>
         {data.map((d, i) => {
           const h = Math.max(4, (d.value / maxVal) * 120);
-          const barColor = color2 && i % 2 === 1 ? color2 : color;
+          const barColor = colors ? colors[i % colors.length] : (color2 && i % 2 === 1 ? color2 : color);
           return (
             <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, height: "100%" }}>
               <div style={{ flex: 1, width: "100%", display: "flex", alignItems: "flex-end" }}>
@@ -152,10 +153,8 @@ const LineChart = ({ series }) => {
       y: H - (v / maxVal) * H * 0.82,
     }));
 
-  const linePath = (data) => {
-    const p = pts(data);
-    return p.map((pt, i) => `${i === 0 ? "M" : "L"}${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(" ");
-  };
+  const linePath = (data) => buildPath(data.map((_, i) => pts(data)[i].y === undefined ? 0 : data[i]), 400, 160);
+
 
   const areaPath = (data) => {
     const p = pts(data);
@@ -444,22 +443,7 @@ const Analytics = () => {
               </div>
               <div className="an-card__body">
                 {deptBars.length > 0 ? (
-                  <div className="an-hbar-list">
-                    {deptBars.map((d, i) => (
-                      <div key={d.label} className="an-hbar-item">
-                        <div className="an-hbar-meta">
-                          <span className="an-hbar-name">{d.label}</span>
-                          <span className="an-hbar-count">{d.value}</span>
-                        </div>
-                        <div className="an-hbar-track">
-                          <div className="an-hbar-fill" style={{
-                            width: `${pct(d.value, deptMax)}%`,
-                            background: DEPT_COLORS[i % DEPT_COLORS.length],
-                          }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <BarChart data={deptBars} colors={DEPT_COLORS} maxVal={deptMax} />
                 ) : (
                   <div style={{ textAlign: "center", color: "var(--admin-text-muted)", fontSize: 13, padding: "40px 0" }}>No department data</div>
                 )}
